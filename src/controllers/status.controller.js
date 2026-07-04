@@ -18,6 +18,7 @@
 
 import { extractStatus } from "../extractors/status.extractor.js";
 import { getCache, setCache, TTL } from "../helper/cache.helper.js";
+import { addPaginationMeta } from "../helper/pagination.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: STATUS
@@ -62,8 +63,9 @@ const getStatus = async (req, res, next) => {
     };
     const mappedStatus = statusMap[status] || status;
     const data = await extractStatus(mappedStatus, page);
-    setCache(cacheKey, data, TTL.genres);
-    res.json({ success: true, results: data });
+    const response = addPaginationMeta(data, page);
+    setCache(cacheKey, response, TTL.genres);
+    res.json({ success: true, results: response });
   } catch (error) {
     next(error);
   }

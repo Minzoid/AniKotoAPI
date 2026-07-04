@@ -18,6 +18,7 @@
 
 import { extractFilter } from "../extractors/filter.extractor.js";
 import { getCache, setCache, TTL } from "../helper/cache.helper.js";
+import { addPaginationMeta } from "../helper/pagination.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: FILTER
@@ -47,6 +48,7 @@ import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 const getFilter = async (req, res, next) => {
   try {
     const params = req.query;
+    const page = params.page || 1;
     const cacheKey = `filter_${JSON.stringify(params, Object.keys(params).sort())}`;
     const cached = getCache(cacheKey);
     if (cached) {
@@ -57,8 +59,9 @@ const getFilter = async (req, res, next) => {
     if (Array.isArray(params.type)) params.type = params.type.join(",");
     if (Array.isArray(params.status)) params.status = params.status.join(",");
     const data = await extractFilter(params);
-    setCache(cacheKey, data, TTL.genres);
-    res.json({ success: true, results: data });
+    const response = addPaginationMeta(data, page);
+    setCache(cacheKey, response, TTL.genres);
+    res.json({ success: true, results: response });
   } catch (error) {
     next(error);
   }

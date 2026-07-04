@@ -61,6 +61,7 @@ const addCreatorInfo = (req, res, next) => {
         creator: creatorInfo.creator,
         github: creatorInfo.github,
         telegram: creatorInfo.telegram,
+        message: creatorInfo.message,
         timestamp: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", hour12: true }),
       };
     }

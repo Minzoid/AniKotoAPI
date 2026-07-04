@@ -18,6 +18,7 @@
 
 import { extractAzList } from "../extractors/azList.extractor.js";
 import { getCache, setCache, TTL } from "../helper/cache.helper.js";
+import { addPaginationMeta } from "../helper/pagination.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: A-Z LIST
@@ -51,8 +52,9 @@ const getAzList = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractAzList(letter, page);
-    setCache(cacheKey, data, TTL.genres);
-    res.json({ success: true, results: data });
+    const response = addPaginationMeta(data, page);
+    setCache(cacheKey, response, TTL.genres);
+    res.json({ success: true, results: response });
   } catch (error) {
     next(error);
   }

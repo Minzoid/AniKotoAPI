@@ -18,6 +18,7 @@
 
 import { extractCategory } from "../extractors/category.extractor.js";
 import { getCache, setCache, TTL } from "../helper/cache.helper.js";
+import { addPaginationMeta } from "../helper/pagination.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: CATEGORY
@@ -55,8 +56,9 @@ const getCategory = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractCategory(category, page);
-    setCache(cacheKey, data, TTL.genres);
-    res.json({ success: true, results: data });
+    const response = addPaginationMeta(data, page);
+    setCache(cacheKey, response, TTL.genres);
+    res.json({ success: true, results: response });
   } catch (error) {
     next(error);
   }

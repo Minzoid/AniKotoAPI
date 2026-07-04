@@ -19,6 +19,7 @@
 
 import { extractNewRelease, extractNewlyAdded, extractLatestUpdated } from "../extractors/newRelease.extractor.js";
 import { getCache, setCache, TTL } from "../helper/cache.helper.js";
+import { addPaginationMeta } from "../helper/pagination.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: NEW RELEASE
@@ -48,8 +49,9 @@ const getNewRelease = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractNewRelease(page);
-    setCache(cacheKey, data, TTL.default);
-    res.json({ success: true, results: data });
+    const response = addPaginationMeta(data, page);
+    setCache(cacheKey, response, TTL.default);
+    res.json({ success: true, results: response });
   } catch (error) {
     next(error);
   }
@@ -83,8 +85,9 @@ const getNewlyAdded = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractNewlyAdded(page);
-    setCache(cacheKey, data, TTL.default);
-    res.json({ success: true, results: data });
+    const response = addPaginationMeta(data, page);
+    setCache(cacheKey, response, TTL.default);
+    res.json({ success: true, results: response });
   } catch (error) {
     next(error);
   }
@@ -117,8 +120,9 @@ const getLatestUpdated = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractLatestUpdated(page);
-    setCache(cacheKey, data, TTL.default);
-    res.json({ success: true, results: data });
+    const response = addPaginationMeta(data, page);
+    setCache(cacheKey, response, TTL.default);
+    res.json({ success: true, results: response });
   } catch (error) {
     next(error);
   }

@@ -19,6 +19,7 @@
 
 import { extractSearchResults, extractSearchSuggestions } from "../extractors/search.extractor.js";
 import { getCache, setCache, TTL } from "../helper/cache.helper.js";
+import { addPaginationMeta } from "../helper/pagination.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: SEARCH RESULTS
@@ -52,8 +53,9 @@ const getSearchResults = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractSearchResults(keyword, page);
-    setCache(cacheKey, data, TTL.search);
-    res.json({ success: true, results: data });
+    const response = addPaginationMeta(data, page);
+    setCache(cacheKey, response, TTL.search);
+    res.json({ success: true, results: response });
   } catch (error) {
     next(error);
   }
