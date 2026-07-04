@@ -33,9 +33,22 @@ import { fetchWithMirror } from "./mirror.helper.js";
  */
 const extractPages = async (url, page = 1) => {
   try {
-    const separator = url.includes("?") ? "&" : "?";
-    const path = page > 1 ? `${url}${separator}page=${page}` : url;
-    const { data } = await fetchWithMirror(path);
+    // NOTE: Extract path from full URL if needed (e.g., "https://anikototv.to/filter" -> "/filter")
+    let path = url;
+    if (url.startsWith("http")) {
+      try {
+        const urlObj = new URL(url);
+        path = urlObj.pathname + urlObj.search;
+      } catch (e) {
+        // If URL parsing fails, try to extract path manually
+        const match = url.match(/https?:\/\/[^/]+(\/.*)/);
+        if (match) path = match[1];
+      }
+    }
+    
+    const separator = path.includes("?") ? "&" : "?";
+    const fullPath = page > 1 ? `${path}${separator}page=${page}` : path;
+    const { data } = await fetchWithMirror(fullPath);
     const $ = cheerio.load(data);
     return $;
   } catch (error) {
