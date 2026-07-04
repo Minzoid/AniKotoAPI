@@ -339,6 +339,9 @@ AniKotoAPI/
 │   │   ├── 📄 extractPages.helper.js     #       📃 Page fetcher
 │   │   └── 📄 formatTitle.helper.js      #       🔤 Title formatter
 │   │
+│   ├── 📂 middleware/                    #    🔧 Express middleware
+│   │   └── 📄 creatorInfo.js            #       ✍️ Creator attribution injection
+│   │
 │   └── 📂 routes/                        #    🛤️ Express routes
 │       ├── 📄 apiRoutes.js               #       🌐 Main API routes (33 endpoints)
 │       └── 📄 category.route.js          #       🏷️ Category routes

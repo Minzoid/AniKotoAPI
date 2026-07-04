@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0] - 2026-07-04
 
 ### Added
+- **Creator Info Middleware**: Injects creator attribution (name, GitHub, Telegram, timestamp) into every JSON response
 - **Multi-Mirror Fallback System**: Automatic failover across 5 mirror domains (anikototv.to, anikoto.cz, anikoto.me, anikoto.net, anikototv.se)
 - **LRU Cache with Configurable TTL**: Replaced basic Map cache with LRU cache supporting per-endpoint TTL (3min to 60min)
 - **Response Compression**: Added gzip compression middleware (level 6, 1024 byte threshold)

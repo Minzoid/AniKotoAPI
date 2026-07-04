@@ -84,6 +84,9 @@ AniKotoAPI/
 │       ├── mirror.helper.js           # Multi-mirror fallback (5 domains)
 │       └── extractPages.helper.js     # Page fetching with mirror fallback
 │
+│   └── middleware/
+│       └── creatorInfo.js             # Creator attribution injection
+│
 ├── test.js                            # Test suite (27 tests)
 ├── agents/                            # AI agent prompts (6 agents)
 └── CHANGELOG.md                       # Version history
@@ -100,6 +103,7 @@ AniKotoAPI/
 | Caching | LRU cache with configurable TTL |
 | Compression | gzip (level 6, 1024 byte threshold) |
 | Mirror Fallback | 5 mirror domains with health checks |
+| Middleware | Creator info attribution injection |
 | Static Files | Express static middleware |
 
 ## Request Flow
@@ -108,6 +112,14 @@ AniKotoAPI/
 Client Request
     ↓
 Vercel Routes (/api/* → server.js)
+    ↓
+Express Middleware
+    ↓
+├── CORS
+├── Security Headers
+├── Compression (gzip)
+├── Rate Limiting
+├── Creator Info Injection
     ↓
 Express Router (apiRoutes.js)
     ↓
@@ -119,7 +131,7 @@ HTTP Request to anikototv.to (with headers)
     ↓
 Cheerio parses HTML response
     ↓
-Returns structured JSON
+Returns structured JSON with Creator Attribution
     ↓
 Client Response
 ```

@@ -26,6 +26,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { createApiRoutes } from "./src/routes/apiRoutes.js";
 import { getCacheStats } from "./src/helper/cache.helper.js";
+import { addCreatorInfo } from "./src/middleware/creatorInfo.js";
 
 dotenv.config();
 
@@ -159,6 +160,9 @@ app.use((req, res, next) => {
 app.get("/api/cache/stats", (req, res) => {
   res.json({ success: true, results: getCacheStats() });
 });
+
+// ---- FEATURE: Creator info middleware (injects attribution into all responses) ----
+app.use(addCreatorInfo);
 
 createApiRoutes(app, jsonResponse, jsonError);
 
