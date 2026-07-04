@@ -16,7 +16,7 @@
  */
 
 import { extractTrendingSidebar } from "../extractors/trendingSidebar.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: TRENDING SIDEBAR
@@ -44,7 +44,7 @@ const getTrendingSidebar = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractTrendingSidebar();
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.trending);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);

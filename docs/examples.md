@@ -363,3 +363,67 @@ async function getSchedule() {
 
 getSchedule();
 ```
+
+### Latest Updated
+
+```javascript
+const axios = require('axios');
+
+async function getLatestUpdated(page = 1) {
+  const { data } = await axios.get('https://anikototvapi.vercel.app/api/latest-updated', {
+    params: { page }
+  });
+  
+  console.log('Recently updated anime:', data.results.length);
+  return data.results;
+}
+
+getLatestUpdated();
+```
+
+### Seasons
+
+```javascript
+const axios = require('axios');
+
+async function getSeasons(animeId) {
+  const { data } = await axios.get(`https://anikototvapi.vercel.app/api/seasons/${animeId}`);
+  
+  console.log('Seasons:', data.results.length);
+  return data.results;
+}
+
+getSeasons(1642);
+```
+
+### Watch Order
+
+```javascript
+const axios = require('axios');
+
+async function getWatchOrder(animeId) {
+  const { data } = await axios.get(`https://anikototvapi.vercel.app/api/watch-order/${animeId}`);
+  
+  console.log('Watch order entries:', data.results.length);
+  return data.results;
+}
+
+getWatchOrder(1642);
+```
+
+### Download Links
+
+```javascript
+const axios = require('axios');
+
+async function getDownloadLinks(slug, episode) {
+  const { data } = await axios.get('https://anikototvapi.vercel.app/api/download', {
+    params: { slug, ep: episode }
+  });
+  
+  console.log('Download links:', data.results);
+  return data.results;
+}
+
+getDownloadLinks('one-piece-odmau', 1165);
+```

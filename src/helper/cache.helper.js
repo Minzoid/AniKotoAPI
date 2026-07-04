@@ -4,111 +4,117 @@
  * Repository: https://github.com/Shineii86/AniKotoAPI
  *
  * @description
- *   In-memory caching utility for storing and retrieving API responses.
- *   Implements TTL-based cache invalidation to prevent stale data
- *   while reducing unnecessary requests to the source site.
+ *   In-memory LRU cache with configurable TTL per endpoint.
+ *   Evicts least recently used entries when max size reached.
+ *   Supports cache statistics and manual invalidation.
  *
  * @exports
- *   getCache, setCache, clearCache
+ *   getCache, setCache, clearCache, getCacheStats, LRUCache
  *
  * @author  Shinei Nouzen
  * @license MIT
  * ======= • ======= • ======= • ======= • =======• =======
  */
 
-// ══════════════════════════════════════════════════════════════
-// CACHE STORAGE & CONFIGURATION
-// ══════════════════════════════════════════════════════════════
-
-// ---- FEATURE: In-memory Map-based cache storage ----
-/**
- * Internal cache storage using JavaScript Map object.
- * Stores data with timestamps for TTL-based expiration.
- *
- * @type {Map<string, {data: any, timestamp: number}>}
- */
-const cache = new Map();
-
-// ---- FEATURE: Cache time-to-live configuration (5 minutes) ----
-/**
- * Cache TTL (Time-To-Live) in milliseconds.
- * Default: 5 minutes (300,000 ms).
- * After this duration, cached items are considered stale
- * and will be removed on next access.
- *
- * @type {number}
- * @default 300000
- */
-const CACHE_TTL = 5 * 60 * 1000;
-// ---- FEATURE: Maximum cache size ----
-const MAX_CACHE_SIZE = 100;
-
-// ══════════════════════════════════════════════════════════════
-// CACHE OPERATIONS
-// ══════════════════════════════════════════════════════════════
-
-// ---- FEATURE: Retrieve cached data by key with TTL validation ----
-/**
- * Retrieves data from cache if it exists and hasn't expired.
- * Automatically removes stale entries on access.
- *
- * @param {string} key - The cache key to lookup
- * @returns {any|null} Cached data if valid, null if expired or missing
- *
- * @example
- *   // Get cached anime list
- *   const data = getCache("anime-list-action");
- *   if (data) {
- *     // Use cached data
- *   }
- */
-const getCache = (key) => {
-  const item = cache.get(key);
-  if (item && Date.now() - item.timestamp < CACHE_TTL) {
-    return item.data;
+class LRUCache {
+  constructor(maxSize = 100, defaultTTL = 300000) {
+    this.cache = new Map();
+    this.maxSize = maxSize;
+    this.defaultTTL = defaultTTL;
+    this.stats = { hits: 0, misses: 0, sets: 0, deletes: 0 };
   }
-  cache.delete(key);
-  return null;
-};
 
-// ---- FEATURE: Store data in cache with current timestamp ----
-/**
- * Stores data in cache with current timestamp for TTL tracking.
- * Overwrites any existing data for the same key.
- *
- * @param {string} key - The cache key to store under
- * @param {any} data - The data to cache (any serializable type)
- * @returns {void}
- *
- * @example
- *   // Cache anime search results
- *   setCache("search-one-piece", animeResults);
- */
-const setCache = (key, data) => {
-  // Evict oldest entries if cache is full
-  if (cache.size >= MAX_CACHE_SIZE) {
-    const oldestKey = cache.keys().next().value;
-    cache.delete(oldestKey);
+  get(key) {
+    if (!this.cache.has(key)) {
+      this.stats.misses++;
+      return undefined;
+    }
+
+    const entry = this.cache.get(key);
+    if (Date.now() > entry.expiresAt) {
+      this.cache.delete(key);
+      this.stats.misses++;
+      return undefined;
+    }
+
+    this.stats.hits++;
+    this.cache.delete(key);
+    this.cache.set(key, entry);
+    return entry.value;
   }
-  cache.set(key, { data, timestamp: Date.now() });
+
+  set(key, value, ttl) {
+    if (this.cache.has(key)) {
+      this.cache.delete(key);
+    }
+
+    if (this.cache.size >= this.maxSize) {
+      const firstKey = this.cache.keys().next().value;
+      this.cache.delete(firstKey);
+    }
+
+    this.cache.set(key, {
+      value,
+      expiresAt: Date.now() + (ttl || this.defaultTTL)
+    });
+    this.stats.sets++;
+  }
+
+  delete(key) {
+    const existed = this.cache.delete(key);
+    if (existed) this.stats.deletes++;
+    return existed;
+  }
+
+  clear() {
+    const size = this.cache.size;
+    this.cache.clear();
+    return size;
+  }
+
+  getStats() {
+    const total = this.stats.hits + this.stats.misses;
+    return {
+      ...this.stats,
+      size: this.cache.size,
+      hitRate: total > 0 ? ((this.stats.hits / total) * 100).toFixed(2) + '%' : '0%'
+    };
+  }
+
+  has(key) {
+    if (!this.cache.has(key)) return false;
+    const entry = this.cache.get(key);
+    if (Date.now() > entry.expiresAt) {
+      this.cache.delete(key);
+      return false;
+    }
+    return true;
+  }
+}
+
+const TTL = {
+  home: 600000,
+  search: 300000,
+  info: 600000,
+  episodes: 300000,
+  servers: 600000,
+  stream: 180000,
+  spotlight: 600000,
+  trending: 600000,
+  schedule: 1800000,
+  genres: 3600000,
+  suggestions: 300000,
+  default: 300000
 };
 
-// ---- FEATURE: Clear all cached entries from memory ----
-/**
- * Clears all entries from the cache. Use when:
- * - Memory cleanup is needed
- * - Force-refreshing all data
- * - Application restart/reset
- *
- * @returns {void}
- *
- * @example
- *   // Force refresh all cached data
- *   clearCache();
- */
-const clearCache = () => {
-  cache.clear();
-};
+const cache = new LRUCache(
+  parseInt(process.env.CACHE_MAX_SIZE) || 200,
+  parseInt(process.env.CACHE_DEFAULT_TTL) || 300000
+);
 
-export { getCache, setCache, clearCache };
-// ══════════════════════════════════════════════════════════════ END: cache.helper.js
+const getCache = (key) => cache.get(key);
+const setCache = (key, data, ttl) => cache.set(key, data, ttl);
+const clearCache = () => cache.clear();
+const getCacheStats = () => cache.getStats();
+
+export { getCache, setCache, clearCache, getCacheStats, LRUCache, TTL };

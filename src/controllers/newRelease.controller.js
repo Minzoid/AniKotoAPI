@@ -17,8 +17,8 @@
  * ======= • ======= • ======= • ======= • =======• =======
  */
 
-import { extractNewRelease, extractNewlyAdded } from "../extractors/newRelease.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { extractNewRelease, extractNewlyAdded, extractLatestUpdated } from "../extractors/newRelease.extractor.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: NEW RELEASE
@@ -48,7 +48,7 @@ const getNewRelease = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractNewRelease(page);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.default);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);
@@ -83,13 +83,47 @@ const getNewlyAdded = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractNewlyAdded(page);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.default);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);
   }
 };
 
-export { getNewRelease, getNewlyAdded };
+// ══════════════════════════════════════════════════════════════
+// CONTROLLER: LATEST UPDATED
+// ══════════════════════════════════════════════════════════════
+
+/**
+ * Handles GET /api/latest-updated requests. Returns paginated list
+ * of recently updated anime sorted by last update time.
+ *
+ * @param {object} req - Express request object
+ * @param {number} req.query.page - Page number (default: 1)
+ * @param {object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ * @returns {void} Sends JSON response with latest updated anime
+ *
+ * @example
+ *   GET /api/latest-updated?page=2
+ *   Response: { success: true, results: { totalPages, data[] } }
+ */
+const getLatestUpdated = async (req, res, next) => {
+  try {
+    const { page = 1 } = req.query;
+    const cacheKey = `latestupdated_${page}`;
+    const cached = getCache(cacheKey);
+    if (cached) {
+      return res.json({ success: true, results: cached });
+    }
+    const data = await extractLatestUpdated(page);
+    setCache(cacheKey, data, TTL.default);
+    res.json({ success: true, results: data });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { getNewRelease, getNewlyAdded, getLatestUpdated };
 
 // ══════════════════════════════════════════════════════════════ END: newRelease.controller.js

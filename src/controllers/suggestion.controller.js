@@ -17,7 +17,7 @@
  */
 
 import { extractSuggestions } from "../extractors/suggestion.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: SUGGESTIONS
@@ -52,7 +52,7 @@ const getSuggestions = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractSuggestions(keyword);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.suggestions);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);

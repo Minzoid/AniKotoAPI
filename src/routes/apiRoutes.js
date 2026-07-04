@@ -36,12 +36,14 @@ import { getPopular } from "../controllers/popular.controller.js";
 import { getFilter } from "../controllers/filter.controller.js";
 import { getWatchPage } from "../controllers/watchPage.controller.js";
 import { getAzList } from "../controllers/azList.controller.js";
-import { getNewRelease, getNewlyAdded } from "../controllers/newRelease.controller.js";
+import { getNewRelease, getNewlyAdded, getLatestUpdated } from "../controllers/newRelease.controller.js";
 import { getStatus } from "../controllers/status.controller.js";
 import { getTrendingSidebar } from "../controllers/trendingSidebar.controller.js";
 import { getSeasons } from "../controllers/seasons.controller.js";
 import { getWatchOrder } from "../controllers/watchOrder.controller.js";
+import { getDownloadLinks } from "../controllers/download.controller.js";
 import { categoryRoutes } from "./category.route.js";
+import { getMirrorStatus, resetMirrorCache } from "../helper/mirror.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // ROUTE REGISTRATION
@@ -193,6 +195,15 @@ app.use((req, res, next) => {
     }
   });
 
+  // ---- FEATURE: Download links for episode ----
+  app.get("/api/download", async (req, res, next) => {
+    try {
+      await getDownloadLinks(req, res, next);
+    } catch (error) {
+      jsonError(res, error.message);
+    }
+  });
+
   // ══════════════════════════════════════════════════════════════
   // SCHEDULE
   // ══════════════════════════════════════════════════════════════
@@ -290,6 +301,15 @@ app.use((req, res, next) => {
   app.get("/api/newly-added", async (req, res, next) => {
     try {
       await getNewlyAdded(req, res, next);
+    } catch (error) {
+      jsonError(res, error.message);
+    }
+  });
+
+  // ---- FEATURE: Recently updated anime (sorted by update time) ----
+  app.get("/api/latest-updated", async (req, res, next) => {
+    try {
+      await getLatestUpdated(req, res, next);
     } catch (error) {
       jsonError(res, error.message);
     }
@@ -404,6 +424,22 @@ app.get("/api/stats", (req, res) => {
   });
 });
 
+// ---- FEATURE: Mirror status and health check ----
+app.get("/api/mirrors", async (req, res) => {
+  try {
+    const status = await getMirrorStatus();
+    res.json({ success: true, results: status });
+  } catch (error) {
+    jsonError(res, error.message);
+  }
+});
+
+// ---- FEATURE: Reset mirror cache ----
+app.post("/api/mirrors/reset", (req, res) => {
+  resetMirrorCache();
+  res.json({ success: true, message: "Mirror cache reset" });
+});
+
 // ---- FEATURE: OpenAPI specification ----
 app.get("/api/openapi", (req, res) => {
   res.json({
@@ -427,6 +463,7 @@ app.get("/api/openapi", (req, res) => {
       "/episodes/{id}": { get: { summary: "Episode list", tags: ["Episodes"] } },
       "/servers": { get: { summary: "Server list", tags: ["Streaming"] } },
       "/stream": { get: { summary: "Stream URL", tags: ["Streaming"] } },
+      "/download": { get: { summary: "Download links", tags: ["Streaming"] } },
       "/schedule": { get: { summary: "Anime schedule", tags: ["Schedule"] } },
       "/random": { get: { summary: "Random anime", tags: ["Discovery"] } },
       "/top-ten": { get: { summary: "Top 10 rankings", tags: ["Rankings"] } },
@@ -440,12 +477,15 @@ app.get("/api/openapi", (req, res) => {
       "/status/{name}": { get: { summary: "By status", tags: ["Categories"] } },
       "/health": { get: { summary: "Health check", tags: ["System"] } },
       "/stats": { get: { summary: "API statistics", tags: ["System"] } },
+      "/mirrors": { get: { summary: "Mirror status", tags: ["System"] } },
+      "/mirrors/reset": { post: { summary: "Reset mirror cache", tags: ["System"] } },
       "/openapi": { get: { summary: "OpenAPI spec", tags: ["System"] } },
       "/watch": { get: { summary: "Watch page data", tags: ["Streaming"] } },
       "/search/suggest": { get: { summary: "Search suggestions", tags: ["Search"] } },
       "/episodes-ajax/{id}": { get: { summary: "AJAX episode list", tags: ["Episodes"] } },
       "/mapper-servers": { get: { summary: "Mapper servers", tags: ["Streaming"] } },
       "/newly-added": { get: { summary: "Newly added", tags: ["Releases"] } },
+      "/latest-updated": { get: { summary: "Recently updated", tags: ["Releases"] } },
       "/trending-sidebar": { get: { summary: "Trending sidebar", tags: ["Discovery"] } },
       "/seasons/{id}": { get: { summary: "Season data", tags: ["Anime"] } },
       "/watch-order/{id}": { get: { summary: "Watch order", tags: ["Anime"] } },

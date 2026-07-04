@@ -22,6 +22,7 @@ import { headers } from "../configs/header.config.js";
 import { URLS } from "../configs/dataUrl.js";
 import { extractPages } from "../helper/extractPages.helper.js";
 import { countPages } from "../helper/countPages.helper.js";
+import { fetchWithMirror } from "../helper/mirror.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // NEW RELEASE EXTRACTION
@@ -160,6 +161,63 @@ const extractNewlyAdded = async (page = 1) => {
   }
 };
 
-export { extractNewRelease, extractNewlyAdded };
+// ══════════════════════════════════════════════════════════════
+// LATEST UPDATED EXTRACTION
+// ══════════════════════════════════════════════════════════════
+
+/**
+ * Fetches and parses recently updated anime with pagination.
+ * Uses the /latest-updated page which shows anime sorted by last update time.
+ *
+ * @param {number} page - Page number to fetch (default: 1)
+ * @returns {Promise<Object>} Object containing totalPages and data array
+ *
+ * @example
+ *   const latest = await extractLatestUpdated(1);
+ *   console.log(latest.totalPages);
+ *   console.log(latest.data[0].title);
+ */
+const extractLatestUpdated = async (page = 1) => {
+  try {
+    const $ = await extractPages("/latest-updated", page);
+    const totalPages = countPages($);
+
+    const results = [];
+
+    $(".item").each((i, el) => {
+      const slug = $(el).find("a").attr("href")?.split("/watch/").pop() || "";
+      const poster = $(el).find("img").attr("src") || "";
+      const title = $(el).find(".film-name a, .name.d-title").text().trim() ||
+                    $(el).find("a.name").text().trim() || "";
+      const japaneseTitle = $(el).find(".name.d-title").attr("data-jp") ||
+                           $(el).find("a.name").attr("data-jp") || "";
+      const sub = parseInt($(el).find(".ep-status.sub span").text().trim()) || 0;
+      const dub = parseInt($(el).find(".ep-status.dub span").text().trim()) || 0;
+      const total = parseInt($(el).find(".ep-status.total span").text().trim()) || 0;
+      const type = $(el).find(".type, .fdi-item:nth-child(2)").text().trim() || "";
+      const rating = $(el).find(".rating, .fdi-item:nth-child(3)").text().trim() || "";
+
+      if (slug) {
+        results.push({
+          slug,
+          poster,
+          title,
+          japaneseTitle,
+          sub,
+          dub,
+          total,
+          type,
+          rating
+        });
+      }
+    });
+
+    return { totalPages, data: results };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { extractNewRelease, extractNewlyAdded, extractLatestUpdated };
 
 // ══════════════════════════════════════════════════════════════ END: newRelease.extractor.js

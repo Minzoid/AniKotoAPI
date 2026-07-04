@@ -17,7 +17,7 @@
  */
 
 import { extractSeasons } from "../extractors/seasons.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: SEASONS
@@ -52,7 +52,7 @@ const getSeasons = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractSeasons(id);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.default);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);

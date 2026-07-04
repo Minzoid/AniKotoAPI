@@ -272,3 +272,30 @@ curl "https://anikototvapi.vercel.app/api/watch?slug=road-of-naruto-ggjw8&ep=1"
 - Next episode schedule
 
 This is useful when you need all watch page data at once instead of making 3 separate requests.
+
+---
+
+## Download Links
+
+For downloading episodes, use the `/download` endpoint which returns decoded download links.
+
+**Request:**
+
+```bash
+curl "https://anikototvapi.vercel.app/api/download?slug=one-piece-odmau&ep=1165"
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "results": {
+    "downloadLinks": [...],
+    "episodeNumber": 1165,
+    "title": "One Piece"
+  }
+}
+```
+
+> **Note:** Download links are decoded from base64 data and may require browser interaction due to Cloudflare protection on some hosts.

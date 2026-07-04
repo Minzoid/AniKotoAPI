@@ -19,11 +19,13 @@
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
+import compression from "compression";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { createApiRoutes } from "./src/routes/apiRoutes.js";
+import { getCacheStats } from "./src/helper/cache.helper.js";
 
 dotenv.config();
 
@@ -38,6 +40,16 @@ const __dirname = dirname(__filename);
 const publicDir = path.join(process.cwd(), "public");
 const has404File = fs.existsSync(path.join(publicDir, "404.html"));
 const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",");
+
+// ---- FEATURE: Response compression ----
+app.use(compression({
+  filter: (req, res) => {
+    if (req.headers["x-no-compression"]) return false;
+    return compression.filter(req, res);
+  },
+  level: 6,
+  threshold: 1024
+}));
 
 // ══════════════════════════════════════════════════════════════
 // CORS MIDDLEWARE
@@ -117,23 +129,35 @@ const jsonError = (res, message = "Internal server error", status = 500) =>
 // API ROUTES
 // ══════════════════════════════════════════════════════════════
 
-// ---- FEATURE: Rate limiting (100 requests per minute per IP) ----
+// ---- FEATURE: Rate limiting (configurable, default 100 requests per minute per IP) ----
 const requestCounts = new Map();
+const RATE_LIMIT = parseInt(process.env.RATE_LIMIT) || 100;
+const RATE_WINDOW = parseInt(process.env.RATE_WINDOW) || 60000;
+
 app.use((req, res, next) => {
   const ip = req.ip || req.connection.remoteAddress;
   const now = Date.now();
-  const windowMs = 60000;
-  const maxRequests = 100;
   if (!requestCounts.has(ip)) {
     requestCounts.set(ip, []);
   }
-  const timestamps = requestCounts.get(ip).filter(t => now - t < windowMs);
+  const timestamps = requestCounts.get(ip).filter(t => now - t < RATE_WINDOW);
   requestCounts.set(ip, timestamps);
-  if (timestamps.length >= maxRequests) {
-    return res.status(429).json({ success: false, message: "Rate limit exceeded. Try again later." });
+  if (timestamps.length >= RATE_LIMIT) {
+    return res.status(429).json({
+      success: false,
+      message: "Rate limit exceeded. Try again later.",
+      retryAfter: Math.ceil((timestamps[0] + RATE_WINDOW - now) / 1000)
+    });
   }
   timestamps.push(now);
+  res.setHeader("X-RateLimit-Limit", RATE_LIMIT);
+  res.setHeader("X-RateLimit-Remaining", RATE_LIMIT - timestamps.length);
   next();
+});
+
+// ---- FEATURE: Cache stats endpoint ----
+app.get("/api/cache/stats", (req, res) => {
+  res.json({ success: true, results: getCacheStats() });
 });
 
 createApiRoutes(app, jsonResponse, jsonError);
@@ -142,10 +166,25 @@ createApiRoutes(app, jsonResponse, jsonError);
 // 404 HANDLER
 // ══════════════════════════════════════════════════════════════
 
+// ---- FEATURE: Request timeout middleware (30 seconds) ----
+app.use((req, res, next) => {
+  const timeout = parseInt(process.env.REQUEST_TIMEOUT) || 30000;
+  req.setTimeout(timeout, () => {
+    res.status(408).json({ success: false, message: "Request timeout" });
+  });
+  next();
+});
+
 // ---- FEATURE: Global error handler ----
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({ success: false, message: err.message || "Internal server error" });
+  console.error(`[ERROR] ${err.message}`, err.stack);
+  if (err.type === 'entity.too.large') {
+    return res.status(413).json({ success: false, message: "Request entity too large" });
+  }
+  res.status(err.status || 500).json({
+    success: false,
+    message: process.env.NODE_ENV === 'production' ? "Internal server error" : err.message
+  });
 });
 
 // ---- FEATURE: Catch-all 404 handler for undefined routes ----
@@ -154,7 +193,16 @@ app.use((req, res) => {
   if (fs.existsSync(filePath)) {
     res.status(404).sendFile(filePath);
   } else {
-    res.status(404).json({ success: false, message: "Endpoint not found" });
+    res.status(404).json({
+      success: false,
+      message: "Endpoint not found",
+      availableEndpoints: [
+        "/", "/search", "/info", "/episodes", "/servers", "/stream",
+        "/spotlight", "/trending", "/top-ten", "/random", "/most-popular",
+        "/new-release", "/schedule", "/genre/:genre", "/type/:type",
+        "/status/:status", "/health", "/stats", "/openapi"
+      ]
+    });
   }
 });
 

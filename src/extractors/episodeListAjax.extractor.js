@@ -19,7 +19,7 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
 import { headers } from "../configs/header.config.js";
-import { BASE_URL } from "../configs/dataUrl.js";
+import { fetchWithMirror } from "../helper/mirror.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // EPISODE LIST AJAX EXTRACTOR
@@ -42,13 +42,13 @@ import { BASE_URL } from "../configs/dataUrl.js";
  */
 const extractEpisodeListAjax = async (animeId, style = "", vrf = "") => {
   try {
-    let url = `${BASE_URL}/ajax/episode/list/${animeId}`;
+    let path = `/ajax/episode/list/${animeId}`;
     const params = [];
     if (style) params.push(`style=${style}`);
     if (vrf) params.push(`vrf=${vrf}`);
-    if (params.length) url += `?${params.join("&")}`;
+    if (params.length) path += `?${params.join("&")}`;
 
-    const { data: raw } = await axios.get(url, {
+    const { data: raw } = await fetchWithMirror(path, {
       headers: {
         ...headers,
         "X-Requested-With": "XMLHttpRequest"

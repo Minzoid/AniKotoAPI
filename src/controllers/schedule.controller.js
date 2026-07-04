@@ -17,7 +17,7 @@
  */
 
 import { extractSchedule } from "../extractors/schedule.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: SCHEDULE
@@ -53,7 +53,7 @@ const getSchedule = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractSchedule(date);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.schedule);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);

@@ -17,7 +17,7 @@
  */
 
 import { extractHomeInfo } from "../extractors/homeInfo.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: HOME INFO
@@ -44,7 +44,7 @@ const getHomeInfo = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractHomeInfo();
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.home);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);

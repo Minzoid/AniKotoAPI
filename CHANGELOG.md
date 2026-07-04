@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-07-04
+
+### Added
+- **Multi-Mirror Fallback System**: Automatic failover across 5 mirror domains (anikototv.to, anikoto.cz, anikoto.me, anikoto.net, anikototv.se)
+- **LRU Cache with Configurable TTL**: Replaced basic Map cache with LRU cache supporting per-endpoint TTL (3min to 60min)
+- **Response Compression**: Added gzip compression middleware (level 6, 1024 byte threshold)
+- **Cache Statistics Endpoint**: `/api/cache/stats` returns hits, misses, sets, deletes, size, hitRate
+- **Mirror Status Endpoint**: `/api/mirrors` shows health status and latency for all domains
+- **Mirror Reset Endpoint**: `/api/mirrors/reset` clears mirror cache and failed state
+- **Seasons Endpoint**: `/api/seasons/:id` returns all seasons/OVAs/movies for an anime
+- **Watch Order Endpoint**: `/api/watch-order/:id` returns related anime with relationship types
+- **Latest Updated Endpoint**: `/api/latest-updated` returns recently updated anime sorted by update time
+- **Download Endpoint**: `/api/download?slug=&ep=` returns decoded download links from base64 data
+- **Configurable Rate Limiting**: `RATE_LIMIT` and `RATE_WINDOW` env vars for customization
+- **Request Timeout**: Configurable via `REQUEST_TIMEOUT` env var (default 30s)
+- **Rate Limit Headers**: `X-RateLimit-Limit` and `X-RateLimit-Remaining` headers
+- **Retry-After Header**: Included in 429 responses with seconds until reset
+- **Environment Variables**: Added `MIRROR_DOMAINS`, `MIRROR_CACHE_TTL`, `CACHE_MAX_SIZE`, `CACHE_DEFAULT_TTL`
+- **Test Suite**: Added 27 endpoint tests with performance metrics and optional endpoint handling
+- **OpenAPI Spec**: Added `/api/mirrors`, `/api/mirrors/reset`, `/api/latest-updated`, `/api/download` to spec
+
+### Changed
+- **BREAKING**: All extractors now use mirror fallback helper for resilience
+- **BREAKING**: Cache system upgraded from simple Map to LRU with eviction
+- **BREAKING**: Rate limiting now configurable via environment variables
+- Updated `extractPages.helper.js` to use `fetchWithMirror` instead of direct axios
+- Updated `homeInfo.extractor.js` to use mirror fallback
+- Updated `episodeListAjax.extractor.js` to use mirror fallback
+- Updated all controllers to use endpoint-specific TTL values
+- Updated `.env.example` with all new configuration options
+- Updated `test.js` with optional endpoint handling and performance metrics
+
+### Fixed
+- **CRITICAL**: Fixed header merging bug in mirror helper (custom headers were ignored)
+- Fixed mirror URL construction (proper base URL handling)
+- Fixed cache key sorting in filter controller
+- Fixed trailing slash inconsistency in console output
+- Fixed inconsistent error handling across extractors
+
+### Removed
+- Removed `og-image.svg` and `logo.png` (replaced by `share.png`)
+- Removed unused `cookie-parser` dependency (was already removed in v1.8.0)
+
 ## [1.9.0] - 2026-06-09
 
 ### Fixed

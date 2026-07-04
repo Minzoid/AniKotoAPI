@@ -20,6 +20,7 @@ import axios from "axios";
 import { headers } from "../configs/header.config.js";
 import { URLS } from "../configs/dataUrl.js";
 import { getCache, setCache } from "../helper/cache.helper.js";
+import { fetchWithMirror } from "../helper/mirror.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // HOME INFO EXTRACTOR
@@ -40,7 +41,7 @@ const extractHomeInfo = async () => {
   const cached = getCache("home");
   if (cached) return cached;
   try {
-    const { data } = await axios.get(URLS.home, { headers });
+    const { data } = await fetchWithMirror("/home");
     const $ = cheerio.load(data);
 
     // ---- FEATURE: Extract spotlight carousel items from #hotest section ----

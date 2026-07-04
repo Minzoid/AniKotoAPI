@@ -17,7 +17,7 @@
  */
 
 import { extractSpotlight } from "../extractors/spotlight.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: SPOTLIGHT
@@ -45,7 +45,7 @@ const getSpotlight = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractSpotlight();
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.spotlight);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);

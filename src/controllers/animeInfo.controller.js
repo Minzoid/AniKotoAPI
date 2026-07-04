@@ -17,7 +17,7 @@
  */
 
 import { extractAnimeInfo } from "../extractors/animeInfo.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: ANIME INFO
@@ -51,7 +51,7 @@ const getAnimeInfo = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractAnimeInfo(id);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.info);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);

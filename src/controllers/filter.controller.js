@@ -17,7 +17,7 @@
  */
 
 import { extractFilter } from "../extractors/filter.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: FILTER
@@ -57,7 +57,7 @@ const getFilter = async (req, res, next) => {
     if (Array.isArray(params.type)) params.type = params.type.join(",");
     if (Array.isArray(params.status)) params.status = params.status.join(",");
     const data = await extractFilter(params);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.genres);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);

@@ -7,7 +7,7 @@ AniKotoAPI/
 ├── server.js                          # Express entry point, port 4444
 ├── package.json                       # name: "AniKotoAPI"
 ├── vercel.json                        # Routes /api/* and /* to server.js
-├── .env                               # ANIKOTO_CHECK_SERVER_TS env var
+├── .env                               # Configuration (see .env.example)
 │
 ├── public/                            # Static files served from process.cwd()
 │   ├── index.html                     # Premium landing page (56KB, SVG icons, live console)
@@ -21,7 +21,7 @@ AniKotoAPI/
 │
 ├── docs/                              # API documentation
 │   ├── index.md                       # Overview, quick start, features
-│   ├── endpoints.md                   # Full API reference (30 endpoints)
+│   ├── endpoints.md                   # Full API reference (33 endpoints)
 │   ├── streaming.md                   # Streaming flow guide (3-step)
 │   ├── examples.md                    # cURL, JavaScript, Python, Node.js
 │   └── architecture.md                # This file
@@ -33,7 +33,7 @@ AniKotoAPI/
 │   │   └── ids.config.js              # Genre/type/status ID mappings
 │   │
 │   ├── routes/
-│   │   ├── apiRoutes.js               # All route definitions
+│   │   ├── apiRoutes.js               # All route definitions + OpenAPI spec
 │   │   └── category.route.js          # genre/:name, type/:name, status/:name
 │   │
 │   ├── controllers/
@@ -49,7 +49,7 @@ AniKotoAPI/
 │   │   ├── topten.controller.js       # Top 10
 │   │   ├── schedule.controller.js     # Schedule
 │   │   ├── random.controller.js       # Random anime
-│   │   ├── newRelease.controller.js   # New releases
+│   │   ├── newRelease.controller.js   # New releases + Latest Updated
 │   │   ├── popular.controller.js  # Most popular
 │   │   ├── category.controller.js        # Genre filter
 │   │   ├── category.controller.js         # Type filter
@@ -68,17 +68,24 @@ AniKotoAPI/
 │   │   ├── topTen.extractor.js        # Top 10
 │   │   ├── schedule.extractor.js      # Schedule
 │   │   ├── random.extractor.js        # Random anime
-│   │   ├── newRelease.extractor.js    # New releases
+│   │   ├── newRelease.extractor.js    # New releases + Latest Updated
 │   │   ├── mostPopular.extractor.js   # Most popular
 │   │   ├── genre.extractor.js         # Genre filter
 │   │   ├── type.extractor.js          # Type filter
 │   │   ├── status.extractor.js        # Status filter
 │   │   ├── filter.extractor.js        # Advanced filter
-│   │   └── suggestion.extractor.js    # Suggestions
+│   │   ├── suggestion.extractor.js    # Suggestions
+│   │   ├── seasons.extractor.js       # Seasons/OVAs/movies
+│   │   ├── watchOrder.extractor.js    # Watch order
+│   │   └── download.extractor.js      # Download links
 │   │
 │   └── helper/
-│       └── cache.helper.js            # In-memory Map cache, 5-min TTL
+│       ├── cache.helper.js            # LRU cache with configurable TTL
+│       ├── mirror.helper.js           # Multi-mirror fallback (5 domains)
+│       └── extractPages.helper.js     # Page fetching with mirror fallback
 │
+├── test.js                            # Test suite (27 tests)
+├── agents/                            # AI agent prompts (6 agents)
 └── CHANGELOG.md                       # Version history
 ```
 
@@ -90,7 +97,9 @@ AniKotoAPI/
 | Framework | Express.js |
 | Scraping | Cheerio + Axios |
 | Deployment | Vercel (Serverless) |
-| Caching | In-memory Map with 5-min TTL |
+| Caching | LRU cache with configurable TTL |
+| Compression | gzip (level 6, 1024 byte threshold) |
+| Mirror Fallback | 5 mirror domains with health checks |
 | Static Files | Express static middleware |
 
 ## Request Flow

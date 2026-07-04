@@ -18,7 +18,7 @@
  */
 
 import { extractSearchResults, extractSearchSuggestions } from "../extractors/search.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: SEARCH RESULTS
@@ -52,7 +52,7 @@ const getSearchResults = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractSearchResults(keyword, page);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.search);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);
@@ -91,7 +91,7 @@ const getSearchSuggestions = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractSearchSuggestions(keyword);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.search);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);

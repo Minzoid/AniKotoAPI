@@ -57,9 +57,11 @@ curl "https://anikototvapi.vercel.app/api/info?id=road-of-naruto-ggjw8"
 
 ## Features
 
-- **30 Endpoints** — Home, search, info, episodes, streaming, schedule, and more
+- **33 Endpoints** — Home, search, info, episodes, streaming, schedule, seasons, watch order, download, and more
 - **No API Key** — Just make requests, no registration needed
-- **In-Memory Cache** — 5-minute TTL for fast responses
+- **LRU Cache** — Configurable TTL per endpoint type (3min to 60min)
+- **Multi-Mirror Fallback** — Automatic failover across 5 mirror domains
+- **Response Compression** — Gzip compression for faster responses
 - **CORS Enabled** — Access from any domain
 - **JSON Responses** — Standardized `{success, results}` format
 
@@ -92,7 +94,7 @@ Error responses:
 
 ## Rate Limiting
 
-There are no explicit rate limits, but the API uses a 5-minute in-memory cache. Repeated requests for the same data will be served from cache.
+Rate limiting is configurable via environment variables (`RATE_LIMIT`, `RATE_WINDOW`). Default is 100 requests per 60 seconds per IP. Includes `X-RateLimit-Limit` and `X-RateLimit-Remaining` headers.
 
 ## Disclaimer
 

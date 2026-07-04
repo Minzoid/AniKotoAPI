@@ -17,7 +17,7 @@
  */
 
 import { extractWatchPage } from "../extractors/watchPage.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: WATCH PAGE
@@ -54,7 +54,7 @@ const getWatchPage = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractWatchPage(slug, ep);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.stream);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);

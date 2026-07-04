@@ -554,33 +554,66 @@ Returns trending anime for sidebar display.
 
 ## GET /seasons/:id
 
-Get season information for an anime.
+Get all seasons for an anime (main season, OVAs, movies, specials).
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
-| `id` | string | Yes | Anime slug |
+| `id` | number | Yes | Anime numeric ID |
 
 ```bash
-curl "https://anikototvapi.vercel.app/api/seasons/one-piece-100"
+curl "https://anikototvapi.vercel.app/api/seasons/1642"
 ```
 
-Returns season data including related seasons.
+Returns all seasons including OVAs, movies, and specials for the anime.
 
 ---
 
 ## GET /watch-order/:id
 
-Get recommended watch order for an anime.
+Get recommended watch order for an anime franchise.
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
-| `id` | string | Yes | Anime slug |
+| `id` | number | Yes | Anime numeric ID |
 
 ```bash
-curl "https://anikototvapi.vercel.app/api/watch-order/one-piece-100"
+curl "https://anikototvapi.vercel.app/api/watch-order/1642"
 ```
 
-Returns recommended watch order sequence.
+Returns recommended watch order sequence with relationship types.
+
+---
+
+## GET /latest-updated
+
+Get recently updated anime sorted by update time.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| `page` | number | No | Page number (default: 1) |
+
+```bash
+curl "https://anikototvapi.vercel.app/api/latest-updated"
+```
+
+Returns paginated list of recently updated anime.
+
+---
+
+## GET /download
+
+Get download links for an anime episode.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| `slug` | string | Yes | Anime slug |
+| `ep` | number | Yes | Episode number |
+
+```bash
+curl "https://anikototvapi.vercel.app/api/download?slug=one-piece-odmau&ep=1165"
+```
+
+Returns decoded download links for the specified episode.
 
 ---
 

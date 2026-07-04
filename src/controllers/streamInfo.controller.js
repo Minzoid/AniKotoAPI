@@ -19,7 +19,7 @@
  */
 
 import { extractStreamInfo, extractServerList, extractMapperServers } from "../extractors/streamInfo.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: STREAM INFO
@@ -54,7 +54,7 @@ const getStreamInfo = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractStreamInfo(id);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.default);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);
@@ -94,7 +94,7 @@ const getServerList = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractServerList(ids);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.default);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);
@@ -137,7 +137,7 @@ const getMapperServers = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractMapperServers(malId, slug, timestamp);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.default);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);

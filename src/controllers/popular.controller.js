@@ -17,7 +17,7 @@
  */
 
 import { extractPopular } from "../extractors/popular.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: POPULAR
@@ -47,7 +47,7 @@ const getPopular = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractPopular(page);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.default);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);

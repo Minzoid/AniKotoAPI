@@ -19,7 +19,7 @@
   <img src="https://img.shields.io/badge/Cheerio-1.0-3572A5?style=flat-square&logoColor=white" alt="Cheerio"/>
   <img src="https://img.shields.io/badge/Vercel-Serverless-000000?style=flat-square&logo=vercel&logoColor=white" alt="Vercel"/>
   <img src="https://img.shields.io/badge/License-MIT-22c55e?style=flat-square&logo=mit&logoColor=white" alt="License"/>
-  <img src="https://img.shields.io/badge/Version-1.9.0-f43f8e?style=flat-square&logoColor=white" alt="Version"/>
+  <img src="https://img.shields.io/badge/Version-2.0.0-f43f8e?style=flat-square&logoColor=white" alt="Version"/>
   <img src="https://img.shields.io/badge/Endpoints-30-6366f1?style=flat-square&logoColor=white" alt="Endpoints"/>
   <img src="https://img.shields.io/badge/Anime-10000+-a855f7?style=flat-square&logoColor=white" alt="Anime Database"/>
 </p>
@@ -84,23 +84,23 @@
 
 ### Why AniKotoAPI?
 
-- 🎬 **30 Endpoints** — Complete coverage of anikototv.to data
+- 🎬 **33 Endpoints** — Complete coverage of anikototv.to data
 - 🔍 **Full-Text Search** — Search anime by keyword with suggestions
 - 📺 **Episode Lists** — AJAX-loaded episode data with server info
 - 🎯 **Smart Filtering** — Genre, type, status, rating, sort, season, year
 - 🏆 **Rankings** — Top 10 (day/week/month), trending, most popular
 - 🎲 **Random Anime** — Random anime discovery endpoint
-- ⚡ **Smart Caching** — 5-minute TTL reduces source site load
-- 🔒 **CORS Enabled** — Works from any frontend, no proxy needed
-- 🚀 **Zero-Config Deploy** — One click to Vercel, or run standalone with Express
+- ⚡ **Smart Caching** — LRU cache with configurable TTL per endpoint
+- 🌐 **Multi-Mirror Fallback** — Automatic failover across 5 mirror domains
+- 🚀 **Response Compression** — Gzip compression for faster responses
 - 📊 **Live Data** — Every response is fresh from the actual website
 
 ### How It Works
 
 ```mermaid
 flowchart TD
-    A["🌐 Client Request<br/>(Browser / App / curl)"] --> B["🛡️ Vercel Edge / Express Server<br/>CORS · Security Headers"]
-    B --> C{"💾 Cache Check<br/>(In-Memory Map)"}
+    A["🌐 Client Request<br/>(Browser / App / curl)"] --> B["🛡️ Vercel Edge / Express Server<br/>CORS · Security Headers · Rate Limiting"]
+    B --> C{"💾 Cache Check<br/>(LRU with TTL)"}
     C -- HIT --> D["⚡ Return Cached Response<br/>~200ms"]
     C -- MISS --> E["🔍 Cheerio Scraper"]
 
@@ -110,17 +110,17 @@ flowchart TD
     E --> E4["AJAX Endpoints"]
     E --> E5["Filter Pages"]
 
-    E1 & E2 & E3 & E4 & E5 --> F["Axios HTTP Fetch<br/>Custom Headers · 15s Timeout"]
+    E1 & E2 & E3 & E4 & E5 --> F["Axios HTTP Fetch<br/>Multi-Mirror Fallback · Timeout"]
     F --> G["Parse HTML<br/>Cheerio Selectors"]
-    G --> H["Cache + Respond<br/>JSON"]
+    G --> H["Cache + Respond<br/>JSON + Gzip"]
 
     style A fill:#1e1e2e,stroke:#a78bfa,color:#f1f5f9
     style B fill:#1e1e2e,stroke:#6366f1,color:#f1f5f9
     style C fill:#1e1e2e,stroke:#f43f8e,color:#f1f5f9
     style D fill:#1e1e2e,stroke:#22c55e,color:#f1f5f9
-    style E fill:#1e1e2e,stroke:#a855f7,color:#f1f5f9
-    style F fill:#1e1e2e,stroke:#eab308,color:#f1f5f9
-    style G fill:#1e1e2e,stroke:#06b6d4,color:#f1f5f9
+    style E fill:#1e1e2e,stroke:#06b6d4,color:#f1f5f9
+    style F fill:#1e1e2e,stroke:#a855f7,color:#f1f5f9
+    style G fill:#1e1e2e,stroke:#f43f8e,color:#f1f5f9
     style H fill:#1e1e2e,stroke:#22c55e,color:#f1f5f9
 ```
 
@@ -183,7 +183,7 @@ flowchart TD
 
 | Feature | Description | Status |
 |:---|:---|:---:|
-| 🎬 30 API Endpoints | Complete coverage of anime data | ✅ |
+| 🎬 33 API Endpoints | Complete coverage of anime data | ✅ |
 | 🔍 Full-Text Search | Keyword search with pagination | ✅ |
 | 📺 Episode Lists | AJAX-loaded episode data | ✅ |
 | 🎯 Advanced Filtering | Genre, type, status, rating, sort | ✅ |
@@ -191,7 +191,7 @@ flowchart TD
 | 🎲 Random Anime | Random anime discovery | ✅ |
 | 📡 Streaming Servers | Video embed URLs + mapper API | ✅ |
 | 📋 AZ List | A-Z alphabetical browsing | ✅ |
-| 🔄 Smart Caching | 5-min TTL, in-memory Map | ✅ |
+| 🔄 Smart Caching | LRU cache with configurable TTL | ✅ |
 | 🚀 One-Click Deploy | Vercel button deployment | ✅ |
 | 🏗️ Express Mode | Standalone server with `npm start` | ✅ |
 | 📖 AlisaReactionBot Style | Full JSDoc documentation | ✅ |
@@ -240,6 +240,7 @@ flowchart TD
   "axios": "^1.8.0",         // HTTP client for scraping
   "cheerio": "^1.0.0-rc.12",  // HTML parsing
   "cors": "^2.8.5",           // CORS middleware
+  "compression": "^1.7.4",    // Response compression
   "dotenv": "^16.4.0"         // Environment variables
 }
 ```
@@ -254,8 +255,8 @@ flowchart TD
 |:-----:|-----------|-------------|
 | 1 | **Client** | Browser, app, or `curl` sends request |
 | 2 | **Vercel Edge / Express** | Routes request, applies CORS + security headers |
-| 3 | **Cache Check** | In-memory Map with 5-min TTL — hit = instant response |
-| 4 | **Scrape Source** | Axios fetches HTML from anikototv.to with custom headers |
+| 3 | **Cache Check** | LRU cache with endpoint-specific TTL — hit = instant response |
+| 4 | **Scrape Source** | Axios fetches HTML from anikototv.to with multi-mirror fallback |
 | 5 | **Parse HTML** | Cheerio extracts data using CSS selectors |
 | 6 | **Cache + Respond** | Store in cache, return JSON response |
 
@@ -263,11 +264,11 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A["📥 Request"] --> B{"🧠 Memory Cache<br/>(Map + TTL)"}
+    A["📥 Request"] --> B{"🧠 LRU Cache<br/>(TTL per endpoint)"}
     B -- HIT --> C["⚡ Return Cached<br/>~200ms"]
-    B -- MISS --> D["🌐 Fetch from<br/>anikototv.to"]
+    B -- MISS --> D["🌐 Fetch with<br/>Mirror Fallback"]
     D --> E["🔍 Parse with<br/>Cheerio"]
-    E --> F["💾 Cache Result<br/>(5-min TTL)"]
+    E --> F["💾 Cache Result<br/>"]
     F --> G["📤 Return Fresh"]
 
     style A fill:#1e1e2e,stroke:#a78bfa,color:#f1f5f9
@@ -279,7 +280,7 @@ flowchart TD
     style G fill:#1e1e2e,stroke:#22c55e,color:#f1f5f9
 ```
 
-> 💡 Serverless functions have read-only filesystems except `/tmp`. The cache uses in-memory `Map` which survives across warm invocations.
+> 💡 Serverless functions have read-only filesystems except `/tmp`. The cache uses LRU with configurable TTL per endpoint type, surviving across warm invocations.
 
 ---
 
@@ -1792,6 +1793,121 @@ console.log(resp.data);
     { "slug": "the-last-naruto-the-movie-whib1/ep-1", "poster": "https://cdn.anipixcdn.co/thumbnail/6c3cf77d52820cd0fe646d38bc2145ca.jpg", "title": "The Last: Naruto the Movie", "japaneseTitle": "The Last: Naruto the Movie", "type": "Movie", "sub": 1, "dub": 1 }
   ]
 }
+```
+
+---
+
+> ## 📺 GET Latest Updated
+
+### Endpoint
+
+```bash
+/latest-updated
+```
+
+#### Parameters
+
+| Parameter | Type | Mandatory | Default | Description |
+| :-------: | :--: | :-------: | :-----: | :---------: |
+| `page` | `number` | No | `1` | Page number |
+
+#### Example of request
+
+```bash
+curl "https://anikototvapi.vercel.app/api/latest-updated"
+```
+
+```javascript
+import axios from "axios";
+const resp = await axios.get("https://anikototvapi.vercel.app/api/latest-updated");
+console.log(resp.data);
+```
+
+---
+
+> ## 📅 GET Anime Seasons
+
+### Endpoint
+
+```bash
+/seasons/:id
+```
+
+#### Parameters
+
+| Parameter | Type | Mandatory | Default | Description |
+| :-------: | :--: | :-------: | :-----: | :---------: |
+| `id` | `number` | Yes ✔️ | — | Anime numeric ID |
+
+#### Example of request
+
+```bash
+curl "https://anikototvapi.vercel.app/api/seasons/1642"
+```
+
+```javascript
+import axios from "axios";
+const resp = await axios.get("https://anikototvapi.vercel.app/api/seasons/1642");
+console.log(resp.data);
+```
+
+---
+
+> ## 📋 GET Watch Order
+
+### Endpoint
+
+```bash
+/watch-order/:id
+```
+
+#### Parameters
+
+| Parameter | Type | Mandatory | Default | Description |
+| :-------: | :--: | :-------: | :-----: | :---------: |
+| `id` | `number` | Yes ✔️ | — | Anime numeric ID |
+
+#### Example of request
+
+```bash
+curl "https://anikototvapi.vercel.app/api/watch-order/1642"
+```
+
+```javascript
+import axios from "axios";
+const resp = await axios.get("https://anikototvapi.vercel.app/api/watch-order/1642");
+console.log(resp.data);
+```
+
+---
+
+> ## 📥 GET Download Links
+
+### Endpoint
+
+```bash
+/download
+```
+
+#### Parameters
+
+| Parameter | Type | Mandatory | Default | Description |
+| :-------: | :--: | :-------: | :-----: | :---------: |
+| `slug` | `string` | Yes ✔️ | — | Anime slug |
+| `ep` | `number` | Yes ✔️ | — | Episode number |
+
+#### Example of request
+
+```bash
+curl "https://anikototvapi.vercel.app/api/download?slug=one-piece-odmau&ep=1165"
+```
+
+```javascript
+import axios from "axios";
+const resp = await axios.get("https://anikototvapi.vercel.app/api/download", {
+  params: { slug: "one-piece-odmau", ep: 1165 }
+});
+console.log(resp.data);
 ```
 
 ---

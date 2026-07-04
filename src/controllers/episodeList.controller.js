@@ -17,7 +17,7 @@
  */
 
 import { extractEpisodeList } from "../extractors/episodeList.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: EPISODE LIST
@@ -52,7 +52,7 @@ const getEpisodeList = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractEpisodeList(id);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.episodes);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);

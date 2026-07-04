@@ -17,7 +17,7 @@
  */
 
 import { extractWatchOrder } from "../extractors/watchOrder.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: WATCH ORDER
@@ -53,7 +53,7 @@ const getWatchOrder = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractWatchOrder(id);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.default);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);

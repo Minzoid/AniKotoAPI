@@ -17,7 +17,7 @@
  */
 
 import { extractAzList } from "../extractors/azList.extractor.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
+import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // CONTROLLER: A-Z LIST
@@ -51,7 +51,7 @@ const getAzList = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractAzList(letter, page);
-    setCache(cacheKey, data);
+    setCache(cacheKey, data, TTL.genres);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);
