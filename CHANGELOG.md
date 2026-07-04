@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0] - 2026-07-04
 
 ### Added
-- **Creator Info Middleware**: Injects creator attribution (name, GitHub, Telegram, timestamp) into every JSON response
+- **Pagination Metadata**: All list endpoints now include `pagination` object with `currentPage`, `totalPages`, `totalItems`, `itemsPerPage`, `hasNext`, `hasPrev`
+- **Creator Info Middleware**: Injects creator attribution (name, GitHub, Telegram, message, timestamp) into every JSON response
 - **Multi-Mirror Fallback System**: Automatic failover across 5 mirror domains (anikototv.to, anikoto.cz, anikoto.me, anikoto.net, anikototv.se)
 - **LRU Cache with Configurable TTL**: Replaced basic Map cache with LRU cache supporting per-endpoint TTL (3min to 60min)
 - **Response Compression**: Added gzip compression middleware (level 6, 1024 byte threshold)
@@ -39,7 +40,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated `test.js` with optional endpoint handling and performance metrics
 
 ### Fixed
-- **CRITICAL**: Fixed header merging bug in mirror helper (custom headers were ignored)
+- **CRITICAL**: Fixed `extractPages` URL handling bug causing doubled URLs in mirror fallback
+- **CRITICAL**: Fixed `creatorInfo` middleware not including `message` field in responses
+- Fixed header merging bug in mirror helper (custom headers were ignored)
 - Fixed mirror URL construction (proper base URL handling)
 - Fixed cache key sorting in filter controller
 - Fixed trailing slash inconsistency in console output

@@ -82,7 +82,8 @@ AniKotoAPI/
 │   └── helper/
 │       ├── cache.helper.js            # LRU cache with configurable TTL
 │       ├── mirror.helper.js           # Multi-mirror fallback (5 domains)
-│       └── extractPages.helper.js     # Page fetching with mirror fallback
+│       ├── extractPages.helper.js     # Page fetching with mirror fallback
+│       └── pagination.helper.js       # Pagination metadata generator
 │
 │   └── middleware/
 │       └── creatorInfo.js             # Creator attribution injection

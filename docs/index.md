@@ -62,6 +62,7 @@ curl "https://anikototvapi.vercel.app/api/info?id=road-of-naruto-ggjw8"
 - **LRU Cache** — Configurable TTL per endpoint type (3min to 60min)
 - **Multi-Mirror Fallback** — Automatic failover across 5 mirror domains
 - **Response Compression** — Gzip compression for faster responses
+- **Pagination Metadata** — All list endpoints include `pagination` object with `currentPage`, `totalPages`, `hasNext`, `hasPrev`
 - **CORS Enabled** — Access from any domain
 - **JSON Responses** — Standardized `{success, results}` format
 

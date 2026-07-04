@@ -4,6 +4,40 @@ Base URL: `https://anikototvapi.vercel.app/api`
 
 ---
 
+## Pagination
+
+All list endpoints include pagination metadata in the response:
+
+```json
+{
+  "success": true,
+  "results": {
+    "data": [...],
+    "pagination": {
+      "currentPage": 1,
+      "totalPages": 294,
+      "totalItems": 8820,
+      "itemsPerPage": 30,
+      "hasNext": true,
+      "hasPrev": false
+    }
+  }
+}
+```
+
+| Field | Type | Description |
+|:---|:---|:---|
+| `currentPage` | `number` | Current page number (1-indexed) |
+| `totalPages` | `number` | Total number of pages available |
+| `totalItems` | `number` | Estimated total items across all pages |
+| `itemsPerPage` | `number` | Number of items per page (default: 30) |
+| `hasNext` | `boolean` | Whether there is a next page |
+| `hasPrev` | `boolean` | Whether there is a previous page |
+
+**Endpoints with pagination:** `/api/search`, `/api/most-popular`, `/api/new-release`, `/api/newly-added`, `/api/latest-updated`, `/api/az-list/:letter`, `/api/filter`, `/api/genre/:name`, `/api/type/:name`, `/api/status/:name`
+
+---
+
 ## GET /
 
 Returns homepage data: spotlight anime, trending, top-airing, and genres.

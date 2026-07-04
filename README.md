@@ -337,7 +337,8 @@ AniKotoAPI/
 │   │   ├── 📄 cache.helper.js            #       💾 In-memory caching
 │   │   ├── 📄 countPages.helper.js       #       📄 Pagination counter
 │   │   ├── 📄 extractPages.helper.js     #       📃 Page fetcher
-│   │   └── 📄 formatTitle.helper.js      #       🔤 Title formatter
+│   │   ├── 📄 formatTitle.helper.js      #       🔤 Title formatter
+│   │   └── 📄 pagination.helper.js       #       📊 Pagination metadata generator
 │   │
 │   ├── 📂 middleware/                    #    🔧 Express middleware
 │   │   └── 📄 creatorInfo.js            #       ✍️ Creator attribution injection
@@ -1932,6 +1933,38 @@ console.log(resp.data);
   "message": "Error description"
 }
 ```
+
+### Pagination Metadata
+
+All list endpoints include pagination metadata in the response:
+
+```json
+{
+  "success": true,
+  "results": {
+    "data": [...],
+    "pagination": {
+      "currentPage": 1,
+      "totalPages": 294,
+      "totalItems": 8820,
+      "itemsPerPage": 30,
+      "hasNext": true,
+      "hasPrev": false
+    }
+  }
+}
+```
+
+| Field | Type | Description |
+|:---|:---|:---|
+| `currentPage` | `number` | Current page number (1-indexed) |
+| `totalPages` | `number` | Total number of pages available |
+| `totalItems` | `number` | Estimated total items across all pages |
+| `itemsPerPage` | `number` | Number of items per page (default: 30) |
+| `hasNext` | `boolean` | Whether there is a next page |
+| `hasPrev` | `boolean` | Whether there is a previous page |
+
+**Endpoints with pagination:** `/api/search`, `/api/most-popular`, `/api/new-release`, `/api/newly-added`, `/api/latest-updated`, `/api/az-list/:letter`, `/api/filter`, `/api/genre/:name`, `/api/type/:name`, `/api/status/:name`
 
 ### Anime Item Object
 
