@@ -20,13 +20,13 @@
   <img src="https://img.shields.io/badge/Vercel-Serverless-000000?style=flat-square&logo=vercel&logoColor=white" alt="Vercel"/>
   <img src="https://img.shields.io/badge/License-MIT-22c55e?style=flat-square&logo=mit&logoColor=white" alt="License"/>
   <img src="https://img.shields.io/badge/Version-2.0.0-f43f8e?style=flat-square&logoColor=white" alt="Version"/>
-  <img src="https://img.shields.io/badge/Endpoints-30-6366f1?style=flat-square&logoColor=white" alt="Endpoints"/>
+  <img src="https://img.shields.io/badge/Endpoints-33-6366f1?style=flat-square&logoColor=white" alt="Endpoints"/>
   <img src="https://img.shields.io/badge/Anime-10000+-a855f7?style=flat-square&logoColor=white" alt="Anime Database"/>
 </p>
 
 <p align="center">
   <b>A complete RESTful API scraping real-time anime data from anikototv.to</b><br/>
-  Search, browse, filter, watch — every endpoint returns live data with 5-minute smart caching.<br/>
+  Search, browse, filter, watch — every endpoint returns live data with smart caching and multi-mirror fallback.<br/>
   Built for building anime websites, apps, and bots.
 </p>
 
@@ -134,8 +134,8 @@ flowchart TD
 
 ### ⚡ Core
 - **Real-time scraping** from anikototv.to
-- **Smart caching** with 5-minute TTL
-- **30 RESTful endpoints** covering all data
+- **Smart caching** with LRU and configurable TTL per endpoint
+- **33 RESTful endpoints** covering all data
 - **AJAX episode loading** for accurate data
 - **Mapper API integration** for extra servers
 - **Graceful error handling** per endpoint
@@ -171,7 +171,7 @@ flowchart TD
 - **CORS enabled** — works from any frontend
 - **Error responses** with descriptive messages
 - **Input validation** — required params checked
-- **Timeout protection** — 15s per request
+- **Timeout protection** — Configurable per request
 - **Multiple domains** — fallback mirror support
 - **Zero dependencies on databases** — pure scraping
 
@@ -300,7 +300,7 @@ AniKotoAPI/
 │   │
 │   ├── 📂 docs/                          #    📚 API documentation
 │   │   ├── 📄 index.md                   #       Overview, quick start
-│   │   ├── 📄 endpoints.md               #       Full API reference (30 endpoints)
+│   │   ├── 📄 endpoints.md               #       Full API reference (33 endpoints)
 │   │   ├── 📄 streaming.md               #       Streaming flow guide
 │   │   ├── 📄 examples.md                #       Code examples (cURL, JS, Python)
 │   │   └── 📄 architecture.md            #       Project structure, tech stack
@@ -340,7 +340,7 @@ AniKotoAPI/
 │   │   └── 📄 formatTitle.helper.js      #       🔤 Title formatter
 │   │
 │   └── 📂 routes/                        #    🛤️ Express routes
-│       ├── 📄 apiRoutes.js               #       🌐 Main API routes (30 endpoints)
+│       ├── 📄 apiRoutes.js               #       🌐 Main API routes (33 endpoints)
 │       └── 📄 category.route.js          #       🏷️ Category routes
 │
 ├── 📄 server.js                          # 🚀 Express server entry point
@@ -2044,7 +2044,7 @@ CMD ["node", "server.js"]
 
 ### Optimization Features
 
-- 💾 **In-memory cache** — Map-based with TTL expiration
+- 💾 **LRU cache** — Configurable TTL per endpoint type
 - ⚡ **Cheerio parsing** — Fast HTML DOM traversal
 - 🔧 **Custom headers** — Mimics browser requests
 - 🎯 **Selective scraping** — Only extracts needed data
@@ -2168,7 +2168,7 @@ The API can access 10,000+ anime titles from anikototv.to. The most-popular endp
 
 ### ✅ Completed
 
-- [x] 🎬 30 API endpoints covering all data
+- [x] 🎬 33 API endpoints covering all data
 - [x] 🔍 Full-text search with pagination
 - [x] 📺 Episode lists via AJAX loading
 - [x] 🎯 Advanced filtering (genre, type, status, rating, sort)
@@ -2176,7 +2176,7 @@ The API can access 10,000+ anime titles from anikototv.to. The most-popular endp
 - [x] 🎲 Random anime discovery
 - [x] 📡 Streaming server info + mapper API
 - [x] 📋 AZ List alphabetical browsing
-- [x] 🔄 Smart caching with 5-min TTL
+- [x] 🔄 Smart caching with LRU and configurable TTL
 - [x] 🚀 One-click Vercel deployment
 - [x] 📖 Comprehensive documentation with real API data
 - [x] 🏗️ AlisaReactionBot-style code comments
