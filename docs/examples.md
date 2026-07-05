@@ -21,26 +21,26 @@ curl "https://anikototvapi.vercel.app/api/search?keyword=naruto"
 ### Anime Info
 
 ```bash
-curl "https://anikototvapi.vercel.app/api/info?id=road-of-naruto-ggjw8"
+curl "https://anikototvapi.vercel.app/api/info?id=naruto-eybxz"
 ```
 
 ### Episodes
 
 ```bash
-curl "https://anikototvapi.vercel.app/api/episodes/road-of-naruto-ggjw8"
+curl "https://anikototvapi.vercel.app/api/episodes/958"
 ```
 
 ### Servers
 
 ```bash
-SERVER_IDS=$(curl -s "https://anikototvapi.vercel.app/api/episodes/road-of-naruto-ggjw8" | python3 -c "import sys,json; print(json.load(sys.stdin)['results']['episodes'][0]['server_ids'])")
+SERVER_IDS=$(curl -s "https://anikototvapi.vercel.app/api/episodes/958" | python3 -c "import sys,json; print(json.load(sys.stdin)['results']['episodes'][0]['server_ids'])")
 curl "https://anikototvapi.vercel.app/api/servers?ids=$SERVER_IDS"
 ```
 
 ### Stream URL
 
 ```bash
-LINK_ID=$(curl -s "https://anikototvapi.vercel.app/api/episodes/road-of-naruto-ggjw8" | python3 -c "import sys,json; print(json.load(sys.stdin)['results']['episodes'][0]['server_ids'])" | xargs -I{} curl -s "https://anikototvapi.vercel.app/api/servers?ids={}" | python3 -c "import sys,json; print(json.load(sys.stdin)['results'][0]['link_id'])")
+LINK_ID=$(curl -s "https://anikototvapi.vercel.app/api/episodes/958" | python3 -c "import sys,json; print(json.load(sys.stdin)['results']['episodes'][0]['server_ids'])" | xargs -I{} curl -s "https://anikototvapi.vercel.app/api/servers?ids={}" | python3 -c "import sys,json; print(json.load(sys.stdin)['results'][0]['link_id'])")
 curl "https://anikototvapi.vercel.app/api/stream?id=$LINK_ID"
 ```
 
@@ -140,15 +140,15 @@ async function getAnimeInfo(slug) {
   return info;
 }
 
-getAnimeInfo('road-of-naruto-ggjw8');
+getAnimeInfo('naruto-eybxz');
 ```
 
 ### Full Streaming Flow
 
 ```javascript
-async function getStreamUrl(animeSlug) {
+async function getStreamUrl(animeId) {
   // Step 1: Get episodes
-  const episodesRes = await fetch(`https://anikototvapi.vercel.app/api/episodes/${animeSlug}`);
+  const episodesRes = await fetch(`https://anikototvapi.vercel.app/api/episodes/${animeId}`);
   const episodesData = await episodesRes.json();
   const episodes = episodesData.results.episodes;
   
@@ -179,7 +179,7 @@ async function getStreamUrl(animeSlug) {
 }
 
 // Usage
-getStreamUrl('road-of-naruto-ggjw8')
+getStreamUrl(958)
   .then(url => {
     console.log('Stream URL:', url);
     // Use with video player
@@ -268,11 +268,11 @@ searchAnime('naruto').then(results => {
 ```javascript
 const axios = require('axios');
 
-async function getStreamUrl(animeSlug) {
+async function getStreamUrl(animeId) {
   const BASE = 'https://anikototvapi.vercel.app/api';
   
   // Step 1: Get episodes
-  const { data: episodesData } = await axios.get(`${BASE}/episodes/${animeSlug}`);
+  const { data: episodesData } = await axios.get(`${BASE}/episodes/${animeId}`);
   const episodes = episodesData.results.episodes;
   
   if (!episodes || episodes.length === 0) {
@@ -302,7 +302,7 @@ async function getStreamUrl(animeSlug) {
 }
 
 // Usage
-getStreamUrl('road-of-naruto-ggjw8')
+getStreamUrl(958)
   .then(url => console.log('Stream URL:', url))
   .catch(err => console.error('Error:', err.message));
 ```
@@ -312,12 +312,12 @@ getStreamUrl('road-of-naruto-ggjw8')
 ```javascript
 const axios = require('axios');
 
-async function getEpisodeList(animeSlug) {
-  const { data } = await axios.get(`https://anikototvapi.vercel.app/api/episodes/${animeSlug}`);
+async function getEpisodeList(animeId) {
+  const { data } = await axios.get(`https://anikototvapi.vercel.app/api/episodes/${animeId}`);
   
-  const { animeId, totalEpisodes, episodes } = data.results;
+  const { animeId: id, totalEpisodes, episodes } = data.results;
   
-  console.log(`Anime ID: ${animeId}`);
+  console.log(`Anime ID: ${id}`);
   console.log(`Total Episodes: ${totalEpisodes}`);
   console.log(`Episodes available: ${episodes.length}`);
   
@@ -328,7 +328,7 @@ async function getEpisodeList(animeSlug) {
   return data.results;
 }
 
-getEpisodeList('road-of-naruto-ggjw8');
+getEpisodeList(958);
 ```
 
 ### Suggestions

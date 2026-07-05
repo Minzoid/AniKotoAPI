@@ -169,12 +169,12 @@ Get episode list for an anime.
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
-| `id` | string | Yes | Anime slug |
+| `id` | string | Yes | Anime slug or animeId |
 
 **Request:**
 
 ```bash
-curl "https://anikototvapi.vercel.app/api/episodes/road-of-naruto-ggjw8"
+curl "https://anikototvapi.vercel.app/api/episodes/958"
 ```
 
 **Response:**
@@ -183,19 +183,20 @@ curl "https://anikototvapi.vercel.app/api/episodes/road-of-naruto-ggjw8"
 {
   "success": true,
   "results": {
-    "animeId": "7174",
-    "totalEpisodes": 1,
+    "animeId": 958,
+    "slug": "958",
+    "totalEpisodes": 220,
     "episodes": [
       {
-        "id": "110289",
+        "id": "16638",
         "episode_no": 1,
         "slug": "1",
         "title": "",
         "active": true,
         "href": "#",
-        "server_ids": "SlNVT25JaFlCMnZOeXZ2aG5takIxL2EybGl4TzJoNE1pN3JXdFNlODVocWtTckt1SFR0YUxrNzNhanQ2MEJoVG9UUEZNeWJOMm1uUThpYjNxejhhUEZWMitnNFFtTUNMYjBTc1FJZjZNNFZPNm5LMlVuTnpOU25ScUI1dHVGczM0UzluZ2xITG5qbExabnBDdGphY0VRPT0",
-        "timestamp": "1729249503",
-        "mal_id": "53236"
+        "server_ids": "dXNCT3hNQzk3THhSTW8ySnM5...",
+        "timestamp": "1729197616",
+        "mal_id": "20"
       }
     ]
   }

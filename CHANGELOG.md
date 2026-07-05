@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2026-07-05
+
+### Fixed
+- **Documentation**: Fixed streaming flow guide — `/api/episodes/:slug` corrected to `/api/episodes/:animeId`
+- **Documentation**: Fixed all examples using `road-of-naruto-ggjw8` slug for episodes to use `958` animeId
+- **Documentation**: Fixed JavaScript/Node.js streaming examples to use `animeId` parameter instead of `animeSlug`
+- **Documentation**: Updated cURL examples to use correct animeId (958) for episodes endpoint
+- **Documentation**: Updated architecture.md streaming flow diagram to reflect correct endpoint
+
 ## [2.0.1] - 2026-07-05
 
 ### Fixed

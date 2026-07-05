@@ -438,14 +438,14 @@ https://anikototvapi.vercel.app/api
 To get a stream URL, follow these 3 steps:
 
 ```bash
-# Step 1: Get episodes (returns server_ids)
-curl "https://anikototvapi.vercel.app/api/episodes/road-of-naruto-ggjw8"
+# Step 1: Get episodes by animeId (returns server_ids)
+curl "https://anikototvapi.vercel.app/api/episodes/958"
 
 # Step 2: Get servers (pass server_ids from Step 1)
-curl "https://anikototvapi.vercel.app/api/servers?ids=SlNVT25JaFlCMnZOe..."
+curl "https://anikototvapi.vercel.app/api/servers?ids=dXNCT3hNQzk3THhSTW8ySnM5..."
 
 # Step 3: Get stream URL (pass link_id from Step 2)
-curl "https://anikototvapi.vercel.app/api/stream?id=MTF1dkFtaW9BRTZPbz..."
+curl "https://anikototvapi.vercel.app/api/stream?id=MTF1dkFtaW9BRTZPbzJJRElFZUZr..."
 ```
 
 ### Dub & Sub Switch
@@ -796,17 +796,17 @@ console.log(resp.data);
 
 | Parameter | Type | Mandatory | Default | Description |
 | :-------: | :--: | :-------: | :-----: | :---------: |
-| `id` | `string` | Yes ✔️ | — | Anime slug |
+| `id` | `string` | Yes ✔️ | — | Anime slug or animeId |
 
 #### Example of request
 
 ```bash
-curl "https://anikototvapi.vercel.app/api/episodes/one-piece-odmau"
+curl "https://anikototvapi.vercel.app/api/episodes/958"
 ```
 
 ```javascript
 import axios from "axios";
-const resp = await axios.get("https://anikototvapi.vercel.app/api/episodes/one-piece-odmau");
+const resp = await axios.get("https://anikototvapi.vercel.app/api/episodes/958");
 console.log(resp.data);
 ```
 
@@ -914,13 +914,13 @@ console.log(resp.data);
 #### Example of request
 
 ```bash
-curl "https://anikototvapi.vercel.app/api/servers?ids={episodeIds}"
+curl "https://anikototvapi.vercel.app/api/servers?ids={server_ids}"
 ```
 
 ```javascript
 import axios from "axios";
 const resp = await axios.get("https://anikototvapi.vercel.app/api/servers", {
-  params: { ids: "yourEpisodeIds" }
+  params: { ids: "yourServerIds" }
 });
 console.log(resp.data);
 ```
@@ -1016,13 +1016,13 @@ Server list for an episode — returns available streaming servers with their na
 | `ids` | `string` | **required** | `server_ids` from `/episodes` response (base64-encoded) |
 
 ```bash
-curl "https://anikototvapi.vercel.app/api/servers?ids={episodeIds}"
+curl "https://anikototvapi.vercel.app/api/servers?ids={server_ids}"
 ```
 
 ```javascript
 import axios from "axios";
 const resp = await axios.get("https://anikototvapi.vercel.app/api/servers", {
-  params: { ids: "yourEpisodeIds" }
+  params: { ids: "yourServerIds" }
 });
 console.log(resp.data);
 ```
@@ -2172,7 +2172,7 @@ CMD ["node", "server.js"]
 |:---|:---|:---|
 | ❌ `npm install` fails | Node.js version too old | Upgrade to Node.js 20+ (`node -v`) |
 | ❌ 500 error on filter | Missing `keyword` param | Add `?keyword=` (even empty) to filter requests |
-| ❌ Empty episodes array | AJAX not loaded | Use `/api/episodes/:slug` which fetches via AJAX |
+| ❌ Empty episodes array | Wrong parameter | Use `/api/episodes/:animeId` with numeric animeId (e.g., 958) |
 | ❌ CORS errors | Frontend domain blocked | CORS is `*` — check browser extension |
 | ❌ 404 on API routes | Wrong URL format | Use `/api/` prefix, not just `/` |
 | ❌ Deploy fails on Vercel | Build error | Check `node server.js` locally first |
@@ -2204,7 +2204,7 @@ Use <code>/api/search?keyword=your+search</code>. Results include title, poster,
 <details>
 <summary><b>📺 How do I get episode lists?</b></summary>
 <br/>
-Use <code>/api/episodes/:slug</code> where <code>:slug</code> is the anime URL slug (e.g., <code>one-piece-odmau</code>). This fetches episode data via AJAX for accuracy. The response includes <code>animeId</code>, <code>totalEpisodes</code>, and <code>episodes</code> array.
+Use <code>/api/episodes/:id</code> where <code>:id</code> is the anime slug or animeId (e.g., <code>958</code> for Naruto). The response includes <code>animeId</code>, <code>totalEpisodes</code>, and <code>episodes</code> array with <code>server_ids</code> for each episode.
 </details>
 
 <details>

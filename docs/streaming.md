@@ -5,7 +5,7 @@ This guide explains how to get streaming URLs from AniKotoAPI in 3 steps.
 ## Overview
 
 ```
-Step 1: Get Episodes   →  /api/episodes/:slug
+Step 1: Get Episodes   →  /api/episodes/:id
 Step 2: Get Servers    →  /api/servers?ids={server_ids}
 Step 3: Get Stream URL →  /api/stream?id={link_id}
 ```
@@ -14,12 +14,12 @@ Step 3: Get Stream URL →  /api/stream?id={link_id}
 
 ## Step 1: Get Episodes
 
-Each anime has multiple episodes. Fetch the episode list with the anime slug.
+Each anime has multiple episodes. Fetch the episode list with the anime slug or animeId.
 
 **Request:**
 
 ```bash
-curl "https://anikototvapi.vercel.app/api/episodes/road-of-naruto-ggjw8"
+curl "https://anikototvapi.vercel.app/api/episodes/958"
 ```
 
 **Response:**
@@ -28,19 +28,20 @@ curl "https://anikototvapi.vercel.app/api/episodes/road-of-naruto-ggjw8"
 {
   "success": true,
   "results": {
-    "animeId": "7174",
-    "totalEpisodes": 1,
+    "animeId": 958,
+    "slug": "958",
+    "totalEpisodes": 220,
     "episodes": [
       {
-        "id": "110289",
+        "id": "16638",
         "episode_no": 1,
         "slug": "1",
         "title": "",
         "active": true,
         "href": "#",
-        "server_ids": "SlNVT25JaFlCMnZOeXZ2aG5takIxL2EybGl4TzJoNE1pN3JXdFNlODVocWtTckt1SFR0YUxrNzNhanQ2MEJoVG9UUEZNeWJOMm1uUThpYjNxejhhUEZWMitnNFFtTUNMYjBTc1FJZjZNNFZPNm5LMlVuTnpOU25ScUI1dHVGczM0UzluZ2xITG5qbExabnBDdGphY0VRPT0",
-        "timestamp": "1729249503",
-        "mal_id": "53236"
+        "server_ids": "dXNCT3hNQzk3THhSTW8ySnM5...",
+        "timestamp": "1729197616",
+        "mal_id": "20"
       }
     ]
   }
@@ -58,7 +59,7 @@ Each episode has multiple servers. Use the `server_ids` from Step 1.
 **Request:**
 
 ```bash
-curl "https://anikototvapi.vercel.app/api/servers?ids=SlNVT25JaFlCMnZOeXZ2aG5takIxL2EybGl4TzJoNE1pN3JXdFNlODVocWtTckt1SFR0YUxrNzNhanQ2MEJoVG9UUEZNeWJOMm1uUThpYjNxejhhUEZWMitnNFFtTUNMYjBTc1FJZjZNNFZPNm5LMlVuTnpOU25ScUI1dHVGczM0UzluZ2xITG5qbExabnBDdGphY0VRPT0"
+curl "https://anikototvapi.vercel.app/api/servers?ids=dXNCT3hNQzk3THhSTW8ySnM5..."
 ```
 
 **Response:**
@@ -69,19 +70,19 @@ curl "https://anikototvapi.vercel.app/api/servers?ids=SlNVT25JaFlCMnZOeXZ2aG5tak
   "results": [
     {
       "type": "sub",
-      "ep_id": "110289",
-      "link_id": "MTF1dkFtaW9BRTZPbzJJRElFZUZrOWdjeldjOERLaWNMMXFNbVB3WUJqOHZGS2FSWVgvbVJraVpIV1dQRjRoN01hOFUvYmxsWXFYNGtiR0h5OWdGQWc9PQ",
-      "cmid": "animixplay-fqs",
-      "sv_id": "1",
-      "name": "HD-1"
+      "ep_id": "16638",
+      "link_id": "MTF1dkFtaW9BRTZPbzJJRElFZUZr...",
+      "cmid": "animixplay-fqsqfvdf4u",
+      "sv_id": "8e4",
+      "name": "VidPlay-1"
     },
     {
       "type": "sub",
-      "ep_id": "110289",
-      "link_id": "MTF1dkFtaW9BRTZPbzJJRElFZUZrOWdjeldjOERLaWNMMXFNbVB3WUJqOEZ4cFNpMDdQbnV1S3dNdklpRkhWbzRsVmgxSGx4YWx3LytPcnZXU0RCVHc9PQ",
-      "cmid": "animixplay-fqs",
-      "sv_id": "2",
-      "name": "Vidstream-2"
+      "ep_id": "16638",
+      "link_id": "MTF1dkFtaW9BRTZPbzJJRElFZUZr...",
+      "cmid": "animixplay-fqsqfvdf4u",
+      "sv_id": "323",
+      "name": "HD-1"
     }
   ]
 }
@@ -98,7 +99,7 @@ Get the actual streaming URL using the `link_id` from Step 2.
 **Request:**
 
 ```bash
-curl "https://anikototvapi.vercel.app/api/stream?id=MTF1dkFtaW9BRTZPbzJJRElFZUZrOWdjeldjOERLaWNMMXFNbVB3WUJqOHZGS2FSWVgvbVJraVpIV1dQRjRoN01hOFUvYmxsWXFYNGtiR0h5OWdGQWc9PQ"
+curl "https://anikototvapi.vercel.app/api/stream?id=MTF1dkFtaW9BRTZPbzJJRElFZUZr..."
 ```
 
 **Response:**
@@ -107,8 +108,8 @@ curl "https://anikototvapi.vercel.app/api/stream?id=MTF1dkFtaW9BRTZPbzJJRElFZUZr
 {
   "success": true,
   "results": {
-    "linkId": "MTF1dkFtaW9BRTZPbzJJRElFZUZrOWdjeldjOERLaWNMMXFNbVB3WUJqOHZGS2FSWVgvbVJraVpIV1dQRjRoN01hOFUvYmxsWXFYNGtiR0h5OWdGQWc9PQ",
-    "url": "https://megaplay.buzz/stream/s-5/94736/sub",
+    "linkId": "MTF1dkFtaW9BRTZPbzJJRElFZUZr...",
+    "url": "https://vidtube.site/stream/aVlsNDR3MnRLbWRvQUFBbWJUNERLQT09/sub",
     "skipData": {
       "intro": [0, 0],
       "outro": [0, 0]
@@ -124,9 +125,9 @@ curl "https://anikototvapi.vercel.app/api/stream?id=MTF1dkFtaW9BRTZPbzJJRElFZUZr
 ## JavaScript Example
 
 ```javascript
-async function getStreamUrl(animeSlug) {
+async function getStreamUrl(animeId) {
   // Step 1: Get episodes
-  const episodesRes = await fetch(`https://anikototvapi.vercel.app/api/episodes/${animeSlug}`);
+  const episodesRes = await fetch(`https://anikototvapi.vercel.app/api/episodes/${animeId}`);
   const episodesData = await episodesRes.json();
   const episodes = episodesData.results.episodes;
   
@@ -146,18 +147,18 @@ async function getStreamUrl(animeSlug) {
     throw new Error('No servers found');
   }
   
-  // Pick first server (HD-1)
+  // Pick first server (VidPlay-1)
   const linkId = servers[0].link_id;
   
   // Step 3: Get stream URL
   const streamRes = await fetch(`https://anikototvapi.vercel.app/api/stream?id=${linkId}`);
   const streamData = await streamRes.json();
   
-  return streamData.results.url; // "https://megaplay.buzz/stream/s-5/94736/sub"
+  return streamData.results.url; // "https://vidtube.site/stream/..."
 }
 
 // Usage
-getStreamUrl('road-of-naruto-ggjw8')
+getStreamUrl(958)
   .then(url => console.log('Stream URL:', url))
   .catch(err => console.error('Error:', err));
 ```
@@ -169,11 +170,11 @@ getStreamUrl('road-of-naruto-ggjw8')
 ```python
 import requests
 
-def get_stream_url(anime_slug):
+def get_stream_url(anime_id):
     base = "https://anikototvapi.vercel.app/api"
     
     # Step 1: Get episodes
-    episodes_res = requests.get(f"{base}/episodes/{anime_slug}")
+    episodes_res = requests.get(f"{base}/episodes/{anime_id}")
     episodes_data = episodes_res.json()
     episodes = episodes_data['results']['episodes']
     
@@ -199,7 +200,7 @@ def get_stream_url(anime_slug):
     return stream_data['results']['url']
 
 # Usage
-url = get_stream_url('road-of-naruto-ggjw8')
+url = get_stream_url(958)
 print(f"Stream URL: {url}")
 ```
 
@@ -247,7 +248,7 @@ player.source = {
 
 | Issue | Solution |
 |-------|----------|
-| "No episodes found" | Check the anime slug is correct (use `/api/search` first) |
+| "No episodes found" | Check the anime ID is correct (use `/api/search` first to find slug, then use animeId) |
 | "No servers found" | The `server_ids` may be invalid, try another episode |
 | Stream URL 403 | Some servers require specific referrer headers |
 | CORS error | Use a proxy or access from server-side |
@@ -261,7 +262,7 @@ For a simpler approach, use the `/watch` endpoint which returns episode data, se
 **Request:**
 
 ```bash
-curl "https://anikototvapi.vercel.app/api/watch?slug=road-of-naruto-ggjw8&ep=1"
+curl "https://anikototvapi.vercel.app/api/watch?slug=naruto-eybxz&ep=1"
 ```
 
 **Response includes:**

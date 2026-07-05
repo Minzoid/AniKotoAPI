@@ -18,7 +18,7 @@ curl https://anikototvapi.vercel.app/api
 curl "https://anikototvapi.vercel.app/api/search?keyword=naruto"
 
 # Get anime info
-curl "https://anikototvapi.vercel.app/api/info?id=road-of-naruto-ggjw8"
+curl "https://anikototvapi.vercel.app/api/info?id=naruto-eybxz"
 ```
 
 **Live Response — Homepage:**

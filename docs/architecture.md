@@ -140,7 +140,7 @@ Client Response
 ## Streaming Flow
 
 ```
-/api/episodes/:slug
+/api/episodes/:animeId
     ↓
     Returns: server_ids, animeId, totalEpisodes
     ↓
