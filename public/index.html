@@ -4,255 +4,214 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AniKotoAPI — Free Anime Data API</title>
-
-  <!-- ──────────────── Basic OG Tags ──────────────── -->
   <meta property="og:title" content="AniKotoAPI — Free Anime Data API" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://anikototvapi.vercel.app" />
   <meta property="og:image" content="https://anikototvapi.vercel.app/share.png" />
-  <meta property="og:description" content="Free REST API for anime data. Browse, search, stream episodes. 30+ endpoints, no API key required." />
+  <meta property="og:description" content="Free REST API for anime data. Browse, search, stream episodes. 33+ endpoints, no API key required." />
   <meta property="og:site_name" content="AniKotoAPI" />
   <meta property="og:locale" content="en_US" />
-
-  <!-- ──────────────── Image Optimization ──────────────── -->
   <meta property="og:image:secure_url" content="https://anikototvapi.vercel.app/share.png" />
   <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="601" />
   <meta property="og:image:alt" content="AniKotoAPI - Free Anime Data REST API" />
-
-  <!-- ──────────────── Twitter Card Tags ──────────────── -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@Shineii86" />
   <meta name="twitter:creator" content="@Shineii86" />
   <meta name="twitter:title" content="AniKotoAPI — Free Anime Data API" />
-  <meta name="twitter:description" content="Free REST API for anime data. Browse, search, stream episodes. 30+ endpoints, no API key required." />
+  <meta name="twitter:description" content="Free REST API for anime data. Browse, search, stream episodes. 33+ endpoints, no API key required." />
   <meta name="twitter:image" content="https://anikototvapi.vercel.app/share.png" />
   <meta name="twitter:image:alt" content="AniKotoAPI - Free Anime Data REST API" />
   <meta name="twitter:domain" content="anikototvapi.vercel.app" />
-
-  <!-- ──────────────── Generic Meta ──────────────── -->
-  <meta name="description" content="Free REST API for anime data. Browse, search, stream episodes. 30+ endpoints, no API key required. Built with Node.js, Express, Cheerio." />
+  <meta name="description" content="Free REST API for anime data. Browse, search, stream episodes. 33+ endpoints, no API key required. Built with Node.js, Express, Cheerio." />
   <meta name="author" content="Shinei Nouzen" />
   <meta name="keywords" content="anime api, free api, rest api, anime data, streaming, episode servers, nodejs, express, anime database, anime search" />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#0A0A12" />
+  <meta name="theme-color" content="#faf9f5" />
   <link rel="canonical" href="https://anikototvapi.vercel.app" />
-
-  <!-- ──────────────── Favicon ──────────────── -->
   <link rel="icon" type="image/png" href="/favicon-origin.png" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon-origin.png" />
   <link rel="manifest" href="/manifest.json" />
-
-  <!-- ──────────────── Fonts ──────────────── -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     :root{
-      --bg:#0A0A12;--bg2:#111120;--bg3:#16162A;
-      --surface:rgba(17,17,32,.7);--glass:rgba(255,255,255,.03);
-      --border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.1);
-      --text:#E2E8F0;--text2:#94A3B8;--text3:#64748B;
-      --purple:#A855F7;--pink:#EC4899;--indigo:#6366F1;
-      --green:#22C55E;--cyan:#06B6D4;--amber:#F59E0B;--red:#EF4444;
-      --grad:linear-gradient(135deg,var(--purple),var(--pink));
-      --grad2:linear-gradient(135deg,var(--indigo),var(--purple));
-      --radius:12px;--radius-lg:16px;--radius-xl:20px;
+      --canvas:#faf9f5;--surface-soft:#f5f0e8;--surface-card:#efe9de;--surface-cream-strong:#e8e0d2;
+      --surface-dark:#181715;--surface-dark-elevated:#252320;--surface-dark-soft:#1f1e1b;
+      --hairline:#e6dfd8;--hairline-soft:#ebe6df;
+      --ink:#141413;--body-strong:#252523;--body:#3d3d3a;--muted:#6c6a64;--muted-soft:#8e8b82;
+      --on-primary:#fff;--on-dark:#faf9f5;--on-dark-soft:#a09d96;
+      --primary:#cc785c;--primary-active:#a9583e;--primary-disabled:#e6dfd8;
+      --accent-teal:#5db8a6;--accent-amber:#e8a55a;
+      --success:#5db872;--warning:#d4a017;--error:#c64545;
+      --font-display:'Cormorant Garamond',Garamond,'Times New Roman',serif;
+      --font-body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+      --font-code:'JetBrains Mono',monospace;
     }
     html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
-    body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
-    ::selection{background:rgba(168,85,247,.3);color:#fff}
+    body{font-family:var(--font-body);background:var(--canvas);color:var(--body);line-height:1.6}
+    ::selection{background:rgba(204,120,92,.2);color:var(--ink)}
     ::-webkit-scrollbar{width:6px}
     ::-webkit-scrollbar-track{background:transparent}
-    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
-    ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.15)}
+    ::-webkit-scrollbar-thumb{background:var(--hairline);border-radius:3px}
 
-    /* ── Ambient ── */
-    .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-    .orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.12}
-    .orb-1{width:700px;height:700px;background:var(--purple);top:-250px;left:-200px;animation:drift 30s ease-in-out infinite}
-    .orb-2{width:500px;height:500px;background:var(--pink);bottom:-200px;right:-150px;animation:drift 25s ease-in-out infinite reverse}
-    .orb-3{width:400px;height:400px;background:var(--indigo);top:40%;left:40%;animation:drift 22s ease-in-out infinite 5s}
-    @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(50px,-40px) scale(1.1)}66%{transform:translate(-30px,30px) scale(.92)}}
-
-    /* ── Particles Canvas ── */
-    #particles{position:fixed;inset:0;z-index:0;pointer-events:none}
-
-    /* ── Layout ── */
-    .wrap{position:relative;z-index:1}
-    .container{max-width:1120px;margin:0 auto;padding:0 24px}
-    .container-lg{max-width:1280px;margin:0 auto;padding:0 24px}
+    .container{max-width:1200px;margin:0 auto;padding:0 24px}
+    a{color:var(--primary);text-decoration:none}
+    a:hover{text-decoration:underline}
 
     /* ── Header ── */
-    header{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 24px;transition:all .35s}
-    header.scrolled{background:rgba(10,10,18,.88);backdrop-filter:blur(24px) saturate(1.5);border-bottom:1px solid var(--border)}
-    .header-inner{max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
-    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
-    .logo svg{width:28px;height:28px}
-    .logo-text{font-size:1.1rem;font-weight:700;letter-spacing:-.02em}
-    .logo-text span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    header{position:fixed;top:0;left:0;right:0;z-index:1000;background:var(--canvas);border-bottom:1px solid var(--hairline);transition:all .3s}
+    header.scrolled{box-shadow:0 1px 3px rgba(20,20,19,.06)}
+    .header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 24px}
+    .logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink)}
+    .logo-mark{font-family:var(--font-display);font-size:1.3rem;font-weight:600;letter-spacing:-.02em}
+    .logo-mark span{color:var(--primary)}
     nav{display:flex;align-items:center;gap:4px}
-    nav a{color:var(--text2);text-decoration:none;font-size:.8rem;font-weight:500;padding:6px 14px;border-radius:8px;transition:all .2s}
-    nav a:hover{color:var(--text);background:var(--glass)}
-    nav a.active{color:var(--purple)}
-    .nav-cta{margin-left:8px;background:var(--grad)!important;color:#fff!important;padding:7px 16px!important;border-radius:8px!important;font-weight:600!important}
-    .nav-cta:hover{opacity:.9;transform:translateY(-1px)}
+    nav a{color:var(--muted);text-decoration:none;font-size:.875rem;font-weight:500;padding:6px 14px;border-radius:8px;transition:all .15s}
+    nav a:hover{color:var(--ink);background:var(--surface-card);text-decoration:none}
+    .nav-cta{margin-left:8px;background:var(--primary)!important;color:var(--on-primary)!important;padding:8px 18px!important;border-radius:8px!important;font-weight:500!important}
+    .nav-cta:hover{background:var(--primary-active)!important}
 
     /* ── Hero ── */
-    .hero{padding:140px 0 80px;text-align:center;position:relative}
-    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--glass);border:1px solid var(--border);padding:6px 16px;border-radius:100px;font-size:.75rem;color:var(--text2);margin-bottom:24px}
-    .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-    .hero h1{font-size:clamp(2.5rem,5.5vw,4rem);font-weight:900;line-height:1.1;letter-spacing:-.04em;margin-bottom:20px}
-    .hero h1 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .hero-sub{color:var(--text2);font-size:1.05rem;max-width:540px;margin:0 auto 40px;line-height:1.7}
-    .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;font-size:.88rem;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:all .25s;font-family:inherit}
+    .hero{padding:140px 0 80px;max-width:1200px;margin:0 auto;padding-left:24px;padding-right:24px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--surface-card);border:1px solid var(--hairline);padding:6px 16px;border-radius:9999px;font-size:.75rem;font-weight:500;color:var(--muted);margin-bottom:20px;letter-spacing:.5px;text-transform:uppercase}
+    .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    .hero h1{font-family:var(--font-display);font-size:clamp(2.5rem,5vw,3.5rem);font-weight:400;line-height:1.1;letter-spacing:-.02em;color:var(--ink);margin-bottom:16px}
+    .hero-sub{color:var(--body);font-size:1.05rem;max-width:480px;line-height:1.7;margin-bottom:32px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:8px;font-size:.875rem;font-weight:500;text-decoration:none;border:none;cursor:pointer;transition:all .15s;font-family:var(--font-body)}
     .btn svg{width:16px;height:16px}
-    .btn-primary{background:var(--grad);color:#fff;box-shadow:0 4px 24px rgba(168,85,247,.3)}
-    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(168,85,247,.4)}
-    .btn-ghost{background:var(--glass);border:1px solid var(--border2);color:var(--text)}
-    .btn-ghost:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15)}
+    .btn-primary{background:var(--primary);color:var(--on-primary)}
+    .btn-primary:hover{background:var(--primary-active);text-decoration:none}
+    .btn-secondary{background:var(--canvas);border:1px solid var(--hairline);color:var(--ink)}
+    .btn-secondary:hover{background:var(--surface-card);text-decoration:none}
 
     /* ── Console ── */
-    .console{max-width:720px;margin:0 auto;border-radius:var(--radius-xl);overflow:hidden;border:1px solid var(--border2);background:var(--bg2);box-shadow:0 24px 80px rgba(0,0,0,.5),0 0 120px rgba(168,85,247,.08)}
-    .console-bar{display:flex;align-items:center;gap:8px;padding:14px 18px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border)}
+    .console-wrap{background:var(--surface-dark);border-radius:12px;overflow:hidden;box-shadow:0 24px 80px rgba(20,20,19,.15)}
+    .console-bar{display:flex;align-items:center;gap:8px;padding:14px 18px;background:var(--surface-dark-elevated);border-bottom:1px solid rgba(255,255,255,.06)}
     .console-dot{width:10px;height:10px;border-radius:50%}
-    .console-dot:nth-child(1){background:#FF5F57}
-    .console-dot:nth-child(2){background:#FEBC2E}
-    .console-dot:nth-child(3){background:#28C840}
-    .console-title{margin-left:12px;font-size:.72rem;color:var(--text3);font-family:'JetBrains Mono',monospace}
+    .console-dot:nth-child(1){background:#ff5f57}
+    .console-dot:nth-child(2){background:#febc2e}
+    .console-dot:nth-child(3){background:#28c840}
+    .console-title{margin-left:12px;font-size:.75rem;color:var(--on-dark-soft);font-family:var(--font-code)}
     .console-body{display:flex;min-height:180px}
-    .console-input{flex:1;padding:18px;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.8;color:var(--text);border:none;background:transparent;resize:none;outline:none}
-    .console-input::placeholder{color:var(--text3)}
-    .console-output{flex:1;padding:18px;border-left:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.8;color:var(--green);overflow:auto;max-height:300px;white-space:pre-wrap}
-    .console-actions{display:flex;gap:8px;padding:12px 18px;border-top:1px solid var(--border);background:rgba(255,255,255,.01)}
-    .console-btn{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.75rem;font-weight:500;cursor:pointer;transition:all .2s;font-family:'JetBrains Mono',monospace}
-    .console-btn:hover{background:var(--glass);color:var(--text)}
-    .console-btn.active{background:rgba(168,85,247,.15);color:var(--purple);border-color:rgba(168,85,247,.3)}
-    .console-send{margin-left:auto;padding:6px 16px;border-radius:6px;border:none;background:var(--grad);color:#fff;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'JetBrains Mono',monospace}
-    .console-send:hover{opacity:.9;transform:translateY(-1px)}
+    .console-input{flex:1;padding:18px;font-family:var(--font-code);font-size:.8rem;line-height:1.8;color:var(--on-dark);border:none;background:transparent;resize:none;outline:none}
+    .console-input::placeholder{color:var(--on-dark-soft)}
+    .console-output{flex:1;padding:18px;border-left:1px solid rgba(255,255,255,.06);font-family:var(--font-code);font-size:.78rem;line-height:1.8;color:var(--success);overflow:auto;max-height:300px;white-space:pre-wrap}
+    .console-actions{display:flex;gap:8px;padding:12px 18px;border-top:1px solid rgba(255,255,255,.06);background:var(--surface-dark-elevated)}
+    .console-btn{padding:6px 14px;border-radius:6px;border:1px solid rgba(255,255,255,.08);background:transparent;color:var(--on-dark-soft);font-size:.75rem;font-weight:500;cursor:pointer;transition:all .15s;font-family:var(--font-code)}
+    .console-btn:hover{background:rgba(255,255,255,.05);color:var(--on-dark)}
+    .console-btn.active{background:rgba(204,120,92,.15);color:var(--primary);border-color:rgba(204,120,92,.3)}
+    .console-send{margin-left:auto;padding:6px 16px;border-radius:6px;border:none;background:var(--primary);color:var(--on-primary);font-size:.75rem;font-weight:500;cursor:pointer;transition:all .15s;font-family:var(--font-code)}
+    .console-send:hover{background:var(--primary-active)}
 
     /* ── Stats ── */
-    .stats{padding:60px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .stats{padding:60px 0;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);background:var(--surface-soft)}
     .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
-    .stat-value{font-size:2rem;font-weight:900;letter-spacing:-.03em}
-    .stat-value.grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .stat-label{font-size:.78rem;color:var(--text3);margin-top:4px;font-weight:500}
+    .stat-value{font-family:var(--font-display);font-size:2.5rem;font-weight:400;letter-spacing:-.02em;color:var(--ink)}
+    .stat-label{font-size:.8rem;color:var(--muted);margin-top:4px;font-weight:500}
 
     /* ── Section ── */
-    .section{padding:100px 0}
-    .section-label{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);font-weight:700;margin-bottom:12px}
-    .section-title{font-size:clamp(1.8rem,3vw,2.4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:10px;line-height:1.2}
-    .section-desc{color:var(--text2);font-size:1rem;max-width:520px;line-height:1.7;margin-bottom:40px}
+    .section{padding:96px 0}
+    .section-label{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--primary);font-weight:600;margin-bottom:12px}
+    .section-title{font-family:var(--font-display);font-size:clamp(1.8rem,3vw,2.4rem);font-weight:400;letter-spacing:-.01em;margin-bottom:10px;line-height:1.2;color:var(--ink)}
+    .section-desc{color:var(--body);font-size:1rem;max-width:520px;line-height:1.7;margin-bottom:40px}
 
     /* ── Features Grid ── */
     .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .feature-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px;transition:all .35s;position:relative;overflow:hidden}
-    .feature-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(168,85,247,.05),rgba(236,72,153,.05));opacity:0;transition:opacity .35s}
-    .feature-card:hover{border-color:rgba(168,85,247,.2);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.3)}
-    .feature-card:hover::before{opacity:1}
-    .feature-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative;z-index:1}
-    .feature-icon svg{width:22px;height:22px}
-    .fi-purple{background:rgba(168,85,247,.12);color:var(--purple)}
-    .fi-pink{background:rgba(236,72,153,.12);color:var(--pink)}
-    .fi-green{background:rgba(34,197,94,.12);color:var(--green)}
-    .fi-cyan{background:rgba(6,182,212,.12);color:var(--cyan)}
-    .fi-amber{background:rgba(245,158,11,.12);color:var(--amber)}
-    .fi-indigo{background:rgba(99,102,241,.12);color:var(--indigo)}
-    .feature-title{font-size:1rem;font-weight:700;margin-bottom:8px;position:relative;z-index:1}
-    .feature-desc{color:var(--text2);font-size:.84rem;line-height:1.7;position:relative;z-index:1}
+    .feature-card{background:var(--surface-card);border:1px solid var(--hairline);border-radius:12px;padding:32px;transition:all .2s}
+    .feature-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(20,20,19,.06)}
+    .feature-icon{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;background:var(--canvas);border:1px solid var(--hairline)}
+    .feature-icon svg{width:20px;height:20px;color:var(--primary)}
+    .feature-title{font-family:var(--font-display);font-size:1.1rem;font-weight:500;margin-bottom:8px;color:var(--ink)}
+    .feature-desc{color:var(--body);font-size:.875rem;line-height:1.7}
 
     /* ── Endpoint Explorer ── */
-    .explorer{display:grid;grid-template-columns:240px 1fr;gap:1px;background:var(--border);border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border)}
-    .explorer-nav{background:var(--bg2);padding:8px}
-    .explorer-nav-btn{display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;border:none;background:transparent;color:var(--text2);font-size:.8rem;font-weight:500;border-radius:8px;cursor:pointer;transition:all .2s;text-align:left;font-family:inherit}
-    .explorer-nav-btn:hover{background:var(--glass);color:var(--text)}
-    .explorer-nav-btn.active{background:rgba(168,85,247,.1);color:var(--purple)}
+    .explorer{display:grid;grid-template-columns:240px 1fr;gap:1px;background:var(--hairline);border-radius:12px;overflow:hidden;border:1px solid var(--hairline)}
+    .explorer-nav{background:var(--surface-dark);padding:8px}
+    .explorer-nav-btn{display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;border:none;background:transparent;color:var(--on-dark-soft);font-size:.8rem;font-weight:500;border-radius:8px;cursor:pointer;transition:all .15s;text-align:left;font-family:var(--font-body)}
+    .explorer-nav-btn:hover{background:rgba(255,255,255,.05);color:var(--on-dark)}
+    .explorer-nav-btn.active{background:rgba(204,120,92,.15);color:var(--primary)}
     .explorer-nav-btn svg{width:16px;height:16px;flex-shrink:0}
-    .explorer-panel{background:var(--bg2);padding:24px;min-height:400px}
-    .explorer-panel-title{font-size:1.1rem;font-weight:700;margin-bottom:4px}
-    .explorer-panel-desc{color:var(--text2);font-size:.84rem;margin-bottom:20px;line-height:1.6}
-    .explorer-method{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;font-size:.7rem;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:.04em;margin-bottom:12px}
-    .method-get{background:rgba(34,197,94,.12);color:var(--green)}
-    .explorer-path{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--text);margin-bottom:16px;padding:12px 16px;background:rgba(0,0,0,.3);border-radius:8px;border:1px solid var(--border)}
+    .explorer-panel{background:var(--surface-dark);padding:24px;min-height:400px}
+    .explorer-panel-title{font-family:var(--font-display);font-size:1.2rem;font-weight:500;margin-bottom:4px;color:var(--on-dark)}
+    .explorer-panel-desc{color:var(--on-dark-soft);font-size:.84rem;margin-bottom:20px;line-height:1.6}
+    .explorer-method{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;font-size:.7rem;font-weight:700;font-family:var(--font-code);letter-spacing:.04em;margin-bottom:12px;background:rgba(93,184,114,.15);color:var(--success)}
+    .explorer-path{font-family:var(--font-code);font-size:.85rem;color:var(--on-dark);margin-bottom:16px;padding:12px 16px;background:var(--surface-dark-soft);border-radius:8px;border:1px solid rgba(255,255,255,.06)}
     .explorer-params{margin-bottom:16px}
-    .explorer-params-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);font-weight:600;margin-bottom:8px}
+    .explorer-params-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--on-dark-soft);font-weight:600;margin-bottom:8px}
     .param-row{display:grid;grid-template-columns:120px 80px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:.8rem}
-    .param-name{font-family:'JetBrains Mono',monospace;color:var(--pink);font-weight:500}
-    .param-type{font-family:'JetBrains Mono',monospace;color:var(--purple);font-size:.75rem}
-    .param-desc{color:var(--text2)}
-    .explorer-code{background:rgba(0,0,0,.3);border-radius:8px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.8;color:var(--text2);overflow-x:auto;border:1px solid var(--border)}
-    .explorer-code .kw{color:var(--purple)}
-    .explorer-code .str{color:var(--green)}
-    .explorer-code .cmt{color:var(--text3)}
-    .explorer-code .fn{color:var(--cyan)}
-    .explorer-code .num{color:var(--amber)}
+    .param-name{font-family:var(--font-code);color:var(--accent-amber);font-weight:500}
+    .param-type{font-family:var(--font-code);color:var(--accent-teal);font-size:.75rem}
+    .param-desc{color:var(--on-dark-soft)}
+    .explorer-code{background:var(--surface-dark-soft);border-radius:8px;padding:16px;font-family:var(--font-code);font-size:.78rem;line-height:1.8;color:var(--on-dark-soft);overflow-x:auto;border:1px solid rgba(255,255,255,.06)}
 
     /* ── Code Tabs ── */
-    .code-tabs{display:flex;gap:2px;background:rgba(0,0,0,.2);border-radius:8px;padding:3px;margin-bottom:12px;width:fit-content}
-    .code-tab{padding:6px 14px;border-radius:6px;border:none;background:transparent;color:var(--text3);font-size:.72rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'JetBrains Mono',monospace}
-    .code-tab.active{background:rgba(168,85,247,.15);color:var(--purple)}
-    .code-tab:hover:not(.active){color:var(--text2)}
-    .code-block{display:none}
-    .code-block.active{display:block}
+    .code-tabs{display:flex;gap:2px;background:var(--surface-dark-soft);border-radius:8px;padding:3px;margin-bottom:12px;width:fit-content}
+    .code-tab{padding:6px 14px;border-radius:6px;border:none;background:transparent;color:var(--on-dark-soft);font-size:.72rem;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--font-code)}
+    .code-tab.active{background:rgba(204,120,92,.15);color:var(--primary)}
+    .code-tab:hover:not(.active){color:var(--on-dark)}
 
     /* ── Playground ── */
-    .playground-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
-    .playground-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-    .playground-header svg{width:18px;height:18px;color:var(--purple)}
-    .playground-header h3{font-size:1rem;font-weight:700}
+    .playground-card{background:var(--surface-card);border:1px solid var(--hairline);border-radius:12px;overflow:hidden}
+    .playground-header{padding:20px 24px;border-bottom:1px solid var(--hairline);display:flex;align-items:center;gap:10px}
+    .playground-header svg{width:18px;height:18px;color:var(--primary)}
+    .playground-header h3{font-family:var(--font-display);font-size:1.1rem;font-weight:500;color:var(--ink)}
     .playground-body{padding:24px}
     .playground-inputs{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
-    .playground-inputs input,.playground-inputs select{flex:1;min-width:200px;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--text);font-size:.85rem;font-family:'JetBrains Mono',monospace;outline:none;transition:border-color .2s}
-    .playground-inputs input:focus,.playground-inputs select:focus{border-color:var(--purple)}
-    .playground-inputs input::placeholder{color:var(--text3)}
-    .playground-inputs select option{background:var(--bg2)}
-    .playground-output{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.7;color:var(--green);max-height:400px;overflow:auto;white-space:pre-wrap;display:none}
+    .playground-inputs input,.playground-inputs select{flex:1;min-width:200px;padding:10px 14px;border-radius:8px;border:1px solid var(--hairline);background:var(--canvas);color:var(--ink);font-size:.85rem;font-family:var(--font-code);outline:none;transition:border-color .15s}
+    .playground-inputs input:focus,.playground-inputs select:focus{border-color:var(--primary)}
+    .playground-inputs input::placeholder{color:var(--muted-soft)}
+    .playground-inputs select option{background:var(--canvas)}
+    .playground-output{background:var(--surface-dark);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:16px;font-family:var(--font-code);font-size:.78rem;line-height:1.7;color:var(--success);max-height:400px;overflow:auto;white-space:pre-wrap;display:none}
     .playground-output.visible{display:block}
 
     /* ── Marquee ── */
-    .marquee{padding:40px 0;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .marquee{padding:40px 0;overflow:hidden;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);background:var(--surface-soft)}
     .marquee-track{display:flex;gap:40px;animation:marquee 30s linear infinite;width:max-content}
-    .marquee-item{display:flex;align-items:center;gap:8px;color:var(--text3);font-size:.8rem;font-weight:500;white-space:nowrap}
+    .marquee-item{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.8rem;font-weight:500;white-space:nowrap}
     .marquee-item svg{width:16px;height:16px;opacity:.5}
     @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
     /* ── CTA ── */
-    .cta{text-align:center;padding:100px 0}
-    .cta-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:60px 40px;position:relative;overflow:hidden}
-    .cta-box::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(236,72,153,.08))}
-    .cta-title{font-size:clamp(1.8rem,3vw,2.4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:12px;position:relative}
-    .cta-desc{color:var(--text2);font-size:1rem;margin-bottom:28px;position:relative}
-    .cta-actions{display:flex;gap:12px;justify-content:center;position:relative}
+    .cta{text-align:center;padding:96px 0}
+    .cta-box{background:var(--primary);border-radius:16px;padding:64px 40px;position:relative;overflow:hidden}
+    .cta-title{font-family:var(--font-display);font-size:clamp(1.8rem,3vw,2.4rem);font-weight:400;letter-spacing:-.01em;margin-bottom:12px;color:var(--on-primary)}
+    .cta-desc{color:rgba(255,255,255,.85);font-size:1rem;margin-bottom:28px}
+    .cta-actions{display:flex;gap:12px;justify-content:center}
+    .btn-on-coral{background:var(--canvas);color:var(--ink);border:1px solid var(--hairline)}
+    .btn-on-coral:hover{background:var(--surface-card);text-decoration:none}
 
     /* ── Footer ── */
-    footer{padding:60px 0 40px;border-top:1px solid var(--border)}
+    footer{background:var(--surface-dark);color:var(--on-dark-soft);padding:64px 0 40px}
     .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
     .footer-brand .logo{margin-bottom:12px}
-    .footer-brand p{color:var(--text3);font-size:.82rem;line-height:1.7;max-width:280px}
-    .footer-col h4{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);font-weight:600;margin-bottom:16px}
-    .footer-col a{display:block;color:var(--text2);text-decoration:none;font-size:.84rem;padding:4px 0;transition:color .2s}
-    .footer-col a:hover{color:var(--purple)}
-    .footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid var(--border);color:var(--text3);font-size:.75rem}
+    .footer-brand .logo .logo-mark{color:var(--on-dark)}
+    .footer-brand p{color:var(--on-dark-soft);font-size:.84rem;line-height:1.7;max-width:280px}
+    .footer-col h4{font-size:.7rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--on-dark-soft);font-weight:600;margin-bottom:16px}
+    .footer-col a{display:block;color:var(--on-dark-soft);text-decoration:none;font-size:.84rem;padding:4px 0;transition:color .15s}
+    .footer-col a:hover{color:var(--on-dark)}
+    .footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid rgba(255,255,255,.06);color:var(--on-dark-soft);font-size:.75rem}
     .footer-social{display:flex;gap:12px}
-    .footer-social a{color:var(--text3);transition:color .2s}
-    .footer-social a:hover{color:var(--purple)}
+    .footer-social a{color:var(--on-dark-soft);transition:color .15s}
+    .footer-social a:hover{color:var(--on-dark)}
     .footer-social svg{width:18px;height:18px}
 
     /* ── Scroll Reveal ── */
-    .reveal{opacity:0;transform:translateY(30px);transition:all .7s cubic-bezier(.16,1,.3,1)}
+    .reveal{opacity:0;transform:translateY(20px);transition:all .6s cubic-bezier(.16,1,.3,1)}
     .reveal.visible{opacity:1;transform:translateY(0)}
     .reveal-delay-1{transition-delay:.1s}
     .reveal-delay-2{transition-delay:.2s}
     .reveal-delay-3{transition-delay:.3s}
-    .reveal-delay-4{transition-delay:.4s}
 
     /* ── Mobile ── */
     @media(max-width:900px){
+      .hero{grid-template-columns:1fr;gap:40px}
       .features-grid{grid-template-columns:repeat(2,1fr)}
       .explorer{grid-template-columns:1fr}
       .stats-grid{grid-template-columns:repeat(2,1fr)}
@@ -263,20 +222,18 @@
       .hero h1{font-size:2rem}
       .features-grid{grid-template-columns:1fr}
       .console-body{flex-direction:column}
-      .console-output{border-left:none;border-top:1px solid var(--border)}
+      .console-output{border-left:none;border-top:1px solid rgba(255,255,255,.06)}
       .stats-grid{grid-template-columns:repeat(2,1fr);gap:16px}
       .footer-grid{grid-template-columns:1fr}
       nav{display:none}
     }
   </style>
-
-  <!-- ──────────────── JSON-LD Structured Data ──────────────── -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebAPI",
     "name": "AniKotoAPI",
-    "description": "Free REST API for anime data. Browse, search, stream episodes. 30+ endpoints, no API key required.",
+    "description": "Free REST API for anime data. Browse, search, stream episodes. 33+ endpoints, no API key required.",
     "url": "https://anikototvapi.vercel.app",
     "image": "https://anikototvapi.vercel.app/share.png",
     "documentation": "https://github.com/Shineii86/AniKotoAPI",
@@ -287,28 +244,16 @@
     },
     "category": "Anime Data API",
     "endpoint": "https://anikototvapi.vercel.app/api",
-    "programmingModel": "REST",
-    "documentationUrl": "https://github.com/Shineii86/AniKotoAPI/tree/main/docs"
+    "programmingModel": "REST"
   }
   </script>
 </head>
 <body>
-
-  <div class="ambient">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-  </div>
-  <canvas id="particles"></canvas>
-
   <div class="wrap">
-
-    <!-- Header -->
     <header id="header">
       <div class="header-inner">
         <a href="/" class="logo">
-          <svg aria-hidden="true" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="url(#g1)" stroke-width="2"/><path d="M10 20c0-4 3-7 6-7s6 3 6 7" stroke="url(#g1)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="2" fill="var(--purple)"/><circle cx="20" cy="12" r="2" fill="var(--pink)"/><defs><linearGradient id="g1" x1="0" y1="0" x2="32" y2="32"><stop stop-color="var(--purple)"/><stop offset="1" stop-color="var(--pink)"/></linearGradient></defs></svg>
-          <span class="logo-text"><span>AniKoto</span>API</span>
+          <span class="logo-mark"><span>*</span> AniKotoAPI</span>
         </a>
         <nav>
           <a href="#features">Features</a>
@@ -320,27 +265,26 @@
       </div>
     </header>
 
-    <!-- Hero -->
-    <section class="hero container">
-      <div class="hero-badge"><span class="dot"></span> Free &middot; No API key &middot; Open source</div>
-      <h1>The <span class="grad">Anime Data</span> API<br/>for Your Next Project</h1>
-      <p class="hero-sub">Browse, search, and stream anime data from AniKoto. Real-time scraping with 30+ endpoints, in-memory caching, and zero configuration.</p>
-      <div class="hero-actions">
-        <a href="#playground" class="btn btn-primary">
-          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Try It Live
-        </a>
-        <a href="https://github.com/Shineii86/AniKotoAPI" target="_blank" class="btn btn-ghost">
-          <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-          Star on GitHub
-        </a>
+    <section class="hero">
+      <div>
+        <div class="hero-badge"><span class="dot"></span> Free &middot; No API key &middot; Open source</div>
+        <h1>The anime data API for your next project</h1>
+        <p class="hero-sub">Browse, search, and stream anime data from AniKoto. Real-time scraping with 33+ endpoints, in-memory caching, and zero configuration.</p>
+        <div class="hero-actions">
+          <a href="#playground" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Try It Live
+          </a>
+          <a href="https://github.com/Shineii86/AniKotoAPI" target="_blank" class="btn btn-secondary">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            Star on GitHub
+          </a>
+        </div>
       </div>
-
-      <!-- Live Console -->
-      <div class="console" id="heroConsole">
+      <div class="console-wrap">
         <div class="console-bar">
           <span class="console-dot"></span><span class="console-dot"></span><span class="console-dot"></span>
-          <span class="console-title">anikototvapi.vercel.app — API Console</span>
+          <span class="console-title">anikototvapi.vercel.app/api</span>
         </div>
         <div class="console-body">
           <textarea class="console-input" id="consoleInput" rows="6" spellcheck="false">// Fetch trending anime
@@ -349,7 +293,7 @@ fetch("https://anikototvapi.vercel.app/api")
   .then(data => {
     console.log(data.trending);
   });</textarea>
-          <div class="console-output" id="consoleOutput"><span style="color:var(--text3)">// Click "Run" to see the response</span></div>
+          <div class="console-output" id="consoleOutput"><span style="color:var(--on-dark-soft)">// Click "Run" to see the response</span></div>
         </div>
         <div class="console-actions">
           <button class="console-btn active" onclick="setEndpoint('home', event)">Home</button>
@@ -357,114 +301,88 @@ fetch("https://anikototvapi.vercel.app/api")
           <button class="console-btn" onclick="setEndpoint('stream', event)">Stream</button>
           <button class="console-btn" onclick="setEndpoint('random', event)">Random</button>
           <button class="console-btn" onclick="setEndpoint('schedule', event)">Schedule</button>
-          <button class="console-send" onclick="runConsole()">
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run
-          </button>
+          <button class="console-send" onclick="runConsole()">Run</button>
         </div>
       </div>
     </section>
 
-    <!-- Stats -->
     <section class="stats">
       <div class="container">
         <div class="stats-grid">
-          <div class="reveal"><div class="stat-value grad" data-count="30">0</div><div class="stat-label">API Endpoints</div></div>
-          <div class="reveal reveal-delay-1"><div class="stat-value grad" data-count="0">0</div><div class="stat-label">API Keys Required</div></div>
-          <div class="reveal reveal-delay-2"><div class="stat-value grad" data-count="40">0</div><div class="stat-label">Anime Genres</div></div>
-          <div class="reveal reveal-delay-3"><div class="stat-value grad">Live</div><div class="stat-label">Real-time Data</div></div>
+          <div class="reveal"><div class="stat-value" data-count="33">0</div><div class="stat-label">API Endpoints</div></div>
+          <div class="reveal reveal-delay-1"><div class="stat-value" data-count="0">0</div><div class="stat-label">API Keys Required</div></div>
+          <div class="reveal reveal-delay-2"><div class="stat-value" data-count="40">0</div><div class="stat-label">Anime Genres</div></div>
+          <div class="reveal reveal-delay-3"><div class="stat-value">Live</div><div class="stat-label">Real-time Data</div></div>
         </div>
       </div>
     </section>
 
-    <!-- Marquee -->
     <div class="marquee">
       <div class="marquee-track">
-        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 5-min cache TTL</div>
-        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Zero config</div>
-        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> No auth needed</div>
-        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg> Vercel deployed</div>
-        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Cheerio scraper</div>
-        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> REST JSON</div>
-        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg> CORS enabled</div>
-        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Open source</div>
-        <!-- duplicate for seamless loop -->
-        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 5-min cache TTL</div>
-        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Zero config</div>
-        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> No auth needed</div>
-        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg> Vercel deployed</div>
+        <div class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 5-min cache TTL</div>
+        <div class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Zero config</div>
+        <div class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> No auth needed</div>
+        <div class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg> Vercel deployed</div>
+        <div class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Cheerio scraper</div>
+        <div class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> REST JSON</div>
+        <div class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg> CORS enabled</div>
+        <div class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Open source</div>
+        <div class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 5-min cache TTL</div>
+        <div class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Zero config</div>
+        <div class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> No auth needed</div>
+        <div class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg> Vercel deployed</div>
       </div>
     </div>
 
-    <!-- Features -->
     <section class="section" id="features">
       <div class="container">
         <div class="reveal">
-          <div class="section-label">
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            Features
-          </div>
+          <div class="section-label">Features</div>
           <h2 class="section-title">Built for developers</h2>
           <p class="section-desc">Everything you need to build an anime website, mobile app, or Discord bot. No API keys, no rate limits, no hassle.</p>
         </div>
         <div class="features-grid">
           <div class="feature-card reveal">
-            <div class="feature-icon fi-purple">
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            </div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
             <div class="feature-title">Full-text Search</div>
             <div class="feature-desc">Search by keyword, genre, type, status. Get autocomplete suggestions and paginated results.</div>
           </div>
           <div class="feature-card reveal reveal-delay-1">
-            <div class="feature-icon fi-pink">
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 7h5M17 17h5"/></svg>
-            </div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 7h5M17 17h5"/></svg></div>
             <div class="feature-title">Episode Streaming</div>
             <div class="feature-desc">Retrieve streaming servers, source links, and m3u8 URLs for any episode via AJAX endpoints.</div>
           </div>
           <div class="feature-card reveal reveal-delay-2">
-            <div class="feature-icon fi-green">
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
-            </div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg></div>
             <div class="feature-title">Rich Metadata</div>
             <div class="feature-desc">Synopsis, MAL score, genres, characters, relations, recommendations, and more.</div>
           </div>
           <div class="feature-card reveal">
-            <div class="feature-icon fi-cyan">
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-            </div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
             <div class="feature-title">Schedule & Calendar</div>
             <div class="feature-desc">View what's airing today or fetch the full weekly broadcast schedule.</div>
           </div>
           <div class="feature-card reveal reveal-delay-1">
-            <div class="feature-icon fi-amber">
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-            </div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg></div>
             <div class="feature-title">Advanced Filters</div>
             <div class="feature-desc">Filter by genre, type, status, season, sort order. Multi-select support.</div>
           </div>
           <div class="feature-card reveal reveal-delay-2">
-            <div class="feature-icon fi-indigo">
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            </div>
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
             <div class="feature-title">Fast & Cached</div>
-            <div class="feature-desc">In-memory cache with 5-minute TTL for snappy responses and reduced scraping overhead.</div>
+            <div class="feature-desc">In-memory cache with configurable TTL for snappy responses and reduced scraping overhead.</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Endpoints -->
-    <section class="section" id="endpoints" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <section class="section" id="endpoints" style="background:var(--surface-soft);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)">
       <div class="container">
         <div class="reveal">
-          <div class="section-label">
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-            API Reference
-          </div>
+          <div class="section-label">API Reference</div>
           <h2 class="section-title">Endpoints</h2>
-          <p class="section-desc">All endpoints return JSON. Base URL: <code style="color:var(--pink);background:rgba(236,72,153,.1);padding:2px 8px;border-radius:4px">https://anikototvapi.vercel.app/api</code></p>
+          <p class="section-desc">All endpoints return JSON. Base URL: <code style="color:var(--primary);background:rgba(204,120,92,.1);padding:2px 8px;border-radius:4px;font-family:var(--font-code);font-size:.85rem">https://anikototvapi.vercel.app/api</code></p>
         </div>
-
         <div class="explorer reveal" id="explorer">
           <div class="explorer-nav" id="explorerNav"></div>
           <div class="explorer-panel" id="explorerPanel"></div>
@@ -472,23 +390,17 @@ fetch("https://anikototvapi.vercel.app/api")
       </div>
     </section>
 
-    <!-- Playground -->
     <section class="section" id="playground">
       <div class="container">
         <div class="reveal">
-          <div class="section-label">
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Interactive
-          </div>
+          <div class="section-label">Interactive</div>
           <h2 class="section-title">Playground</h2>
           <p class="section-desc">Test endpoints directly in your browser. No signup required.</p>
         </div>
-
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px">
-          <!-- Search -->
           <div class="playground-card reveal">
             <div class="playground-header">
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
               <h3>Search Anime</h3>
             </div>
             <div class="playground-body">
@@ -499,10 +411,9 @@ fetch("https://anikototvapi.vercel.app/api")
               <div class="playground-output" id="pgSearchOut"></div>
             </div>
           </div>
-          <!-- Stream -->
           <div class="playground-card reveal reveal-delay-1">
             <div class="playground-header">
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
               <h3>Stream Servers</h3>
             </div>
             <div class="playground-body">
@@ -513,10 +424,9 @@ fetch("https://anikototvapi.vercel.app/api")
               <div class="playground-output" id="pgStreamOut"></div>
             </div>
           </div>
-          <!-- Random -->
           <div class="playground-card reveal reveal-delay-2">
             <div class="playground-header">
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
               <h3>Random Anime</h3>
             </div>
             <div class="playground-body">
@@ -526,10 +436,9 @@ fetch("https://anikototvapi.vercel.app/api")
               <div class="playground-output" id="pgRandomOut"></div>
             </div>
           </div>
-          <!-- Schedule -->
           <div class="playground-card reveal reveal-delay-3">
             <div class="playground-header">
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
               <h3>Schedule</h3>
             </div>
             <div class="playground-body">
@@ -544,19 +453,18 @@ fetch("https://anikototvapi.vercel.app/api")
       </div>
     </section>
 
-    <!-- CTA -->
     <section class="cta">
       <div class="container">
         <div class="cta-box reveal">
           <h2 class="cta-title">Start building with AniKotoAPI</h2>
           <p class="cta-desc">Free, open source, no API key required. Deploy your own instance or use ours.</p>
           <div class="cta-actions">
-            <a href="https://anikototvapi.vercel.app/api" target="_blank" class="btn btn-primary">
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            <a href="https://anikototvapi.vercel.app/api" target="_blank" class="btn btn-on-coral">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
               View API
             </a>
-            <a href="https://github.com/Shineii86/AniKotoAPI" target="_blank" class="btn btn-ghost">
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            <a href="https://github.com/Shineii86/AniKotoAPI" target="_blank" class="btn btn-on-coral">
+              <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
               Source Code
             </a>
           </div>
@@ -564,14 +472,12 @@ fetch("https://anikototvapi.vercel.app/api")
       </div>
     </section>
 
-    <!-- Footer -->
     <footer>
       <div class="container">
         <div class="footer-grid">
           <div class="footer-brand">
             <a href="/" class="logo">
-              <svg aria-hidden="true" viewBox="0 0 32 32" fill="none" width="24" height="24"><circle cx="16" cy="16" r="14" stroke="url(#g2)" stroke-width="2"/><path d="M10 20c0-4 3-7 6-7s6 3 6 7" stroke="url(#g2)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="2" fill="var(--purple)"/><circle cx="20" cy="12" r="2" fill="var(--pink)"/><defs><linearGradient id="g2" x1="0" y1="0" x2="32" y2="32"><stop stop-color="var(--purple)"/><stop offset="1" stop-color="var(--pink)"/></linearGradient></defs></svg>
-              <span class="logo-text"><span>AniKoto</span>API</span>
+              <span class="logo-mark"><span>*</span> AniKotoAPI</span>
             </a>
             <p>Free REST API for anime data. Browse, search, and stream from AniKoto. Built with Node.js and deployed on Vercel.</p>
           </div>
@@ -600,7 +506,7 @@ fetch("https://anikototvapi.vercel.app/api")
           <span>&copy; 2026 AniKotoAPI. Educational use only.</span>
           <div class="footer-social">
             <a href="https://github.com/Shineii86/AniKotoAPI" target="_blank" aria-label="GitHub">
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
             </a>
           </div>
         </div>
@@ -609,57 +515,57 @@ fetch("https://anikototvapi.vercel.app/api")
   </div>
 
   <script>
-    /* ── Particles ── */
-    const canvas = document.getElementById('particles');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-    class Particle {
-      constructor() { this.reset(); }
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 1.5 + .5;
-        this.speedX = (Math.random() - .5) * .3;
-        this.speedY = (Math.random() - .5) * .3;
-        this.opacity = Math.random() * .3 + .1;
-      }
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
-      }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(168,85,247,${this.opacity})`;
-        ctx.fill();
-      }
-    }
-    for (let i = 0; i < 60; i++) particles.push(new Particle());
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => { p.update(); p.draw(); });
-      requestAnimationFrame(animateParticles);
-    }
-    animateParticles();
+    const BASE = 'https://anikototvapi.vercel.app/api';
+    const endpoints = {
+      home: { url: '/', label: 'Home' },
+      search: { url: '/search?keyword=naruto', label: 'Search' },
+      stream: { url: '/stream?id=naruto-ep-1', label: 'Stream' },
+      random: { url: '/random', label: 'Random' },
+      schedule: { url: '/schedule', label: 'Schedule' }
+    };
 
-    /* ── Header Scroll ── */
+    function setEndpoint(key, event) {
+      const ep = endpoints[key];
+      document.getElementById('consoleInput').value = `// ${ep.label}\nfetch("${BASE}${ep.url}")\n  .then(r => r.json())\n  .then(data => console.log(data));`;
+      document.querySelectorAll('.console-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    async function runConsole() {
+      const out = document.getElementById('consoleOutput');
+      out.innerHTML = '<span style="color:var(--accent-amber)">Loading...</span>';
+      const input = document.getElementById('consoleInput').value;
+      const urlMatch = input.match(/fetch\("([^"]+)"\)/);
+      if (!urlMatch) { out.innerHTML = '<span style="color:var(--error)">No fetch URL found</span>'; return; }
+      try {
+        const res = await fetch(urlMatch[1]);
+        const data = await res.json();
+        out.innerHTML = syntaxHighlight(JSON.stringify(data, null, 2));
+        out.scrollTop = out.scrollHeight;
+      } catch (e) {
+        out.innerHTML = `<span style="color:var(--error)">Error: ${e.message}</span>`;
+      }
+    }
+
+    function syntaxHighlight(json) {
+      return json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"([^"]+)"(?=\s*:)/g, '<span style="color:var(--accent-amber)">"$1"</span>')
+        .replace(/: "([^"]*)"/g, ': <span style="color:var(--accent-teal)">"$1"</span>')
+        .replace(/: (\d+)/g, ': <span style="color:var(--primary)">$1</span>')
+        .replace(/: (true|false|null)/g, ': <span style="color:var(--on-dark-soft)">$1</span>');
+    }
+
     const header = document.getElementById('header');
     window.addEventListener('scroll', () => {
       header.classList.toggle('scrolled', window.scrollY > 20);
     });
 
-    /* ── Scroll Reveal ── */
     const reveals = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
     }, { threshold: .1, rootMargin: '0px 0px -40px 0px' });
     reveals.forEach(el => revealObserver.observe(el));
 
-    /* ── Animated Counters ── */
     document.querySelectorAll('[data-count]').forEach(el => {
       const target = parseInt(el.dataset.count);
       const obs = new IntersectionObserver(([e]) => {
@@ -677,62 +583,19 @@ fetch("https://anikototvapi.vercel.app/api")
       obs.observe(el);
     });
 
-    /* ── Console ── */
-    const BASE = 'https://anikototvapi.vercel.app/api';
-    const endpoints = {
-      home: { url: '/', label: 'Home' },
-      search: { url: '/search?keyword=naruto', label: 'Search' },
-      stream: { url: '/stream?id=naruto-ep-1', label: 'Stream' },
-      random: { url: '/random', label: 'Random' },
-      schedule: { url: '/schedule', label: 'Schedule' }
-    };
-    function setEndpoint(key, event) {
-      const ep = endpoints[key];
-      document.getElementById('consoleInput').value = `// ${ep.label}\nfetch("${BASE}${ep.url}")\n  .then(r => r.json())\n  .then(data => console.log(data));`;
-      document.querySelectorAll('.console-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
-    }
-    async function runConsole() {
-      const out = document.getElementById('consoleOutput');
-      out.innerHTML = '<span style="color:var(--amber)">Loading...</span>';
-      const input = document.getElementById('consoleInput').value;
-      const urlMatch = input.match(/fetch\("([^"]+)"\)/);
-      if (!urlMatch) { out.innerHTML = '<span style="color:var(--red)">No fetch URL found</span>'; return; }
-      try {
-        const res = await fetch(urlMatch[1]);
-        const data = await res.json();
-        out.innerHTML = syntaxHighlight(JSON.stringify(data, null, 2));
-        out.scrollTop = out.scrollHeight;
-        function escapeHtml(s) { return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-      } catch (e) {
-        out.innerHTML = `<span style="color:var(--red)">Error: ${e.message}</span>`;
-      }
-    }
-    function syntaxHighlight(json) {
-      return json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-        .replace(/"([^"]+)"(?=\s*:)/g, '<span style="color:var(--pink)">"$1"</span>')
-        .replace(/: "([^"]*)"/g, ': <span style="color:var(--green)">"$1"</span>')
-        .replace(/: (\d+)/g, ': <span style="color:var(--amber)">$1</span>')
-        .replace(/: (true|false|null)/g, ': <span style="color:var(--cyan)">$1</span>');
-    }
-
-    /* ── Explorer ── */
     const explorerData = [
       { id: 'home', title: 'Home Info', desc: 'Spotlight, trending, popular, top-airing, genres, and more.', path: '/', params: [], code: { curl: 'curl https://anikototvapi.vercel.app/api', js: 'const res = await fetch("https://anikototvapi.vercel.app/api");\nconst data = await res.json();\nconsole.log(data.trending);', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api")\nprint(r.json()["trending"])' } },
       { id: 'search', title: 'Search', desc: 'Search anime by keyword with pagination.', path: '/search?keyword={q}&page={n}', params: [{ name: 'keyword', type: 'string', desc: 'Search query' }, { name: 'page', type: 'number', desc: 'Page (default 1)' }], code: { curl: 'curl "https://anikototvapi.vercel.app/api/search?keyword=naruto"', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/search?keyword=naruto");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/search", params={"keyword": "naruto"})\nprint(r.json())' } },
-      { id: 'suggest', title: 'Search Suggest', desc: 'Autocomplete suggestions for search.', path: '/search/suggest?keyword={q}', params: [{ name: 'keyword', type: 'string', desc: 'Partial query' }], code: { curl: 'curl "https://anikototvapi.vercel.app/api/search/suggest?keyword=dea"', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/search/suggest?keyword=dea");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/search/suggest", params={"keyword": "dea"})\nprint(r.json())' } },
       { id: 'info', title: 'Anime Info', desc: 'Detailed info: synopsis, genres, relations, recommendations.', path: '/info?id={slug}', params: [{ name: 'id', type: 'string', desc: 'Anime slug' }], code: { curl: 'curl "https://anikototvapi.vercel.app/api/info?id=naruto"', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/info?id=naruto");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/info", params={"id": "naruto"})\nprint(r.json())' } },
-      { id: 'episodes', title: 'Episodes', desc: 'Episode list loaded via AJAX.', path: '/episodes/{slug}', params: [{ name: 'slug', type: 'string', desc: 'Anime slug' }], code: { curl: 'curl "https://anikototvapi.vercel.app/api/episodes/naruto"', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/episodes/naruto");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/episodes/naruto")\nprint(r.json())' } },
-      { id: 'stream', title: 'Stream Servers', desc: 'Streaming servers for an episode.', path: '/stream?id={episodeId}', params: [{ name: 'id', type: 'string', desc: 'Episode ID' }], code: { curl: 'curl "https://anikototvapi.vercel.app/api/stream?id=naruto-ep-1"', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/stream?id=naruto-ep-1");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/stream", params={"id": "naruto-ep-1"})\nprint(r.json())' } },
-      { id: 'servers', title: 'Servers', desc: 'Resolve streaming server links.', path: '/servers?ids={ids}', params: [{ name: 'ids', type: 'string', desc: 'Comma-separated link IDs' }], code: { curl: 'curl "https://anikototvapi.vercel.app/api/servers?ids=123,456"', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/servers?ids=123,456");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/servers", params={"ids": "123,456"})\nprint(r.json())' } },
+      { id: 'episodes', title: 'Episodes', desc: 'Episode list loaded via AJAX.', path: '/episodes/{animeId}', params: [{ name: 'animeId', type: 'number', desc: 'Anime ID' }], code: { curl: 'curl "https://anikototvapi.vercel.app/api/episodes/958"', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/episodes/958");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/episodes/958")\nprint(r.json())' } },
+      { id: 'stream', title: 'Stream Servers', desc: 'Streaming servers for an episode.', path: '/stream?id={linkId}', params: [{ name: 'id', type: 'string', desc: 'Link ID from servers' }], code: { curl: 'curl "https://anikototvapi.vercel.app/api/stream?id=MTF1d..."', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/stream?id=MTF1d...");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/stream", params={"id": "MTF1d..."})\nprint(r.json())' } },
+      { id: 'servers', title: 'Servers', desc: 'Resolve streaming server links.', path: '/servers?ids={serverIds}', params: [{ name: 'ids', type: 'string', desc: 'Server IDs from episodes' }], code: { curl: 'curl "https://anikototvapi.vercel.app/api/servers?ids=SlNVT..."', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/servers?ids=SlNVT...");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/servers", params={"ids": "SlNVT..."})\nprint(r.json())' } },
       { id: 'schedule', title: 'Schedule', desc: 'Anime schedule for a specific date.', path: '/schedule?date={YYYY-MM-DD}', params: [{ name: 'date', type: 'string', desc: 'Date (default today)' }], code: { curl: 'curl "https://anikototvapi.vercel.app/api/schedule"', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/schedule");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/schedule")\nprint(r.json())' } },
       { id: 'topten', title: 'Top 10', desc: 'Top 10 anime (today, week, month).', path: '/top-ten', params: [], code: { curl: 'curl "https://anikototvapi.vercel.app/api/top-ten"', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/top-ten");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/top-ten")\nprint(r.json())' } },
       { id: 'random', title: 'Random', desc: 'Random anime info.', path: '/random', params: [], code: { curl: 'curl "https://anikototvapi.vercel.app/api/random"', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/random");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/random")\nprint(r.json())' } },
       { id: 'filter', title: 'Filter', desc: 'Filter by genre, type, status, season.', path: '/filter?keyword={q}&genre[]={g}', params: [{ name: 'keyword', type: 'string', desc: 'Search keyword (required)' }, { name: 'genre[]', type: 'number', desc: 'Genre IDs' }, { name: 'type[]', type: 'number', desc: 'Type IDs' }], code: { curl: 'curl "https://anikototvapi.vercel.app/api/filter?keyword=&genre[]=1&genre[]=4"', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/filter?keyword=&genre[]=1");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/filter", params={"keyword": "", "genre[]": 1})\nprint(r.json())' } },
       { id: 'popular', title: 'Most Popular', desc: 'Most popular anime list.', path: '/most-popular?page={n}', params: [{ name: 'page', type: 'number', desc: 'Page (default 1)' }], code: { curl: 'curl "https://anikototvapi.vercel.app/api/most-popular"', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/most-popular");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/most-popular")\nprint(r.json())' } },
       { id: 'genre', title: 'Genre', desc: 'Anime by genre.', path: '/genre/{name}', params: [{ name: 'name', type: 'string', desc: 'Genre slug (action, comedy, etc.)' }], code: { curl: 'curl "https://anikototvapi.vercel.app/api/genre/action"', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/genre/action");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/genre/action")\nprint(r.json())' } },
-      { id: 'type', title: 'Type', desc: 'Anime by type.', path: '/type/{name}', params: [{ name: 'name', type: 'string', desc: 'Type (tv, movie, ova, etc.)' }], code: { curl: 'curl "https://anikototvapi.vercel.app/api/type/tv"', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/type/tv");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/type/tv")\nprint(r.json())' } },
-      { id: 'status', title: 'Status', desc: 'Anime by status.', path: '/status/{name}', params: [{ name: 'name', type: 'string', desc: 'Status (currently-airing, finished-airing)' }], code: { curl: 'curl "https://anikototvapi.vercel.app/api/status/currently-airing"', js: 'const res = await fetch("https://anikototvapi.vercel.app/api/status/currently-airing");\nconst data = await res.json();', python: 'import requests\nr = requests.get("https://anikototvapi.vercel.app/api/status/currently-airing")\nprint(r.json())' } },
     ];
     const navEl = document.getElementById('explorerNav');
     const panelEl = document.getElementById('explorerPanel');
@@ -753,6 +616,7 @@ fetch("https://anikototvapi.vercel.app/api")
         </div>
         <div class="explorer-code" id="explorerCode">${ep.code[activeLang]}</div>`;
     }
+
     function switchLang(lang, btn) {
       activeLang = lang;
       document.querySelectorAll('.code-tab').forEach(b => b.classList.remove('active'));
@@ -760,11 +624,12 @@ fetch("https://anikototvapi.vercel.app/api")
       const activeEp = explorerData.find(e => e.id === navEl.querySelector('.active')?.dataset.id) || explorerData[0];
       document.getElementById('explorerCode').textContent = activeEp.code[lang];
     }
+
     explorerData.forEach((ep, i) => {
       const btn = document.createElement('button');
       btn.className = `explorer-nav-btn ${i===0?'active':''}`;
       btn.dataset.id = ep.id;
-      btn.innerHTML = `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>${ep.title}`;
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>${ep.title}`;
       btn.onclick = () => {
         navEl.querySelectorAll('.explorer-nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -774,7 +639,6 @@ fetch("https://anikototvapi.vercel.app/api")
     });
     renderExplorer(explorerData[0]);
 
-    /* ── Playground ── */
     async function pgRun(type) {
       let url, outEl;
       if (type === 'search') {
@@ -796,15 +660,16 @@ fetch("https://anikototvapi.vercel.app/api")
         outEl = document.getElementById('pgScheduleOut');
       }
       outEl.classList.add('visible');
-      outEl.innerHTML = '<span style="color:var(--amber)">Loading...</span>';
+      outEl.innerHTML = '<span style="color:var(--accent-amber)">Loading...</span>';
       try {
         const res = await fetch(url);
         const data = await res.json();
         outEl.innerHTML = syntaxHighlight(JSON.stringify(data, null, 2));
       } catch (e) {
-        outEl.innerHTML = `<span style="color:var(--red)">Error: ${e.message}</span>`;
+        outEl.innerHTML = `<span style="color:var(--error)">Error: ${e.message}</span>`;
       }
     }
+
     document.getElementById('pgSearch')?.addEventListener('keydown', e => { if (e.key === 'Enter') pgRun('search'); });
     document.getElementById('pgStream')?.addEventListener('keydown', e => { if (e.key === 'Enter') pgRun('stream'); });
   </script>
