@@ -909,7 +909,7 @@ console.log(resp.data);
 
 | Parameter | Type | Mandatory | Default | Description |
 | :-------: | :--: | :-------: | :-----: | :---------: |
-| `ids` | `string` | Yes ✔️ | — | Episode IDs |
+| `ids` | `string` | Yes ✔️ | — | `server_ids` from `/episodes` response (base64-encoded) |
 
 #### Example of request
 
@@ -930,15 +930,24 @@ console.log(resp.data);
 ```json
 {
   "success": true,
-  "results": {
-    "sub": [
-      { "server_id": 1, "server_name": "Vidstreaming", "type": "sub" },
-      { "server_id": 2, "server_name": "Gogocdn", "type": "sub" }
-    ],
-    "dub": [
-      { "server_id": 3, "server_name": "Vidstreaming", "type": "dub" }
-    ]
-  }
+  "results": [
+    {
+      "type": "sub",
+      "ep_id": "16638",
+      "link_id": "MTF1dkFtaW9BRTZPbzJJRElFZUZr...",
+      "cmid": "animixplay-fqs",
+      "sv_id": "8e4",
+      "name": "VidPlay-1"
+    },
+    {
+      "type": "sub",
+      "ep_id": "16638",
+      "link_id": "MTF1dkFtaW9BRTZPbzJJRElFZUZr...",
+      "cmid": "animixplay-fqs",
+      "sv_id": "323",
+      "name": "HD-1"
+    }
+  ]
 }
 ```
 
@@ -1004,7 +1013,7 @@ Server list for an episode — returns available streaming servers with their na
 
 | Param | Type | Default | Description |
 |:---|:---|:---|:---|
-| `ids` | `string` | **required** | Episode IDs |
+| `ids` | `string` | **required** | `server_ids` from `/episodes` response (base64-encoded) |
 
 ```bash
 curl "https://anikototvapi.vercel.app/api/servers?ids={episodeIds}"
@@ -1024,15 +1033,24 @@ console.log(resp.data);
 ```json
 {
   "success": true,
-  "results": {
-    "sub": [
-      { "server_id": 1, "server_name": "Vidstreaming", "type": "sub" },
-      { "server_id": 2, "server_name": "Gogocdn", "type": "sub" }
-    ],
-    "dub": [
-      { "server_id": 3, "server_name": "Vidstreaming", "type": "dub" }
-    ]
-  }
+  "results": [
+    {
+      "type": "sub",
+      "ep_id": "16638",
+      "link_id": "MTF1dkFtaW9BRTZPbzJJRElFZUZr...",
+      "cmid": "animixplay-fqs",
+      "sv_id": "8e4",
+      "name": "VidPlay-1"
+    },
+    {
+      "type": "sub",
+      "ep_id": "16638",
+      "link_id": "MTF1dkFtaW9BRTZPbzJJRElFZUZr...",
+      "cmid": "animixplay-fqs",
+      "sv_id": "323",
+      "name": "HD-1"
+    }
+  ]
 }
 ```
 </details>
@@ -1081,6 +1099,46 @@ console.log(resp.data);
       "download": "https://gogodl.net/download?id=..."
     }
   ]
+}
+```
+</details>
+
+---
+
+### `GET /api/stream`
+
+Get streaming URL for a server. Pass the `link_id` from `/api/servers` response.
+
+| Param | Type | Default | Description |
+|:---|:---|:---|:---|
+| `id` | `string` | **required** | `link_id` from `/servers` response (lowercase `id` required) |
+
+```bash
+curl "https://anikototvapi.vercel.app/api/stream?id=MTF1dkFtaW9BRTZPbzJJRElFZUZr..."
+```
+
+```javascript
+import axios from "axios";
+const resp = await axios.get("https://anikototvapi.vercel.app/api/stream", {
+  params: { id: "yourLinkId" }
+});
+console.log(resp.data);
+```
+
+<details>
+<summary>📄 Example Response</summary>
+
+```json
+{
+  "success": true,
+  "results": {
+    "linkId": "MTF1dkFtaW9BRTZPbzJJRElFZUZr...",
+    "url": "https://vidtube.site/stream/aVlsNDR3MnRLbWRvQUFBbWJUNERLQT09/sub",
+    "skipData": {
+      "intro": [0, 0],
+      "outro": [0, 0]
+    }
+  }
 }
 ```
 </details>

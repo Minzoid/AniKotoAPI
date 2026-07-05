@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-07-05
+
+### Fixed
+- **Documentation**: Fixed `/api/servers` parameter description — now correctly states `server_ids` from `/episodes` response (base64-encoded) instead of generic "Episode IDs"
+- **Documentation**: Fixed `/api/servers` sample response to match actual API output (flat array with `type`, `ep_id`, `link_id`, `cmid`, `sv_id`, `name`)
+- **Documentation**: Added `/api/stream` quick reference section with parameter docs and example response
+- **Documentation**: Added note that `/api/stream` requires lowercase `id` parameter (case-sensitive)
+
 ## [2.0.0] - 2026-07-04
 
 ### Added
