@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-07-05
+
+### Changed
+- **UI**: Complete redesign of all HTML pages with Claude/Anthropic design system
+- **UI**: Warm cream canvas (#faf9f5) replacing dark purple theme
+- **UI**: Coral accent (#cc785c) replacing gradient purple/pink
+- **UI**: Slab-serif headlines (Cormorant Garamond) with negative letter-spacing
+- **UI**: Dark navy product surfaces (#181715) for code blocks and footer
+- **UI**: Light cream feature cards (#efe9de)
+- **UI**: Removed ambient orbs, particles, glitch effects, scanlines
+- **UI**: Minimal shadows with color-block depth philosophy
+- **Version**: Bumped to 2.1.0
+
 ## [2.0.2] - 2026-07-05
 
 ### Fixed
