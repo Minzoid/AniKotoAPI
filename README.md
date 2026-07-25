@@ -1,6 +1,9 @@
+> [!NOTE]
+> **API MAYBE Temporarily Paused** due to suspiciously too many requests. My hosted version of this API is only for testing purposes. You MUST host your own instance to use the API.
+
 <div align="center">
   
-  <img src="https://capsule-render.vercel.app/api?type=waving&height=300&color=gradient&text=AniKotoAPI&fontAlignY=30&fontSize=90&desc=Real-Time%20Anime%20Streaming%20Data%20API&descSize=30" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&height=300&color=gradient&text=𝘼𝙣𝙞𝙆𝙤𝙩𝙤𝘼𝙋𝙄&fontAlignY=30&fontSize=100&desc=𝖱𝖾𝖺𝗅-𝖳𝗂𝗆𝖾%20𝖠𝗇𝗂𝗆𝖾%20𝖲𝗍𝗋𝖾𝖺𝗆𝗂𝗇𝗀%20𝖣𝖺𝗍𝖺%20𝖠𝖯𝖨&descSize=30" />
 
 </div>
 
@@ -2430,5 +2433,5 @@ Free to use, modify, and distribute — see the [LICENSE](LICENSE) file for deta
 <p align="center">
   <b>Made With ❤️ For The Anime Community</b>
   <br/><br/>
-  <sub>© 2026 Shineii86. All Rights Reserved.</sub>
+  <sub>© Shinei Nouzen. All Rights Reserved.</sub>
 </p>
