@@ -16,9 +16,8 @@
  */
 
 import * as cheerio from "cheerio";
-import axios from "axios";
-import { headers } from "../configs/header.config.js";
 import { URLS } from "../configs/dataUrl.js";
+import { fetchWithMirror } from "../helper/mirror.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // SPOTLIGHT EXTRACTION
@@ -48,13 +47,11 @@ import { URLS } from "../configs/dataUrl.js";
  */
 const extractSpotlight = async () => {
   try {
-    // NOTE: The homepage contains the spotlight carousel in #hotest section
-    const { data } = await axios.get(URLS.home, { headers });
+    const { data } = await fetchWithMirror("/home");
     const $ = cheerio.load(data);
 
     const spotlights = [];
 
-    // NOTE: Each slide in the swiper carousel represents a featured anime
     $("#hotest .swiper-slide.item").each((i, el) => {
       const slug = $(el).find("a.play").attr("href")?.split("/watch/").pop() || "";
       const poster = $(el).find(".image div").attr("style")?.match(/url\(['"]?(.+?)['"]?\)/)?.[1] || "";
@@ -67,7 +64,6 @@ const extractSpotlight = async () => {
       const dub = parseInt($(el).find("i.dub").text().trim()) || 0;
       const date = $(el).find("i.date").text().trim() || "";
 
-      // NOTE: Only include items with valid slugs
       if (slug) {
         spotlights.push({
           slug,

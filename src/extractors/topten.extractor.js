@@ -16,9 +16,8 @@
  */
 
 import * as cheerio from "cheerio";
-import axios from "axios";
-import { headers } from "../configs/header.config.js";
 import { URLS } from "../configs/dataUrl.js";
+import { fetchWithMirror } from "../helper/mirror.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // TOP TEN EXTRACTION
@@ -47,15 +46,13 @@ import { URLS } from "../configs/dataUrl.js";
  */
 const extractTopTen = async () => {
   try {
-    // NOTE: The top 10 section uses tabbed content with data-name attributes
-    const { data } = await axios.get(URLS.home, { headers });
+    const { data } = await fetchWithMirror("/home");
     const $ = cheerio.load(data);
 
     const today = [];
     const week = [];
     const month = [];
 
-    // NOTE: Each tab contains a list of anime items with ranking data
     $("#top-anime .tab-content[data-name='day'] a.item").each((i, el) => {
       const slug = $(el).attr("href")?.split("/watch/").pop() || "";
       const poster = $(el).find(".poster img").attr("src") || "";
@@ -65,13 +62,11 @@ const extractTopTen = async () => {
       const type = $(el).find(".type").text().trim() || "";
       const rank = i + 1;
 
-      // NOTE: Only include items with valid slugs
       if (slug) {
         today.push({ slug, rank, name, poster, sub, dub, type });
       }
     });
 
-    // NOTE: Weekly rankings follow the same structure as daily
     $("#top-anime .tab-content[data-name='week'] a.item").each((i, el) => {
       const slug = $(el).attr("href")?.split("/watch/").pop() || "";
       const poster = $(el).find(".poster img").attr("src") || "";
@@ -86,7 +81,6 @@ const extractTopTen = async () => {
       }
     });
 
-    // NOTE: Monthly rankings follow the same structure
     $("#top-anime .tab-content[data-name='month'] a.item").each((i, el) => {
       const slug = $(el).attr("href")?.split("/watch/").pop() || "";
       const poster = $(el).find(".poster img").attr("src") || "";

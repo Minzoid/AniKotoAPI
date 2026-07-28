@@ -16,9 +16,8 @@
  */
 
 import * as cheerio from "cheerio";
-import axios from "axios";
-import { headers } from "../configs/header.config.js";
 import { URLS } from "../configs/dataUrl.js";
+import { fetchWithMirror } from "../helper/mirror.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // TRENDING EXTRACTION
@@ -45,13 +44,11 @@ import { URLS } from "../configs/dataUrl.js";
  */
 const extractTrending = async () => {
   try {
-    // NOTE: Trending data is split across multiple sections on the homepage
-    const { data } = await axios.get(URLS.home, { headers });
+    const { data } = await fetchWithMirror("/home");
     const $ = cheerio.load(data);
 
     const trending = [];
 
-    // NOTE: This selector targets both the updated section and recent updates
     $(".section-updated .item, #recent-update .item").each((i, el) => {
       const slug = $(el).find("a.name.d-title").attr("href")?.split("/watch/").pop() || "";
       const poster = $(el).find(".poster img").attr("src") || "";
@@ -62,7 +59,6 @@ const extractTrending = async () => {
       const total = parseInt($(el).find(".ep-status.total span").text().trim()) || 0;
       const type = $(el).find(".meta .inner .right").text().trim() || "";
 
-      // NOTE: Only include items with valid slugs
       if (slug) {
         trending.push({
           slug,

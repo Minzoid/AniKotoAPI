@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-07-28
+
+### Added
+- **Shared Helper**: New `parseListItem.helper.js` for unified anime list item parsing across all extractors
+- **Graceful Shutdown**: Server now handles SIGTERM/SIGINT signals for clean shutdown
+- **Request ID Tracking**: Every request gets a unique `X-Request-Id` header for debugging
+- **CSP Headers**: Added `Content-Security-Policy` header for XSS protection
+- **HSTS Headers**: Added `Strict-Transport-Security` header for HTTPS enforcement
+- **Body Size Limits**: Added `express.json({ limit: '10kb' })` to prevent large payload attacks
+- **Rate Limiter Cleanup**: Automatic cleanup of stale IP entries every 5 minutes
+- **Uncaught Exception Handler**: Added handler for uncaught exceptions with graceful shutdown
+
+### Changed
+- **Mirror Fallback**: All 22 extractors now use `fetchWithMirror()` for consistent mirror fallback
+- **Code Deduplication**: Extracted shared list item parsing logic into `parseListItem.helper.js`, eliminating ~200 lines of duplicated code across 8+ extractors
+- **Documentation**: All files follow strict documentation style — box-style headers, section separators, feature markers, JSDoc params/returns, inline notes, and module footers
+- **Version**: Bumped to 2.2.0
+- **Package**: Removed unused `cors` dependency (custom CORS middleware used instead)
+
+### Fixed
+- **Middleware Order**: Moved request timeout middleware before routes to properly catch timeouts
+- **CORS POST**: Fixed CORS to allow POST method for `/api/mirrors/reset` endpoint
+- **HomeInfo Cache**: Removed redundant cache check in `homeInfo.extractor.js` (controller already handles caching)
+- **Error Handler**: Added `res.headersSent` check to prevent double response on timeout
+- **Unused Imports**: Removed unused `cheerio`, `axios`, `headers` imports from extractors that now use `fetchWithMirror`
+
+### Removed
+- **Unused Dependency**: Removed `cors` package from dependencies (custom middleware handles CORS)
+- **Dead Code**: Removed redundant cache check in `homeInfo.extractor.js`
+
 ## [2.1.0] - 2026-07-05
 
 ### Changed

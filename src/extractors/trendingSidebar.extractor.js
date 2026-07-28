@@ -16,9 +16,8 @@
  */
 
 import * as cheerio from "cheerio";
-import axios from "axios";
-import { headers } from "../configs/header.config.js";
 import { URLS } from "../configs/dataUrl.js";
+import { fetchWithMirror } from "../helper/mirror.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // TRENDING SIDEBAR EXTRACTION
@@ -49,15 +48,13 @@ import { URLS } from "../configs/dataUrl.js";
  */
 const extractTrendingSidebar = async () => {
   try {
-    // NOTE: The sidebar content is embedded in the homepage HTML
-    const { data } = await axios.get(URLS.home, { headers });
+    const { data } = await fetchWithMirror("/home");
     const $ = cheerio.load(data);
 
     const day = [];
     const week = [];
     const month = [];
 
-    // NOTE: Daily rankings use the 'day' tab content
     $("#top-anime .tab-content[data-name='day'] a.item").each((i, el) => {
       const slug = $(el).attr("href")?.split("/watch/").pop() || "";
       const poster = $(el).find(".poster img").attr("src") || "";
@@ -67,13 +64,11 @@ const extractTrendingSidebar = async () => {
       const type = $(el).find(".type").text().trim() || "";
       const rank = i + 1;
 
-      // NOTE: Only include items with valid slugs
       if (slug) {
         day.push({ slug, rank, name, poster, sub, dub, type });
       }
     });
 
-    // NOTE: Weekly rankings use the 'week' tab content
     $("#top-anime .tab-content[data-name='week'] a.item").each((i, el) => {
       const slug = $(el).attr("href")?.split("/watch/").pop() || "";
       const poster = $(el).find(".poster img").attr("src") || "";
@@ -88,7 +83,6 @@ const extractTrendingSidebar = async () => {
       }
     });
 
-    // NOTE: Monthly rankings use the 'month' tab content
     $("#top-anime .tab-content[data-name='month'] a.item").each((i, el) => {
       const slug = $(el).attr("href")?.split("/watch/").pop() || "";
       const poster = $(el).find(".poster img").attr("src") || "";
@@ -103,7 +97,6 @@ const extractTrendingSidebar = async () => {
       }
     });
 
-    // NOTE: Latest episodes section provides recently updated content
     const latestEpisodes = [];
     $("#recent-update .item, .section-updated .item").each((i, el) => {
       const slug = $(el).find("a.name.d-title").attr("href")?.split("/watch/").pop() || "";

@@ -16,9 +16,8 @@
  */
 
 import * as cheerio from "cheerio";
-import axios from "axios";
-import { headers } from "../configs/header.config.js";
 import { URLS } from "../configs/dataUrl.js";
+import { fetchWithMirror } from "../helper/mirror.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // SUGGESTION EXTRACTION
@@ -46,14 +45,12 @@ import { URLS } from "../configs/dataUrl.js";
  */
 const extractSuggestions = async (keyword) => {
   try {
-    // NOTE: The search endpoint requires the 'keyword' parameter
-    const url = `${URLS.search}?keyword=${encodeURIComponent(keyword)}`;
-    const { data } = await axios.get(url, { headers });
+    const path = `/search?keyword=${encodeURIComponent(keyword)}`;
+    const { data } = await fetchWithMirror(path);
     const $ = cheerio.load(data);
 
     const suggestions = [];
 
-    // NOTE: Search results use the same list structure as other pages
     $("#list-items > .item").each((i, el) => {
       const slug = $(el).find("a").attr("href")?.split("/watch/").pop() || "";
       const poster = $(el).find(".ani.poster.tip > a > img").attr("src") || "";
@@ -63,13 +60,11 @@ const extractSuggestions = async (keyword) => {
       const sub = parseInt($(el).find(".ep-status.sub span").text().trim()) || 0;
       const dub = parseInt($(el).find(".ep-status.dub span").text().trim()) || 0;
 
-      // NOTE: Only include items with valid slugs
       if (slug) {
         suggestions.push({ slug, poster, title, japaneseTitle, type, sub, dub });
       }
     });
 
-    // NOTE: Limit to 10 suggestions for autocomplete-style responses
     return suggestions.slice(0, 10);
   } catch (error) {
     throw error;

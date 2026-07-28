@@ -16,10 +16,6 @@
  */
 
 import * as cheerio from "cheerio";
-import axios from "axios";
-import { headers } from "../configs/header.config.js";
-import { URLS } from "../configs/dataUrl.js";
-import { getCache, setCache } from "../helper/cache.helper.js";
 import { fetchWithMirror } from "../helper/mirror.helper.js";
 
 // ══════════════════════════════════════════════════════════════
@@ -38,27 +34,19 @@ import { fetchWithMirror } from "../helper/mirror.helper.js";
  *   console.log(home.spotlights.length); // number of spotlight items
  */
 const extractHomeInfo = async () => {
-  const cached = getCache("home");
-  if (cached) return cached;
   try {
     const { data } = await fetchWithMirror("/home");
     const $ = cheerio.load(data);
 
-    // ---- FEATURE: Extract spotlight carousel items from #hotest section ----
-    // NOTE: Swiper slides contain the hero carousel on the homepage
     const spotlights = [];
     $("#hotest .swiper-slide.item").each((i, el) => {
-      // NOTE: The play button's href contains the /watch/{slug} path
       const slug = $(el).find("a.play").attr("href")?.split("/watch/").pop() || "";
-      // NOTE: Poster is set as inline CSS background-image on a div inside .image
       const poster = $(el).find(".image div").attr("style")?.match(/url\(['"]?(.+?)['"]?\)/)?.[1] || "";
       const title = $(el).find("h2.title.d-title").text().trim() || "";
-      // NOTE: data-jp attribute holds the Japanese/romaji title variant
       const japaneseTitle = $(el).find("h2.title.d-title").attr("data-jp") || "";
       const description = $(el).find(".desc").text().trim() || "";
       const rating = $(el).find("i.rating").text().trim() || "";
       const quality = $(el).find("i.quality").text().trim() || "";
-      // NOTE: sub/dub counts are extracted as integers, defaulting to 0
       const sub = parseInt($(el).find("i.sub").text().trim()) || 0;
       const dub = parseInt($(el).find("i.dub").text().trim()) || 0;
       const date = $(el).find("i.date").text().trim() || "";
@@ -79,15 +67,12 @@ const extractHomeInfo = async () => {
       }
     });
 
-    // ---- FEATURE: Extract trending/recently-updated anime list ----
-    // NOTE: Combines both .section-updated and #recent-update containers for coverage
     const trending = [];
     $(".section-updated .item, #recent-update .item").each((i, el) => {
       const slug = $(el).find("a.name.d-title").attr("href")?.split("/watch/").pop() || "";
       const poster = $(el).find(".poster img").attr("src") || "";
       const title = $(el).find("a.name.d-title").text().trim() || "";
       const japaneseTitle = $(el).find("a.name.d-title").attr("data-jp") || "";
-      // NOTE: Episode counts are in .ep-status spans — sub, dub, and total
       const sub = parseInt($(el).find(".ep-status.sub span").text().trim()) || 0;
       const dub = parseInt($(el).find(".ep-status.dub span").text().trim()) || 0;
       const total = parseInt($(el).find(".ep-status.total span").text().trim()) || 0;
@@ -107,8 +92,6 @@ const extractHomeInfo = async () => {
       }
     });
 
-    // ---- FEATURE: Extract top airing anime of the day ----
-    // NOTE: Only the 'day' tab content is scraped from #top-anime
     const topAiring = [];
     $("#top-anime .tab-content[data-name='day'] a.item").each((i, el) => {
       const slug = $(el).attr("href")?.split("/watch/").pop() || "";
@@ -123,8 +106,6 @@ const extractHomeInfo = async () => {
       }
     });
 
-    // ---- FEATURE: Extract genre filter list from navigation menu ----
-    // NOTE: Only links containing /genre/ in href are considered valid genre entries
     const genres = [];
     $("#menu ul.c4 li a").each((i, el) => {
       const genre = $(el).text().trim();

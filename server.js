@@ -18,10 +18,10 @@
 
 import dotenv from "dotenv";
 import express from "express";
-import cors from "cors";
 import compression from "compression";
 import path from "path";
 import fs from "fs";
+import crypto from "crypto";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { createApiRoutes } from "./src/routes/apiRoutes.js";
@@ -52,6 +52,21 @@ app.use(compression({
   threshold: 1024
 }));
 
+// ---- FEATURE: Request body size limits ----
+app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: false, limit: "10kb" }));
+
+// ══════════════════════════════════════════════════════════════
+// REQUEST ID TRACKING
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Unique request ID for debugging ----
+app.use((req, res, next) => {
+  req.id = crypto.randomUUID();
+  res.setHeader("X-Request-Id", req.id);
+  next();
+});
+
 // ══════════════════════════════════════════════════════════════
 // CORS MIDDLEWARE
 // ══════════════════════════════════════════════════════════════
@@ -62,8 +77,8 @@ app.use((req, res, next) => {
   if (!allowedOrigins || allowedOrigins.includes("*") || (origin && allowedOrigins.includes(origin))) {
     res.setHeader("Access-Control-Allow-Origin", origin || "*");
   }
-  res.setHeader("Access-Control-Allow-Methods", "GET");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Requested-With");
   if (req.method === "OPTIONS") {
     return res.status(204).end();
   }
@@ -77,6 +92,9 @@ app.use((req, res, next) => {
   res.setHeader("X-XSS-Protection", "1; mode=block");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'");
+  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  res.setHeader("X-Permitted-Cross-Domain-Policies", "none");
   next();
 });
 
@@ -135,6 +153,20 @@ const requestCounts = new Map();
 const RATE_LIMIT = parseInt(process.env.RATE_LIMIT) || 100;
 const RATE_WINDOW = parseInt(process.env.RATE_WINDOW) || 60000;
 
+// ---- FEATURE: Rate limiter cleanup interval (every 5 minutes) ----
+const RATE_CLEANUP_INTERVAL = 300000;
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, timestamps] of requestCounts.entries()) {
+    const validTimestamps = timestamps.filter(t => now - t < RATE_WINDOW);
+    if (validTimestamps.length === 0) {
+      requestCounts.delete(ip);
+    } else {
+      requestCounts.set(ip, validTimestamps);
+    }
+  }
+}, RATE_CLEANUP_INTERVAL);
+
 app.use((req, res, next) => {
   const ip = req.ip || req.connection.remoteAddress;
   const now = Date.now();
@@ -164,24 +196,26 @@ app.get("/api/cache/stats", (req, res) => {
 // ---- FEATURE: Creator info middleware (injects attribution into all responses) ----
 app.use(addCreatorInfo);
 
+// ---- FEATURE: Request timeout middleware (30 seconds) ----
+app.use((req, res, next) => {
+  const timeout = parseInt(process.env.REQUEST_TIMEOUT) || 30000;
+  req.setTimeout(timeout, () => {
+    if (!res.headersSent) {
+      res.status(408).json({ success: false, message: "Request timeout" });
+    }
+  });
+  next();
+});
+
 createApiRoutes(app, jsonResponse, jsonError);
 
 // ══════════════════════════════════════════════════════════════
 // 404 HANDLER
 // ══════════════════════════════════════════════════════════════
 
-// ---- FEATURE: Request timeout middleware (30 seconds) ----
-app.use((req, res, next) => {
-  const timeout = parseInt(process.env.REQUEST_TIMEOUT) || 30000;
-  req.setTimeout(timeout, () => {
-    res.status(408).json({ success: false, message: "Request timeout" });
-  });
-  next();
-});
-
 // ---- FEATURE: Global error handler ----
 app.use((err, req, res, next) => {
-  console.error(`[ERROR] ${err.message}`, err.stack);
+  console.error(`[ERROR] ${req.id} ${err.message}`, err.stack);
   if (err.type === 'entity.too.large') {
     return res.status(413).json({ success: false, message: "Request entity too large" });
   }
@@ -214,8 +248,37 @@ app.use((req, res) => {
 // SERVER START
 // ══════════════════════════════════════════════════════════════
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.info(`AniKotoAPI listening at ${PORT}`);
+});
+
+// ══════════════════════════════════════════════════════════════
+// GRACEFUL SHUTDOWN
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Graceful shutdown handling ----
+const gracefulShutdown = (signal) => {
+  console.info(`\n[SHUTDOWN] Received ${signal}. Starting graceful shutdown...`);
+  server.close(() => {
+    console.info("[SHUTDOWN] Server closed. Goodbye.");
+    process.exit(0);
+  });
+  setTimeout(() => {
+    console.error("[SHUTDOWN] Forced shutdown after timeout.");
+    process.exit(1);
+  }, 10000);
+};
+
+process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
+process.on("SIGINT", () => gracefulShutdown("SIGINT"));
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("[UNHANDLED] Unhandled Rejection:", reason);
+});
+
+process.on("uncaughtException", (error) => {
+  console.error("[UNCAUGHT] Uncaught Exception:", error);
+  gracefulShutdown("uncaughtException");
 });
 
 // ══════════════════════════════════════════════════════════════ END: server.js

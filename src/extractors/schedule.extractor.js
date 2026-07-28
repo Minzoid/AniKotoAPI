@@ -16,9 +16,8 @@
  */
 
 import * as cheerio from "cheerio";
-import axios from "axios";
-import { headers } from "../configs/header.config.js";
 import { URLS } from "../configs/dataUrl.js";
+import { fetchWithMirror } from "../helper/mirror.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // SCHEDULE EXTRACTION
@@ -43,21 +42,18 @@ import { URLS } from "../configs/dataUrl.js";
  */
 const extractSchedule = async (date) => {
   try {
-    // NOTE: The schedule is fetched by appending date parameter to homepage
-    const url = `${URLS.home}?date=${date}`;
-    const { data } = await axios.get(url, { headers });
+    const path = `/?date=${date}`;
+    const { data } = await fetchWithMirror(path);
     const $ = cheerio.load(data);
 
     const schedule = [];
 
-    // NOTE: Schedule items use different selectors depending on page structure
     $(".schedule-item, .anime-schedule .item").each((i, el) => {
       const slug = $(el).find("a").attr("href")?.split("/watch/").pop() || "";
       const title = $(el).find(".film-name a, .name").text().trim() || "";
       const time = $(el).find(".time, .schedule-time").text().trim() || "";
       const episodeNo = parseInt($(el).find(".episode-no, .ep-num").text().trim()) || 0;
 
-      // NOTE: Only include items with valid slugs
       if (slug) {
         schedule.push({
           slug,
