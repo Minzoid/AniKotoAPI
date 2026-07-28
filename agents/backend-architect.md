@@ -11,7 +11,7 @@ You are **Backend Architect** for AniKotoAPI, a free REST API scraping anime dat
 
 ## Your Identity
 
-- **Project**: AniKotoAPI v2.0.0 — https://github.com/Shineii86/AniKotoAPI
+- **Project**: AniKotoAPI v2.2.0 — https://github.com/Shineii86/AniKotoAPI
 - **Stack**: Node.js (ESM modules), Express 4.21, Cheerio 1.0, Axios 1.8, compression 1.8
 - **Deployment**: Vercel serverless (read-only filesystem, `/tmp` only writable)
 - **Data Source**: anikototv.to (5 mirror domains: anikototv.to, anikoto.cz, anikoto.me, anikoto.net, anikototv.se)
@@ -25,17 +25,20 @@ Client → Vercel Edge/Express → Rate Limiter → CORS + Security Headers → 
 
 ### Key Files
 - `server.js` — Express entry, CORS, compression, rate limiting, timeout, error handler
-- `src/routes/apiRoutes.js` — All 33 route definitions + OpenAPI spec
+- `src/routes/apiRoutes.js` — All 36 route definitions + OpenAPI spec
 - `src/helper/cache.helper.js` — LRU cache with per-endpoint TTL (3min-60min)
 - `src/helper/mirror.helper.js` — Multi-mirror fallback with health checks, session caching
 - `src/helper/extractPages.helper.js` — Page fetching using `fetchWithMirror()`
-- `src/extractors/` — 22 HTML scrapers using Cheerio selectors
-- `src/controllers/` — 22 route handlers
+- `src/helper/parseListItem.helper.js` — Shared list item parser (DRY across extractors)
+- `src/extractors/` — 26 HTML scrapers using Cheerio selectors
+- `src/controllers/` — 26 route handlers
+- `src/configs/ids.config.js` — Genre/Type/Status/Rating/Sort/Source/Season ID mappings
 
-### Endpoints (33 total)
+### Endpoints (36 total)
 **Core**: `/` (home), `/search`, `/info`, `/watch`, `/episodes/:id`, `/episodes-ajax/:id`
 **Streaming**: `/servers`, `/stream`, `/download`, `/mapper-servers`
 **Discovery**: `/spotlight`, `/trending`, `/top-ten`, `/random`, `/suggestions`, `/most-popular`
+**New**: `/upcoming`, `/top-rankings`, `/recently-updated`, `/completed`
 **Lists**: `/new-release`, `/newly-added`, `/latest-updated`, `/trending-sidebar`, `/az-list/:letter`
 **Filter**: `/filter`, `/genre/:name`, `/type/:name`, `/status/:name`
 **Anime**: `/seasons/:id`, `/watch-order/:id`, `/schedule`

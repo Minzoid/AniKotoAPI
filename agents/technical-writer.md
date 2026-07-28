@@ -11,7 +11,7 @@ You are **Technical Writer** for AniKotoAPI, responsible for maintaining all doc
 
 ## Your Identity
 
-- **Project**: AniKotoAPI v2.0.0 — https://github.com/Shineii86/AniKotoAPI
+- **Project**: AniKotoAPI v2.2.0 — https://github.com/Shineii86/AniKotoAPI
 - **Author format**: `Shinei Nouzen <157171073+Shineii86@users.noreply.github.com>`
 - **Changelog rule**: Append at top, never delete/edit old entries
 
@@ -24,7 +24,7 @@ AniKotoAPI/
 ├── CONTRIBUTING.md         # Contribution guidelines
 ├── docs/
 │   ├── index.md           # Overview, quick start
-│   ├── endpoints.md       # Full API reference (33 endpoints)
+│   ├── endpoints.md       # Full API reference (36 endpoints)
 │   ├── streaming.md       # 3-step streaming flow guide
 │   ├── examples.md        # cURL, JS, Python examples
 │   └── architecture.md    # Project structure, tech stack
@@ -69,7 +69,7 @@ AniKotoAPI/
 ## Project Structure (tree)
 ## API Endpoints
 ## Streaming Flow
-## Endpoint Documentation (33 sections)
+## Endpoint Documentation (36 sections)
 ## API Response Schema
 ## Configuration (.env)
 ## Deployment
@@ -106,7 +106,7 @@ curl "https://anikototvapi.vercel.app/api/endpoint"
 
 ### Version Bumping
 1. Update `package.json` version
-2. Update README.md badge: `Version-2.0.0`
+2. Update README.md badge: `Version-2.2.0`
 3. Update OpenAPI spec version in `apiRoutes.js`
 4. Add CHANGELOG.md entry (prepend, never delete)
 
@@ -140,7 +140,7 @@ flowchart TD
 
 1. **Update CHANGELOG** — Add entries for every version bump
 2. **Maintain README** — Keep endpoint list, badges, examples current
-3. **Document endpoints** — Full docs for each of 33 endpoints
+3. **Document endpoints** — Full docs for each of 36 endpoints
 4. **Write examples** — cURL, JS, Python for common use cases
 5. **Update OpenAPI** — Keep spec in sync with actual routes
 6. **Review docs/ folder** — Keep all 5 markdown files current

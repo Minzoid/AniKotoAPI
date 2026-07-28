@@ -19,11 +19,11 @@ const tests = [
   // Core endpoints
   { name: "Home", url: "/", check: (d) => d.results?.spotlights || d.results?.trending },
   { name: "Search", url: "/search?keyword=naruto", check: (d) => d.results?.data },
-  { name: "Info", url: "/info?id=road-of-naruto-ggjw8", check: (d) => d.results?.title },
-  { name: "Episodes", url: "/episodes/road-of-naruto-ggjw8", check: (d) => d.results?.episodes },
+  { name: "Info", url: "/info?id=one-piece-odmau", check: (d) => d.results?.title },
+  { name: "Episodes", url: "/episodes/one-piece-odmau", check: (d) => d.results?.episodes },
   { name: "Servers", url: "/servers?ids=1", check: (d) => d.results },
-  { name: "Watch", url: "/watch?slug=road-of-naruto-ggjw8&ep=1", check: (d) => d.results?.servers || d.results?.episodeNumber },
-  
+  { name: "Watch", url: "/watch?slug=one-piece-odmau&ep=1", check: (d) => d.results?.servers || d.results?.episodeNumber },
+
   // Discovery endpoints
   { name: "Suggestions", url: "/suggestions?keyword=naruto", check: (d) => d.results },
   { name: "Spotlight", url: "/spotlight", check: (d) => d.results },
@@ -31,27 +31,39 @@ const tests = [
   { name: "Top 10", url: "/top-ten", check: (d) => d.results },
   { name: "Random", url: "/random", check: (d) => d.results },
   { name: "Most Popular", url: "/most-popular", check: (d) => d.results },
+  { name: "Upcoming", url: "/upcoming", check: (d) => Array.isArray(d.results) },
+  { name: "Top Rankings", url: "/top-rankings", check: (d) => Array.isArray(d.results) },
+  { name: "Recently Updated", url: "/recently-updated", check: (d) => Array.isArray(d.results) },
+  { name: "Completed", url: "/completed", check: (d) => Array.isArray(d.results) },
+
+  // Release lists
   { name: "New Release", url: "/new-release", check: (d) => d.results },
   { name: "Newly Added", url: "/newly-added", check: (d) => d.results },
-  { name: "Latest Updated", url: "/latest-updated", check: (d) => d.results, optional: true },
-  
+  { name: "Latest Updated", url: "/latest-updated", check: (d) => d.results },
+
   // Category endpoints
   { name: "Genre", url: "/genre/action", check: (d) => d.results },
   { name: "Type", url: "/type/tv", check: (d) => d.results },
+  { name: "Status", url: "/status/airing", check: (d) => d.results },
   { name: "AZ List", url: "/az-list/a", check: (d) => d.results },
-  { name: "Filter", url: "/filter?keyword=&genre[]=1", check: (d) => d.results },
-  
-  // Utility endpoints
-  { name: "Health", url: "/health", check: (d) => d.status || d.results?.status },
-  { name: "Stats", url: "/stats", check: (d) => d.results },
-  
+  { name: "Filter", url: "/filter?keyword=naruto", check: (d) => d.results },
+
   // Search variants
   { name: "Search Suggest", url: "/search/suggest?keyword=naruto", check: (d) => d.results },
-  { name: "Episodes Ajax", url: "/episodes-ajax/7174", check: (d) => d.results },
+  { name: "Episodes Ajax", url: "/episodes-ajax/one-piece-odmau", check: (d) => d.results },
   { name: "Trending Sidebar", url: "/trending-sidebar", check: (d) => d.results },
-  { name: "Mapper Servers", url: "/mapper-servers?malId=21&slug=one-piece-100&timestamp=1234567890", check: (d) => d.results },
-  { name: "Seasons", url: "/seasons/7174", check: (d) => d.results?.seasons || d.results?.totalSeasons, optional: true },
-  { name: "Watch Order", url: "/watch-order/7174", check: (d) => d.results?.related || d.results?.totalRelated, optional: true },
+
+  // Anime detail
+  { name: "Seasons", url: "/seasons/one-piece-odmau", check: (d) => d.results?.seasons || d.results?.totalSeasons, optional: true },
+  { name: "Watch Order", url: "/watch-order/one-piece-odmau", check: (d) => d.results?.related || d.results?.totalRelated, optional: true },
+  { name: "Download", url: "/download?slug=one-piece-odmau&ep=1", check: (d) => d.results, optional: true },
+
+  // Utility endpoints
+  { name: "Health", url: "/health", check: (d) => d.results?.status === "healthy" },
+  { name: "Stats", url: "/stats", check: (d) => d.results?.endpoints },
+  { name: "Cache Stats", url: "/cache/stats", check: (d) => d.results?.hits !== undefined },
+  { name: "Mirrors", url: "/mirrors", check: (d) => Array.isArray(d.results) },
+  { name: "OpenAPI", url: "/openapi", check: (d) => d.openapi === "3.0.3" },
 ];
 
 let passed = 0;
