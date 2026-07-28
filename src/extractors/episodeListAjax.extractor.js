@@ -98,7 +98,7 @@ const extractEpisodeListAjax = async (animeId, style = "", vrf = "") => {
         timestamp: a.attr("data-timestamp") || "",
         has_sub: a.attr("data-sub") === "1",
         has_dub: a.attr("data-dub") === "1",
-        server_ids: a.attr("data-ids") || "",
+        server_ids: (a.attr("data-ids") || "").replace(/^\\?["']|\\?["']$/g, ""),
         active: a.hasClass("active") || false
       });
     });

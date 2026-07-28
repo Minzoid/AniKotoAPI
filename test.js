@@ -24,7 +24,7 @@ const tests = [
   { name: "Servers", url: "/servers?ids=1", check: (d) => d.results },
   // Streaming
   { name: "Stream", url: "/watch?slug=one-piece-odmau&ep=1", check: (d) => d.results?.servers || d.results?.episodeNumber },
-  { name: "Stream Resolve", url: "/stream/resolve?id=MTF1dkFtaW9BRTZPbzJJRElFZUZrNHVJWFRVWWRWdU5JYnhuaU95bVRYSzk1Z0lVVjJha2FnSE95U3F4M1RsaXNCSnlnd05rTTlBUldTZGZxZjQzajVxcXVDRVY5bjBocnRCV2tkNnNzaXFnc3c5M1JJWjRnNmt5bDNPdm1TczlvVXdwWGplKzFmQmZJMlp0OTBNTXd3PT0&slug=one-piece-odmau", check: (d) => d.results?.url, optional: true },
+
 
   // Discovery endpoints
   { name: "Suggestions", url: "/suggestions?keyword=naruto", check: (d) => d.results },
@@ -52,7 +52,6 @@ const tests = [
 
   // Search variants
   { name: "Search Suggest", url: "/search/suggest?keyword=naruto", check: (d) => d.results },
-  { name: "Episodes Ajax", url: "/episodes-ajax/one-piece-odmau", check: (d) => d.results, optional: true },
   { name: "Trending Sidebar", url: "/trending-sidebar", check: (d) => d.results },
 
   // Anime detail
@@ -142,11 +141,44 @@ async function runTest(test) {
   }
 }
 
+async function fetchJson(url) {
+  const res = await fetch(`${BASE}${url}`);
+  return res.ok ? res.json() : null;
+}
+
 async function runAll() {
   console.log(`\n🧪 Running ${tests.length} tests...\n`);
   console.log(`📡 API: ${BASE}\n`);
-  
-  // Run tests sequentially to avoid rate limiting
+
+  // ---- FEATURE: Resolve dynamic test dependencies ----
+  // NOTE: Fetch info to get numeric animeId for episodes-ajax
+  let animeId = "1642";
+  let linkId = "";
+  try {
+    const info = await fetchJson("/info?id=one-piece-odmau");
+    if (info?.success && info.results?.animeId) {
+      animeId = info.results.animeId;
+    }
+    // NOTE: Get a valid link_id via episodes → servers flow
+    const epData = await fetchJson("/episodes/one-piece-odmau");
+    if (epData?.success && epData.results?.episodes?.length > 0) {
+      const sid = epData.results.episodes[0].server_ids;
+      if (sid) {
+        const srvData = await fetchJson(`/servers?ids=${encodeURIComponent(sid)}`);
+        if (srvData?.success && srvData.results?.length > 0) {
+          linkId = srvData.results[0].link_id || "";
+        }
+      }
+    }
+  } catch (_) { /* use defaults */ }
+
+  // ---- FEATURE: Inject dynamic tests with live data ----
+  tests.push({ name: "Episodes Ajax", url: `/episodes-ajax/${animeId}`, check: (d) => d.results?.episodes || d.results?.totalEpisodes });
+  if (linkId) {
+    tests.push({ name: "Stream Resolve", url: `/stream/resolve?id=${encodeURIComponent(linkId)}&slug=one-piece-odmau`, check: (d) => d.results?.url });
+  }
+
+  // ---- FEATURE: Run all tests sequentially ----
   for (const test of tests) {
     await runTest(test);
   }

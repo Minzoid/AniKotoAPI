@@ -74,7 +74,7 @@ const extractEpisodeList = async (slugOrId) => {
         const href = $ep(el).attr("href") || "";
         const epTitle = $ep(el).find(".ep-title, .ep-name").text().trim() || "";
         const isActive = $ep(el).hasClass("active") || false;
-        const serverIds = $ep(el).attr("data-ids") || "";
+        const serverIds = ($ep(el).attr("data-ids") || "").replace(/^\\?["']|\\?["']$/g, "");
         const timestamp = $ep(el).attr("data-timestamp") || "";
         const malId = $ep(el).attr("data-mal") || "";
 
