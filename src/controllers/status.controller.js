@@ -57,9 +57,12 @@ const getStatus = async (req, res, next) => {
     }
     // Map short status names to full slugs
     const statusMap = {
+      ongoing: "currently-airing",
       airing: "currently-airing",
       completed: "finished-airing",
-      upcoming: "not-yet-aired"
+      finished: "finished-airing",
+      upcoming: "not-yet-aired",
+      "not-yet-aired": "not-yet-aired"
     };
     const mappedStatus = statusMap[status] || status;
     const data = await extractStatus(mappedStatus, page);

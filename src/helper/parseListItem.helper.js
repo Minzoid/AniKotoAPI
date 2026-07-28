@@ -41,17 +41,24 @@ const parseListItem = ($, el, options = {}) => {
   const { includeAnimeId = false, includeRating = true } = options;
 
   // NOTE: slug is the primary key — skip items without a valid watch link
-  const slug = $(el).find("a").attr("href")?.split("/watch/").pop() || "";
+  // NOTE: item may BE the <a> tag itself, so check both self and children
+  let slug = "";
+  if ($(el).is("a")) {
+    slug = $(el).attr("href")?.split("/watch/").pop() || "";
+  }
+  if (!slug) {
+    slug = $(el).find("a").attr("href")?.split("/watch/").pop() || "";
+  }
   if (!slug) return null;
 
   // NOTE: Multiple selectors handle different page layouts (#list-items vs .film_list-wrap vs .item)
-  const poster = $(el).find(".ani.poster.tip > a > img, img").attr("src") || "";
-  const title = $(el).find(".info .b1 a.name.d-title, .film-name a, .name.d-title, a.name").text().trim() || "";
-  const japaneseTitle = $(el).find(".info .b1 a.name.d-title, .name.d-title, a.name").attr("data-jp") || "";
+  const poster = $(el).find("img").attr("src") || "";
+  const title = $(el).find(".name").text().trim() || $(el).children(".info").find(".name").text().trim() || "";
+  const japaneseTitle = $(el).find(".name").attr("data-jp") || "";
   const sub = parseInt($(el).find(".ep-status.sub span").text().trim()) || 0;
   const dub = parseInt($(el).find(".ep-status.dub span").text().trim()) || 0;
   const total = parseInt($(el).find(".ep-status.total span").text().trim()) || 0;
-  const type = $(el).find(".info .meta .m-item:nth-child(2) label, .meta .inner .right, .fdi-item:nth-child(2), .type").text().trim() || "";
+  const type = $(el).find(".meta .dot:last-child, .fdi-item:nth-child(2)").text().trim() || "";
 
   const item = { slug, poster, title, japaneseTitle, sub, dub, total, type };
 
@@ -62,7 +69,7 @@ const parseListItem = ($, el, options = {}) => {
 
   // NOTE: Rating uses different selectors depending on whether it's a list page or detail page
   if (includeRating) {
-    item.rating = $(el).find(".info .meta .m-item.rated span, .rating, .fdi-item:nth-child(3)").text().trim() || "";
+    item.rating = $(el).find(".rated span, .rating, .fdi-item:nth-child(3)").text().trim() || "";
   }
 
   return item;

@@ -60,7 +60,17 @@ const extractCategory = async (category, page = 1) => {
     } else if (category.startsWith("type/")) {
       url = URLS.type(category.replace("type/", ""));
     } else if (category.startsWith("status/")) {
-      url = URLS.status(category.replace("status/", ""));
+      // NOTE: Map short status names to full slugs used by the site
+      const statusSlug = category.replace("status/", "");
+      const statusMap = {
+        ongoing: "currently-airing",
+        airing: "currently-airing",
+        completed: "finished-airing",
+        finished: "finished-airing",
+        upcoming: "not-yet-aired"
+      };
+      const mapped = statusMap[statusSlug] || statusSlug;
+      url = URLS.status(mapped);
     } else {
       url = `${URLS.home}/${category}`;
     }

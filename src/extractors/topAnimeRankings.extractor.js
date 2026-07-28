@@ -56,25 +56,29 @@ const extractTopAnimeRankings = async (sort = "top") => {
 
     const results = [];
 
-    // NOTE: Ranking items have rank1 through rank9 classes for position
-    // The data-sort attribute on tabs controls which ranking is displayed
-    // We parse all ranked items and return them with position
-    $("#top-anime .item, .top-anime .item, .top-table[data-name='top'] .item").each((i, el) => {
-      const slug = $(el).find("a").attr("href")?.split("/watch/").pop() || "";
+    // NOTE: Ranking items live inside #top-anime .tab-content .scaff.side.items
+    // Each item is an <a class="item rankN"> with rank classes rank1..rank9
+    // The data-name on .tab-content controls which tab: day/week/month
+    const tabSelector = sort === "week" ? "[data-name='week']"
+      : sort === "month" ? "[data-name='month']"
+      : "[data-name='day']";
+
+    $(`#top-anime .tab-content${tabSelector} a.item, #top-anime .scaff.side.items a.item`).each((i, el) => {
+      const slug = $(el).attr("href")?.split("/watch/").pop() || "";
       if (!slug) return;
 
       const poster = $(el).find("img").attr("src") || "";
-      const title = $(el).find(".name, .film-name a").text().trim() || "";
+      const title = $(el).find(".name").text().trim() || "";
       const japaneseTitle = $(el).find(".name").attr("data-jp") || "";
       const sub = parseInt($(el).find(".ep-status.sub span").text().trim()) || 0;
       const dub = parseInt($(el).find(".ep-status.dub span").text().trim()) || 0;
-      const type = $(el).find(".type").text().trim() || "";
-      const views = $(el).find(".views, .view-count").text().trim() || "";
+      const type = $(el).find(".meta .dot:last-child").text().trim() || "";
 
-      // NOTE: Rank is determined by position in the list (1-indexed)
-      const rank = i + 1;
+      // NOTE: Rank is extracted from the rankN class on the <a> element
+      const rankClass = [...$(el).attr("class") || ""].join(" ").match(/rank(\d+)/);
+      const rank = rankClass ? parseInt(rankClass[1]) : i + 1;
 
-      results.push({ rank, slug, poster, title, japaneseTitle, sub, dub, type, views });
+      results.push({ rank, slug, poster, title, japaneseTitle, sub, dub, type });
     });
 
     return results;

@@ -49,18 +49,19 @@ const extractCompletedAnime = async () => {
 
     const results = [];
 
-    // NOTE: completed section contains finished anime series
-    $(".top-table[data-name='completed'] .item, #completed .item, .completed-list .item").each((i, el) => {
-      const slug = $(el).find("a").attr("href")?.split("/watch/").pop() || "";
+    // NOTE: completed section is inside .top-tables with data-name="completed"
+    // Items are <a class="item"> inside .scaff.items
+    $("section.top-table[data-name='completed'] .scaff.items a.item, .top-table[data-name='completed'] a.item").each((i, el) => {
+      const slug = $(el).attr("href")?.split("/watch/").pop() || "";
       if (!slug) return;
 
       const poster = $(el).find("img").attr("src") || "";
-      const title = $(el).find(".film-name a, .name.d-title, a.name").text().trim() || "";
-      const japaneseTitle = $(el).find(".name.d-title, a.name").attr("data-jp") || "";
+      const title = $(el).find(".name").text().trim() || "";
+      const japaneseTitle = $(el).find(".name").attr("data-jp") || "";
       const sub = parseInt($(el).find(".ep-status.sub span").text().trim()) || 0;
       const dub = parseInt($(el).find(".ep-status.dub span").text().trim()) || 0;
       const total = parseInt($(el).find(".ep-status.total span").text().trim()) || 0;
-      const type = $(el).find(".meta .inner .right, .type, .fdi-item:nth-child(2)").text().trim() || "";
+      const type = $(el).find(".meta .dot:last-child").text().trim() || "";
 
       results.push({ slug, poster, title, japaneseTitle, sub, dub, total, type });
     });

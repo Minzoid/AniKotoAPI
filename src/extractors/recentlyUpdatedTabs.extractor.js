@@ -53,28 +53,34 @@ const extractRecentlyUpdatedTabs = async (tab = "all") => {
 
     const results = [];
 
-    // NOTE: Homepage has tabbed sections: updated-all, updated-dub, updated-sub
-    // Each section has data-name attribute matching the tab name
-    const selector = tab === "dub"
-      ? ".top-table[data-name='updated-dub'] .item, #updated-dub .item"
-      : tab === "sub"
-        ? ".top-table[data-name='updated-sub'] .item, #updated-sub .item"
-        : ".top-table[data-name='updated-all'] .item, #recent-update .item, .section-updated .item";
+    // NOTE: #recent-update has tabs (all/dub/sub/trending/random) but filtering is client-side
+    // Items are <div class="item"> inside #recent-update .ani.items
+    // Each item has .ani.poster with <a> link and .info .name.d-title
+    const allItems = $("#recent-update .ani.items .item");
 
-    $(selector).each((i, el) => {
-      const slug = $(el).find("a").attr("href")?.split("/watch/").pop() || "";
+    allItems.each((i, el) => {
+      // NOTE: The item itself is a div, the link is inside .ani.poster a or .info a.name
+      const link = $(el).find(".ani.poster a").attr("href") || $(el).find(".info a.name").attr("href") || "";
+      const slug = link.split("/watch/").pop()?.split("/ep-")[0] || "";
       if (!slug) return;
 
+      // NOTE: Check sub/dub status for tab filtering
+      const hasSub = $(el).find(".ep-status.sub").length > 0;
+      const hasDub = $(el).find(".ep-status.dub").length > 0;
+
+      // NOTE: Filter by tab if not "all" — since server-side rendering shows all items
+      if (tab === "dub" && !hasDub) return;
+      if (tab === "sub" && !hasSub) return;
+
       const poster = $(el).find("img").attr("src") || "";
-      const title = $(el).find(".film-name a, .name.d-title, a.name").text().trim() || "";
-      const japaneseTitle = $(el).find(".name.d-title, a.name").attr("data-jp") || "";
+      const title = $(el).find(".name").text().trim() || "";
+      const japaneseTitle = $(el).find(".name").attr("data-jp") || "";
       const sub = parseInt($(el).find(".ep-status.sub span").text().trim()) || 0;
       const dub = parseInt($(el).find(".ep-status.dub span").text().trim()) || 0;
       const total = parseInt($(el).find(".ep-status.total span").text().trim()) || 0;
-      const type = $(el).find(".meta .inner .right, .type, .fdi-item:nth-child(2)").text().trim() || "";
-      const episodeInfo = $(el).find(".episode-info, .ep-info").text().trim() || "";
+      const type = $(el).find(".meta .right, .type").text().trim() || "";
 
-      results.push({ slug, poster, title, japaneseTitle, sub, dub, total, type, episodeInfo });
+      results.push({ slug, poster, title, japaneseTitle, sub, dub, total, type });
     });
 
     return results;

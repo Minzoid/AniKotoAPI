@@ -40,7 +40,7 @@ import { fetchWithMirror } from "../helper/mirror.helper.js";
  */
 const extractWatchPage = async (slug, ep) => {
   try {
-    const path = `/watch/${slug}/${ep}`;
+    const path = `/watch/${slug}/ep-${ep}`;
     const { data } = await fetchWithMirror(path);
     const $ = cheerio.load(data);
 

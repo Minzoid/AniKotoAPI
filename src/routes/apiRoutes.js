@@ -48,6 +48,7 @@ import { getRecentlyUpdatedTabs } from "../controllers/recentlyUpdatedTabs.contr
 import { getCompletedAnime } from "../controllers/completedAnime.controller.js";
 import { categoryRoutes } from "./category.route.js";
 import { getMirrorStatus, resetMirrorCache } from "../helper/mirror.helper.js";
+import { getCacheStats } from "../helper/cache.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // ROUTE REGISTRATION
@@ -488,6 +489,12 @@ app.get("/api/mirrors", async (req, res) => {
   } catch (error) {
     jsonError(res, error.message);
   }
+});
+
+// ---- FEATURE: Cache statistics ----
+app.get("/api/cache/stats", (req, res) => {
+  const stats = getCacheStats();
+  res.json({ success: true, results: stats });
 });
 
 // ---- FEATURE: Reset mirror cache ----

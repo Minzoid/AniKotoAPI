@@ -41,16 +41,17 @@ import { getCache, setCache, TTL } from "../helper/cache.helper.js";
  */
 const getAnimeInfo = async (req, res, next) => {
   try {
-    const { id } = req.query;
-    if (!id) {
-      return res.status(400).json({ success: false, message: "Anime slug is required" });
+    const { id, slug } = req.query;
+    const animeSlug = id || slug;
+    if (!animeSlug) {
+      return res.status(400).json({ success: false, message: "Anime slug is required (?id= or ?slug=)" });
     }
-    const cacheKey = `anime_${id}`;
+    const cacheKey = `anime_${animeSlug}`;
     const cached = getCache(cacheKey);
     if (cached) {
       return res.json({ success: true, results: cached });
     }
-    const data = await extractAnimeInfo(id);
+    const data = await extractAnimeInfo(animeSlug);
     setCache(cacheKey, data, TTL.info);
     res.json({ success: true, results: data });
   } catch (error) {
