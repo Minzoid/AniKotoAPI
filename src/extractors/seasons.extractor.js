@@ -5,8 +5,8 @@
  *
  * @description
  *   Extracts season information for a specific anime from the
- *   anikototv.to AJAX endpoint. Returns all seasons/OVAs/specials
- *   for a given anime series.
+ *   watch page HTML. Returns available seasons from the page
+ *   sidebar and metadata.
  *
  * @exports
  *   extractSeasons
@@ -21,73 +21,61 @@ import { fetchWithMirror } from "../helper/mirror.helper.js";
 
 /**
  * Fetches and parses season information for an anime.
- * Scrapes the AJAX endpoint that returns season carousel HTML.
+ * Extracts season data from the watch page sidebar.
  *
- * @param {string|number} animeId - The numeric anime ID
+ * @param {string|number} slugOrId - The anime slug or numeric ID
  * @returns {Promise<Object>} Object with animeId, totalSeasons, and seasons array
  *
  * @example
- *   const seasons = await extractSeasons(7174);
- *   console.log(seasons.totalSeasons); // number of seasons
- *   console.log(seasons.seasons[0].title); // first season title
+ *   const seasons = await extractSeasons("one-piece-odmau");
+ *   console.log(seasons.totalSeasons);
  */
-const extractSeasons = async (animeId) => {
+const extractSeasons = async (slugOrId) => {
   try {
-    const { data } = await fetchWithMirror(`/api/seasons/${animeId}`, {
-      headers: { "X-Requested-With": "XMLHttpRequest" }
+    const path = /^\d+$/.test(slugOrId) ? `/watch/${slugOrId}` : `/watch/${slugOrId}`;
+    const { data } = await fetchWithMirror(path);
+
+    const html = typeof data === "string" ? data : String(data);
+    const $ = cheerio.load(html);
+
+    const animeId = parseInt($("#watch-main").attr("data-id")) || 0;
+    const seasons = [];
+
+    // NOTE: Extract seasons from #ani-seasons section (if populated)
+    $("#ani-seasons .swiper-slide, .seasons .item, #w-seasons .item").each((_, el) => {
+      const link = $(el).find("a").first();
+      const href = link.attr("href") || "";
+      const poster = $(el).find("img").attr("src") || "";
+      const title = $(el).find(".name, .title").text().trim() || link.text().trim() || "";
+      const slug = href.split("/watch/").pop() || "";
+
+      if (slug || title) {
+        seasons.push({ title, slug, poster, url: href });
+      }
     });
 
-    // Handle both string HTML and JSON responses
-    let raw = "";
-    if (typeof data === "string") {
-      try {
-        const json = JSON.parse(data);
-        raw = json.result || data;
-      } catch (e) {
-        raw = data;
-      }
-    } else if (data?.result) {
-      raw = data.result;
-    } else if (data?.data) {
-      raw = data.data;
-    }
-    
-    const $ = cheerio.load(raw);
-
-    const seasons = [];
-    
-    // Try multiple selectors to handle different HTML structures
-    const selectors = [
-      ".swiper-slide.season",
-      ".seasons .swiper-slide",
-      "#w-seasons .swiper-slide",
-      ".swiper-slide"
-    ];
-    
-    for (const selector of selectors) {
-      $(selector).each((_, el) => {
+    // NOTE: If no dedicated seasons section, extract from episode list sidebar
+    if (seasons.length === 0) {
+      $(".w-side-section .item").each((_, el) => {
         const link = $(el).find("a").first();
         const href = link.attr("href") || "";
-        const style = link.attr("style") || "";
-        const poster = style.match(/url\(['"]?(.+?)['"]?\)/)?.[1] || "";
-        const title = $(el).find(".name").text().trim() || 
-                     link.text().trim() || "";
-
-        // Extract slug from href
+        const poster = $(el).find("img").attr("src") || "";
+        const title = $(el).find(".name").text().trim() || "";
         const slug = href.split("/watch/").pop() || "";
+        const score = $(el).find(".score").text().trim() || "";
+        const episodes = $(el).find(".meta .dot:last-child").text().trim() || "";
 
-        if (slug || title) {
-          seasons.push({ title, slug, poster, url: href });
+        if (slug && slug !== slugOrId) {
+          seasons.push({ title, slug, poster, url: href, score, episodes });
         }
       });
-      
-      if (seasons.length > 0) break;
     }
 
     return {
       animeId,
+      slug: slugOrId,
       totalSeasons: seasons.length,
-      seasons
+      seasons,
     };
   } catch (error) {
     throw error;

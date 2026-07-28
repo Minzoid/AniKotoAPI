@@ -199,8 +199,17 @@ async function fetchWithMirror(path, options = {}) {
             mirror 
           };
         }
+
+        // NOTE: 404 means endpoint doesn't exist, not mirror failure — don't retry
+        if (response.status === 404) {
+          throw new Error(`Endpoint not found: ${path}`);
+        }
       } catch (error) {
         lastError = error;
+        // NOTE: Don't retry on 404 — the endpoint simply doesn't exist on this mirror
+        if (error.message?.includes("Endpoint not found")) {
+          break;
+        }
         if (attempt < retries) {
           // Wait before retry
           await new Promise(r => setTimeout(r, 500 * (attempt + 1)));
@@ -208,9 +217,11 @@ async function fetchWithMirror(path, options = {}) {
       }
     }
 
-    // Mark mirror as failed after all retries
-    failedMirrors.add(mirror);
-    console.log(`[MIRROR] Marked as failed: ${mirror}`);
+    // NOTE: Only mark mirror as failed for connection errors, not endpoint 404s
+    if (!lastError.message?.includes("Endpoint not found")) {
+      failedMirrors.add(mirror);
+      console.log(`[MIRROR] Marked as failed: ${mirror}`);
+    }
   }
 
   throw new Error(`All mirrors failed. Last error: ${lastError?.message}`);

@@ -228,6 +228,88 @@ app.use((req, res, next) => {
     }
   });
 
+  // ---- FEATURE: M3U8 proxy — fetch and serve M3U8 playlists through API ----
+  app.get("/api/stream/proxy", async (req, res, next) => {
+    try {
+      const { url } = req.query;
+      if (!url) {
+        return res.status(400).json({ success: false, message: "M3U8 URL is required" });
+      }
+      // NOTE: Validate URL is from known streaming domains
+      const allowedDomains = ["vidtube.site", "vidplay.site", "megaplay.buzz", "megaplay-1.buzz", "cdn.anipixcdn.co"];
+      const urlObj = new URL(url);
+      const isAllowed = allowedDomains.some(d => urlObj.hostname.includes(d)) || urlObj.hostname.endsWith(".m3u8");
+
+      if (!isAllowed) {
+        return res.status(403).json({ success: false, message: "Domain not allowed for proxy" });
+      }
+
+      const axios = (await import("axios")).default;
+      const { headers: defaultHeaders } = await import("../configs/header.config.js");
+
+      const response = await axios.get(url, {
+        headers: {
+          ...defaultHeaders,
+          "Referer": "https://anikototv.to/",
+          "Origin": "https://anikototv.to",
+        },
+        timeout: 15000,
+        responseType: "text",
+      });
+
+      // NOTE: Rewrite relative URLs in M3U8 to proxy URLs
+      let content = typeof response.data === "string" ? response.data : String(response.data);
+      const baseUrl = url.substring(0, url.lastIndexOf("/") + 1);
+
+      content = content.replace(/(^(?!#).+\.m3u8.*$)/gm, (match) => {
+        const absoluteUrl = match.startsWith("http") ? match : new URL(match, baseUrl).href;
+        return `/api/stream/proxy?url=${encodeURIComponent(absoluteUrl)}`;
+      });
+
+      content = content.replace(/(^(?!#).+\.ts.*$)/gm, (match) => {
+        const absoluteUrl = match.startsWith("http") ? match : new URL(match, baseUrl).href;
+        return `/api/stream/ts-proxy?url=${encodeURIComponent(absoluteUrl)}`;
+      });
+
+      res.setHeader("Content-Type", "application/vnd.apple.mpegurl");
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Cache-Control", "public, max-age=30");
+      res.send(content);
+    } catch (error) {
+      jsonError(res, error.message);
+    }
+  });
+
+  // ---- FEATURE: TS segment proxy for video segments ----
+  app.get("/api/stream/ts-proxy", async (req, res, next) => {
+    try {
+      const { url } = req.query;
+      if (!url) {
+        return res.status(400).json({ success: false, message: "TS URL is required" });
+      }
+
+      const axios = (await import("axios")).default;
+      const { headers: defaultHeaders } = await import("../configs/header.config.js");
+
+      const response = await axios.get(url, {
+        headers: {
+          ...defaultHeaders,
+          "Referer": "https://anikototv.to/",
+          "Origin": "https://anikototv.to",
+        },
+        timeout: 30000,
+        responseType: "arraybuffer",
+      });
+
+      res.setHeader("Content-Type", "video/mp2t");
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Cache-Control", "public, max-age=3600");
+      res.send(Buffer.from(response.data));
+    } catch (error) {
+      jsonError(res, error.message);
+    }
+  });
+
   // ══════════════════════════════════════════════════════════════
   // SCHEDULE
   // ══════════════════════════════════════════════════════════════
@@ -494,7 +576,7 @@ app.get("/api/stats", (req, res) => {
         ttl: "5 minutes",
         description: "Map-based cache with TTL expiration",
       },
-      endpoints: 36,
+      endpoints: 38,
       timestamp: new Date().toISOString(),
     },
   });
@@ -565,6 +647,8 @@ app.get("/api/openapi", (req, res) => {
       "/watch": { get: { summary: "Watch page data", tags: ["Streaming"] } },
       "/stream/resolve": { get: { summary: "Resolve actual stream URL (m3u8/mp4)", tags: ["Streaming"] } },
       "/stream/qualities": { get: { summary: "Available quality options for M3U8 stream", tags: ["Streaming"] } },
+      "/stream/proxy": { get: { summary: "M3U8 playlist proxy (rewrites URLs)", tags: ["Streaming"] } },
+      "/stream/ts-proxy": { get: { summary: "TS video segment proxy", tags: ["Streaming"] } },
       "/search/suggest": { get: { summary: "Search suggestions", tags: ["Search"] } },
       "/episodes-ajax/{id}": { get: { summary: "AJAX episode list", tags: ["Episodes"] } },
       "/mapper-servers": { get: { summary: "Mapper servers", tags: ["Streaming"] } },

@@ -5,8 +5,8 @@
  *
  * @description
  *   Extracts watch order and related anime information from the
- *   anikototv.to AJAX endpoint. Returns related anime with their
- *   relationship types (sequel, prequel, summary, etc.).
+ *   watch page sidebar. Returns trending/related anime with their
+ *   metadata for continuous viewing.
  *
  * @exports
  *   extractWatchOrder
@@ -21,81 +21,63 @@ import { fetchWithMirror } from "../helper/mirror.helper.js";
 
 /**
  * Fetches and parses watch order / related anime for an anime.
- * Scrapes the AJAX endpoint that returns related anime HTML.
+ * Extracts related anime from the watch page sidebar.
  *
- * @param {string|number} animeId - The numeric anime ID
+ * @param {string|number} slugOrId - The anime slug or numeric ID
  * @returns {Promise<Object>} Object with animeId, totalRelated, related array
  *
  * @example
- *   const data = await extractWatchOrder(7174);
- *   console.log(data.totalRelated); // number of related anime
- *   console.log(data.related[0].title); // first related anime
+ *   const data = await extractWatchOrder("one-piece-odmau");
+ *   console.log(data.totalRelated);
  */
-const extractWatchOrder = async (animeId) => {
+const extractWatchOrder = async (slugOrId) => {
   try {
-    const { data } = await fetchWithMirror(`/api/watch-order/${animeId}`, {
-      headers: { "X-Requested-With": "XMLHttpRequest" }
+    const path = /^\d+$/.test(slugOrId) ? `/watch/${slugOrId}` : `/watch/${slugOrId}`;
+    const { data } = await fetchWithMirror(path);
+
+    const html = typeof data === "string" ? data : String(data);
+    const $ = cheerio.load(html);
+
+    const animeId = parseInt($("#watch-main").attr("data-id")) || 0;
+    const related = [];
+
+    // NOTE: Extract from #w-related section
+    $("#w-related .item, .w-side-section:has(.title:contains('Related')) .item").each((_, el) => {
+      const link = $(el).find("a").first();
+      const href = link.attr("href") || "";
+      const title = $(el).find(".name").text().trim() || "";
+      const poster = $(el).find("img").attr("src") || "";
+      const slug = href.split("/watch/").pop() || "";
+      const relation = $(el).find(".relation, .serieslabelitem").text().trim() || "related";
+
+      if (slug) {
+        related.push({ title, slug, poster, url: href, relation });
+      }
     });
 
-    // Handle both string HTML and JSON responses
-    let raw = "";
-    if (typeof data === "string") {
-      try {
-        const json = JSON.parse(data);
-        raw = json.result || data;
-      } catch (e) {
-        raw = data;
-      }
-    } else if (data?.result) {
-      raw = data.result;
-    } else if (data?.data) {
-      raw = data.data;
-    }
-    
-    const $ = cheerio.load(raw);
-
-    // Extract related anime
-    const related = [];
-    
-    // Try multiple selectors
-    const selectors = [
-      "#w-related .item",
-      ".item.flexserieslist",
-      ".scaff.side.items .item",
-      ".item"
-    ];
-    
-    for (const selector of selectors) {
-      $(selector).each((_, el) => {
-        const link = $(el).find("a.name").first();
+    // NOTE: Also extract trending sidebar items as suggested watch order
+    if (related.length === 0) {
+      $(".w-side-section:has(.title:contains('Trending')) .item, .w-side-section:first .item").each((_, el) => {
+        const link = $(el).find("a").first();
         const href = link.attr("href") || "";
-        const title = link.text().trim() || "";
+        const title = $(el).find(".name").text().trim() || "";
         const poster = $(el).find("img").attr("src") || "";
         const slug = href.split("/watch/").pop() || "";
+        const score = $(el).find(".score").text().trim() || "";
+        const type = $(el).find(".meta .dot:last-child").text().trim() || "";
+        const episodes = $(el).find(".meta .dot:first-child").text().trim() || "";
 
-        // Extract relationship type
-        const relationEl = $(el).find(".relation, .serieslabelitem").first();
-        let relationType = relationEl.text().trim().toLowerCase() || 
-                          relationEl.attr("id") || "related";
-
-        if (slug || title) {
-          related.push({
-            title,
-            slug,
-            poster,
-            url: href,
-            relation: relationType
-          });
+        if (slug && slug !== slugOrId) {
+          related.push({ title, slug, poster, url: href, relation: "trending", score, type, episodes });
         }
       });
-      
-      if (related.length > 0) break;
     }
 
     return {
       animeId,
+      slug: slugOrId,
       totalRelated: related.length,
-      related
+      related,
     };
   } catch (error) {
     throw error;
