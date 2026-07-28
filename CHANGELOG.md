@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Stream Resolve Endpoint**: `GET /api/stream/resolve?id=&slug=` — Resolves actual m3u8/mp4 URLs from embed player URLs (vidtube.site → megaplay API → m3u8 playlist)
 - **Stream Qualities Endpoint**: `GET /api/stream/qualities?url=` — Parses M3U8 playlists for available quality options with resolution, bandwidth, and URLs
+- **M3U8 Proxy Endpoint**: `GET /api/stream/proxy?url=` — Rewrites M3U8 playlists to proxy through API for CORS-free HLS playback
+- **TS Proxy Endpoint**: `GET /api/stream/ts-proxy?url=` — Proxies `.ts` video segments with proper `Content-Type: video/mp2t` and CORS headers
 - **Stream Resolver Extractor**: Full pipeline for resolving actual video URLs from embed pages
 - **M3U8 Quality Parser**: Parses master playlists to extract quality options sorted by resolution
 - **Server Name Normalization**: Maps display names to clean identifiers (VidPlay-1 → vidplay, HD-1 → hd)
@@ -33,11 +35,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Extended Type IDs**: Added `tv-short` and `tv-special` type mappings
 
 ### Changed
-- **Mirror Fallback**: All 22 extractors now use `fetchWithMirror()` for consistent mirror fallback
+- **Mirror Fallback**: All 22+ extractors now use `fetchWithMirror()` for consistent mirror fallback
+- **Mirror Helper**: 404 responses no longer mark mirrors as failed — only connection errors trigger failover
+- **Seasons Extractor**: Rewritten to extract from watch page sidebar (AJAX endpoints don't exist on source site)
+- **Watch Order Extractor**: Rewritten to extract from watch page sidebar trending/related sections
+- **Stream Info Extractor**: Now establishes session before AJAX calls, normalizes server names, adds type field
 - **Code Deduplication**: Extracted shared list item parsing logic into `parseListItem.helper.js`, eliminating ~200 lines of duplicated code across 8+ extractors
 - **Documentation**: All files follow strict documentation style — box-style headers, section separators, feature markers, JSDoc params/returns, inline notes, and module footers
 - **Version**: Bumped to 2.2.0
 - **Package**: Removed unused `cors` dependency (custom CORS middleware used instead)
+- **README**: Updated all endpoint counts, features, and streaming flow documentation
+- **Docs**: Updated endpoints.md, streaming.md, architecture.md, examples.md with new endpoints
 
 ### Fixed
 - **Middleware Order**: Moved request timeout middleware before routes to properly catch timeouts
@@ -45,6 +53,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **HomeInfo Cache**: Removed redundant cache check in `homeInfo.extractor.js` (controller already handles caching)
 - **Error Handler**: Added `res.headersSent` check to prevent double response on timeout
 - **Unused Imports**: Removed unused `cheerio`, `axios`, `headers` imports from extractors that now use `fetchWithMirror`
+- **Watch Page Path**: Fixed `/api/watch` 500 error — path format changed from `/slug/ep` to `/slug/ep-N`
+- **Info Endpoint**: Now accepts both `?id=` and `?slug=` params for flexibility
+- **Status Names**: Fixed `/api/status/airing` 500 — added status name mapping (ongoing→currently-airing, completed→finished-airing)
+- **Top Rankings**: Fixed selectors to match actual HTML (`#top-anime .scaff.side.items a.item`) with rank class extraction
+- **Completed Anime**: Fixed selectors for `section.top-table[data-name='completed']`
+- **Recently Updated**: Fixed selectors for `#recent-update .ani.items .item` with client-side tab filtering
 
 ### Removed
 - **Unused Dependency**: Removed `cors` package from dependencies (custom middleware handles CORS)

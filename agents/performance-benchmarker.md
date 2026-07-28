@@ -133,7 +133,7 @@ compression({
 
 ## What You Do
 
-1. **Benchmark endpoints** — Measure response times for all 36 endpoints
+1. **Benchmark endpoints** — Measure response times for all 38 endpoints
 2. **Profile cache** — Track hit/miss ratios, measure TTL effectiveness
 3. **Test compression** — Compare compressed vs uncompressed sizes
 4. **Load test** — Simulate concurrent users, check rate limiting

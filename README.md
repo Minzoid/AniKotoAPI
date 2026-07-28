@@ -22,8 +22,8 @@
   <img src="https://img.shields.io/badge/Cheerio-1.0-3572A5?style=flat-square&logoColor=white" alt="Cheerio"/>
   <img src="https://img.shields.io/badge/Vercel-Serverless-000000?style=flat-square&logo=vercel&logoColor=white" alt="Vercel"/>
   <img src="https://img.shields.io/badge/License-MIT-22c55e?style=flat-square&logo=mit&logoColor=white" alt="License"/>
-  <img src="https://img.shields.io/badge/Version-2.1.0-f43f8e?style=flat-square&logoColor=white" alt="Version"/>
-  <img src="https://img.shields.io/badge/Endpoints-33-6366f1?style=flat-square&logoColor=white" alt="Endpoints"/>
+  <img src="https://img.shields.io/badge/Version-2.2.0-f43f8e?style=flat-square&logoColor=white" alt="Version"/>
+  <img src="https://img.shields.io/badge/Endpoints-38-6366f1?style=flat-square&logoColor=white" alt="Endpoints"/>
   <img src="https://img.shields.io/badge/Anime-10000+-a855f7?style=flat-square&logoColor=white" alt="Anime Database"/>
 </p>
 
@@ -87,7 +87,7 @@
 
 ### Why AniKotoAPI?
 
-- 🎬 **33 Endpoints** — Complete coverage of anikototv.to data
+- 🎬 **38 Endpoints** — Complete coverage of anikototv.to data
 - 🔍 **Full-Text Search** — Search anime by keyword with suggestions
 - 📺 **Episode Lists** — AJAX-loaded episode data with server info
 - 🎯 **Smart Filtering** — Genre, type, status, rating, sort, season, year
@@ -162,10 +162,13 @@ flowchart TD
 ### 📺 Streaming
 - **Watch page** — full episode data with servers
 - **Stream info** — video embed URLs via AJAX
-- **Server list** — all available streaming servers
+- **Stream URL Resolution** — resolve embed URLs to actual m3u8/mp4
+- **Server list** — all available streaming servers with normalized names
 - **Mapper API** — gogoanime/anivibe server sources
 - **Episode navigation** — prev/next episode data
 - **Next episode schedule** — countdown timer data
+- **M3U8 Proxy** — CORS-free HLS playlist proxy with URL rewriting
+- **TS Proxy** — CORS-free video segment proxy
 
     </td>
     <td>
@@ -186,18 +189,20 @@ flowchart TD
 
 | Feature | Description | Status |
 |:---|:---|:---:|
-| 🎬 33 API Endpoints | Complete coverage of anime data | ✅ |
+| 🎬 38 API Endpoints | Complete coverage of anime data | ✅ |
 | 🔍 Full-Text Search | Keyword search with pagination | ✅ |
 | 📺 Episode Lists | AJAX-loaded episode data | ✅ |
-| 🎯 Advanced Filtering | Genre, type, status, rating, sort | ✅ |
+| 🎯 Advanced Filtering | Genre, type, status, rating, sort, season | ✅ |
 | 🏆 Top 10 Rankings | Day/week/month leaderboards | ✅ |
 | 🎲 Random Anime | Random anime discovery | ✅ |
 | 📡 Streaming Servers | Video embed URLs + mapper API | ✅ |
+| 🔗 Stream URL Resolution | Resolve embed URLs to m3u8/mp4 | ✅ |
 | 📋 AZ List | A-Z alphabetical browsing | ✅ |
 | 🔄 Smart Caching | LRU cache with configurable TTL | ✅ |
+| 🌐 M3U8 Proxy | CORS-free HLS proxy with URL rewriting | ✅ |
 | 🚀 One-Click Deploy | Vercel button deployment | ✅ |
 | 🏗️ Express Mode | Standalone server with `npm start` | ✅ |
-| 📖 AlisaReactionBot Style | Full JSDoc documentation | ✅ |
+| 📖 Full JSDoc Docs | Complete documentation coverage | ✅ |
 
 ---
 
@@ -233,7 +238,6 @@ flowchart TD
 | 🔍 [Cheerio](https://cheerio.js.org/) | HTML parsing & scraping | 1.0 | [Docs](https://cheerio.js.org/docs/) |
 | 🌐 [Axios](https://axios-http.com/) | HTTP client for scraping | 1.8 | [Docs](https://axios-http.com/docs/intro) |
 | 🔧 [dotenv](https://github.com/motdotla/dotenv) | Environment variables | 16.4 | [Docs](https://github.com/motdotla/dotenv) |
-| 🔒 [cors](https://github.com/expressjs/cors) | CORS middleware | 2.8 | [Docs](https://github.com/expressjs/cors) |
 
 ### 📦 Key Dependencies
 
@@ -242,7 +246,6 @@ flowchart TD
   "express": "^4.21.0",        // HTTP server
   "axios": "^1.8.0",         // HTTP client for scraping
   "cheerio": "^1.0.0-rc.12",  // HTML parsing
-  "cors": "^2.8.5",           // CORS middleware
   "compression": "^1.7.4",    // Response compression
   "dotenv": "^16.4.0"         // Environment variables
 }
@@ -303,8 +306,8 @@ AniKotoAPI/
 │   │
 │   ├── 📂 docs/                          #    📚 API documentation
 │   │   ├── 📄 index.md                   #       Overview, quick start
-│   │   ├── 📄 endpoints.md               #       Full API reference (33 endpoints)
-│   │   ├── 📄 streaming.md               #       Streaming flow guide
+│   │   ├── 📄 endpoints.md               #       Full API reference (38 endpoints)
+│   │   ├── 📄 streaming.md               #       Streaming flow guide + proxy
 │   │   ├── 📄 examples.md                #       Code examples (cURL, JS, Python)
 │   │   └── 📄 architecture.md            #       Project structure, tech stack
 │   │
@@ -313,41 +316,47 @@ AniKotoAPI/
 │   ├── 📂 configs/                       #    🔧 Configuration files
 │   │   ├── 📄 dataUrl.js                 #       🌐 URL patterns for anikototv.to
 │   │   ├── 📄 header.config.js           #       📋 Request headers
-│   │   └── 📄 ids.config.js              #       🏷️ Genre/Type/Status/Rating ID mappings
+│   │   └── 📄 ids.config.js              #       🏷️ Genre/Type/Status/Source/Season ID mappings
 │   │
-│   ├── 📂 controllers/                   #    🎮 Route handlers (22 files)
+│   ├── 📂 controllers/                   #    🎮 Route handlers (24 files)
 │   │   ├── 📄 homeInfo.controller.js
 │   │   ├── 📄 animeInfo.controller.js
 │   │   ├── 📄 search.controller.js
 │   │   ├── 📄 episodeList.controller.js
 │   │   ├── 📄 episodeListAjax.controller.js
 │   │   ├── 📄 streamInfo.controller.js
+│   │   ├── 📄 streamResolver.controller.js  # 🆕 Stream URL resolution + quality detection
 │   │   ├── 📄 filter.controller.js
 │   │   ├── 📄 watchPage.controller.js
-│   │   └── 📄 ... (14 more)
+│   │   └── 📄 ... (15 more)
 │   │
-│   ├── 📂 extractors/                    #    🔍 HTML scrapers (22 files)
+│   ├── 📂 extractors/                    #    🔍 HTML scrapers (26 files)
 │   │   ├── 📄 homeInfo.extractor.js      #       🏠 Home page data
 │   │   ├── 📄 search.extractor.js        #       🔍 Search results
 │   │   ├── 📄 animeInfo.extractor.js     #       📺 Anime details
 │   │   ├── 📄 streamInfo.extractor.js    #       📡 Streaming servers
+│   │   ├── 📄 streamResolver.extractor.js #      🔗 Stream URL resolution, M3U8 parser
 │   │   ├── 📄 filter.extractor.js        #       🎯 Filtered results
 │   │   ├── 📄 watchPage.extractor.js     #       ▶️ Watch page data
+│   │   ├── 📄 seasons.extractor.js       #       📅 Season info from watch page
+│   │   ├── 📄 watchOrder.extractor.js    #       📋 Watch order from sidebar
 │   │   ├── 📄 episodeList.extractor.js   #       📋 Episode lists
-│   │   └── 📄 ... (15 more)
+│   │   └── 📄 ... (16 more)
 │   │
 │   ├── 📂 helper/                        #    🛠️ Utility functions
 │   │   ├── 📄 cache.helper.js            #       💾 In-memory caching
 │   │   ├── 📄 countPages.helper.js       #       📄 Pagination counter
 │   │   ├── 📄 extractPages.helper.js     #       📃 Page fetcher
 │   │   ├── 📄 formatTitle.helper.js      #       🔤 Title formatter
+│   │   ├── 📄 mirror.helper.js           #       🌐 Multi-mirror fallback (5 domains)
+│   │   ├── 📄 parseListItem.helper.js    #       📋 Shared list item parser
 │   │   └── 📄 pagination.helper.js       #       📊 Pagination metadata generator
 │   │
 │   ├── 📂 middleware/                    #    🔧 Express middleware
 │   │   └── 📄 creatorInfo.js            #       ✍️ Creator attribution injection
 │   │
 │   └── 📂 routes/                        #    🛤️ Express routes
-│       ├── 📄 apiRoutes.js               #       🌐 Main API routes (33 endpoints)
+│       ├── 📄 apiRoutes.js               #       🌐 Main API routes (38 endpoints)
 │       └── 📄 category.route.js          #       🏷️ Category routes
 │
 ├── 📄 server.js                          # 🚀 Express server entry point
@@ -449,6 +458,21 @@ curl "https://anikototvapi.vercel.app/api/servers?ids=dXNCT3hNQzk3THhSTW8ySnM5..
 
 # Step 3: Get stream URL (pass link_id from Step 2)
 curl "https://anikototvapi.vercel.app/api/stream?id=MTF1dkFtaW9BRTZPbzJJRElFZUZr..."
+```
+
+### Stream URL Resolution
+
+The `/api/stream` endpoint returns an embed URL. To get the actual video URL (m3u8/mp4):
+
+```bash
+# Resolve embed URL to actual stream URL
+curl "https://anikototvapi.vercel.app/api/stream/resolve?id=MTF1dkFtaW9BRTZPbzJJRElFZUZr..."
+
+# Get quality options from an M3U8 playlist
+curl "https://anikototvapi.vercel.app/api/stream/qualities?url=https://example.com/playlist.m3u8"
+
+# Proxy M3U8 playlist (rewrites URLs for CORS-free playback)
+curl "https://anikototvapi.vercel.app/api/stream/proxy?url=https://example.com/playlist.m3u8"
 ```
 
 ### Dub & Sub Switch
@@ -1977,6 +2001,144 @@ console.log(resp.data);
 
 ---
 
+> ## 🔗 GET Stream URL Resolution
+
+### Endpoint
+
+```bash
+/stream/resolve
+```
+
+#### Parameters
+
+| Parameter | Type | Mandatory | Default | Description |
+| :-------: | :--: | :-------: | :-----: | :---------: |
+| `id` | `string` | Yes ✔️ | — | `link_id` from `/servers` response |
+| `slug` | `string` | No | — | Anime slug (for watch page session) |
+
+#### Example of request
+
+```bash
+curl "https://anikototvapi.vercel.app/api/stream/resolve?id=MTF1dkFtaW9BRTZPbzJJRElFZUZr..."
+```
+
+```javascript
+import axios from "axios";
+const resp = await axios.get("https://anikototvapi.vercel.app/api/stream/resolve", {
+  params: { id: "yourLinkId" }
+});
+console.log(resp.data);
+```
+
+#### Sample Response
+
+```json
+{
+  "success": true,
+  "results": {
+    "url": "https://vid-tube.site/hls/b32de9d4a3230c95f52948373e6e1549.m3u8",
+    "type": "hls",
+    "server": "HD-1",
+    "subtitles": []
+  }
+}
+```
+
+---
+
+> ## 📊 GET Stream Qualities
+
+### Endpoint
+
+```bash
+/stream/qualities
+```
+
+#### Parameters
+
+| Parameter | Type | Mandatory | Default | Description |
+| :-------: | :--: | :-------: | :-----: | :---------: |
+| `url` | `string` | Yes ✔️ | — | M3U8 playlist URL |
+
+#### Example of request
+
+```bash
+curl "https://anikototvapi.vercel.app/api/stream/qualities?url=https://example.com/playlist.m3u8"
+```
+
+#### Sample Response
+
+```json
+{
+  "success": true,
+  "results": {
+    "qualities": [
+      { "url": "https://example.com/360.m3u8", "quality": "360p", "width": 640, "height": 360, "bandwidth": 800000, "codec": "avc1" },
+      { "url": "https://example.com/480.m3u8", "quality": "480p", "width": 854, "height": 480, "bandwidth": 1400000, "codec": "avc1" },
+      { "url": "https://example.com/720.m3u8", "quality": "720p", "width": 1280, "height": 720, "bandwidth": 2800000, "codec": "avc1" }
+    ]
+  }
+}
+```
+
+---
+
+> ## 🌐 GET Stream Proxy (M3U8)
+
+### Endpoint
+
+```bash
+/stream/proxy
+```
+
+Rewrites relative URLs inside an M3U8 playlist to proxy through the API, adding CORS headers for cross-origin playback.
+
+#### Parameters
+
+| Parameter | Type | Mandatory | Default | Description |
+| :-------: | :--: | :-------: | :-----: | :---------: |
+| `url` | `string` | Yes ✔️ | — | M3U8 playlist URL |
+
+#### Example of request
+
+```bash
+curl "https://anikototvapi.vercel.app/api/stream/proxy?url=https://example.com/playlist.m3u8"
+```
+
+#### Sample Response
+
+Raw M3U8 content with URLs rewritten to `https://anikototvapi.vercel.app/api/stream/proxy?url=...` and `https://anikototvapi.vercel.app/api/stream/ts-proxy?url=...` for `.ts` segments.
+
+---
+
+> ## 🎬 GET Stream TS Proxy
+
+### Endpoint
+
+```bash
+/stream/ts-proxy
+```
+
+Proxies `.ts` video segments with proper `Content-Type: video/mp2t` and CORS headers.
+
+#### Parameters
+
+| Parameter | Type | Mandatory | Default | Description |
+| :-------: | :--: | :-------: | :-----: | :---------: |
+| `url` | `string` | Yes ✔️ | — | `.ts` segment URL |
+
+#### Example of request
+
+```bash
+curl "https://anikototvapi.vercel.app/api/stream/ts-proxy?url=https://example.com/segment.ts"
+```
+
+#### Sample Response
+
+Binary video segment data with `Content-Type: video/mp2t` and `Access-Control-Allow-Origin: *`.
+
+---
+
 ## 📋 API Response Schema
 
 ### Success Response
@@ -2025,7 +2187,7 @@ All list endpoints include pagination metadata in the response:
 | `hasNext` | `boolean` | Whether there is a next page |
 | `hasPrev` | `boolean` | Whether there is a previous page |
 
-**Endpoints with pagination:** `/api/search`, `/api/most-popular`, `/api/new-release`, `/api/newly-added`, `/api/latest-updated`, `/api/az-list/:letter`, `/api/filter`, `/api/genre/:name`, `/api/type/:name`, `/api/status/:name`
+**Endpoints with pagination:** `/api/search`, `/api/most-popular`, `/api/new-release`, `/api/newly-added`, `/api/latest-updated`, `/api/az-list/:letter`, `/api/filter`, `/api/genre/:name`, `/api/type/:name`, `/api/status/:name`, `/api/upcoming`, `/api/top-rankings`, `/api/recently-updated`, `/api/completed`
 
 ### Anime Item Object
 
@@ -2154,6 +2316,7 @@ CMD ["node", "server.js"]
 
 | Version | Date | Key Changes |
 |:---|:---|:---|
+| **2.2.0** | 2026-07-28 | Streaming resolver, M3U8/TS proxy, 5 new endpoints, bug fixes, full diagnostic sweep |
 | **1.7.2** | 2026-06-08 | Full rebrand AniKotoAPI → AniKotoAPI, docs folder with real data, streaming fix |
 | **1.7.1** | 2026-06-08 | Updated Vercel URL to anikototvapi.vercel.app |
 | **1.7.0** | 2026-06-08 | Premium landing page with SVG icons, live console, particles, glassmorphism |
@@ -2265,21 +2428,25 @@ The API can access 10,000+ anime titles from anikototv.to. The most-popular endp
 
 ### ✅ Completed
 
-- [x] 🎬 33 API endpoints covering all data
+- [x] 🎬 38 API endpoints covering all data
 - [x] 🔍 Full-text search with pagination
 - [x] 📺 Episode lists via AJAX loading
-- [x] 🎯 Advanced filtering (genre, type, status, rating, sort)
+- [x] 🎯 Advanced filtering (genre, type, status, rating, sort, season, year)
 - [x] 🏆 Top 10 rankings (day/week/month)
 - [x] 🎲 Random anime discovery
 - [x] 📡 Streaming server info + mapper API
+- [x] 🔗 Stream URL resolution (embed → m3u8/mp4)
+- [x] 🌐 M3U8 proxy for CORS-free HLS playback
 - [x] 📋 AZ List alphabetical browsing
+- [x] 📅 Seasons and watch order extraction
 - [x] 🔄 Smart caching with LRU and configurable TTL
 - [x] 🚀 One-click Vercel deployment
 - [x] 📖 Comprehensive documentation with real API data
-- [x] 🏗️ AlisaReactionBot-style code comments
+- [x] 🏗️ Full JSDoc documentation coverage
 - [x] 🌐 Premium landing page with SVG icons
 - [x] 📱 PWA manifest and Open Graph image
 - [x] 📚 Full docs/ folder with examples
+- [x] 🐛 Full diagnostic sweep — all 34 endpoints passing
 
 ---
 

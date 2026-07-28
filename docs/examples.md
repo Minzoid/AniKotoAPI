@@ -427,3 +427,40 @@ async function getDownloadLinks(slug, episode) {
 
 getDownloadLinks('one-piece-odmau', 1165);
 ```
+
+### Upcoming Anime
+
+```bash
+curl "https://anikototvapi.vercel.app/api/upcoming"
+```
+
+### Top Rankings
+
+```bash
+curl "https://anikototvapi.vercel.app/api/top-rankings"
+```
+
+### Recently Updated
+
+```bash
+curl "https://anikototvapi.vercel.app/api/recently-updated?tab=sub"
+```
+
+### Completed Anime
+
+```bash
+curl "https://anikototvapi.vercel.app/api/completed"
+```
+
+### Stream URL Resolution
+
+```bash
+# Resolve embed URL to actual video URL
+curl "https://anikototvapi.vercel.app/api/stream/resolve?id=MTF1dkFtaW9BRTZPbzJJRElFZUZr..."
+
+# Get quality options
+curl "https://anikototvapi.vercel.app/api/stream/qualities?url=https://example.com/playlist.m3u8"
+
+# Proxy M3U8 for CORS-free playback
+curl "https://anikototvapi.vercel.app/api/stream/proxy?url=https://example.com/playlist.m3u8"
+```

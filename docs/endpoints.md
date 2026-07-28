@@ -666,3 +666,133 @@ curl "https://anikototvapi.vercel.app/api/az-list/a"
 ```
 
 Returns paginated list of anime starting with the specified letter.
+
+---
+
+## GET /upcoming
+
+Get upcoming anime sorted by air date.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| `page` | number | No | Page number (default: 1) |
+
+```bash
+curl "https://anikototvapi.vercel.app/api/upcoming"
+```
+
+Returns paginated list of upcoming anime with sub/dub counts, type, and rating.
+
+---
+
+## GET /top-rankings
+
+Get top-ranked anime (source site's top section).
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| `page` | number | No | Page number (default: 1) |
+
+```bash
+curl "https://anikototvapi.vercel.app/api/top-rankings"
+```
+
+Returns paginated list with rank numbers extracted from CSS classes.
+
+---
+
+## GET /recently-updated
+
+Get recently updated anime. Supports tab filtering.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| `tab` | string | No | Filter: `sub`, `dub`, `all` (default: `all`) |
+| `page` | number | No | Page number (default: 1) |
+
+```bash
+curl "https://anikototvapi.vercel.app/api/recently-updated"
+```
+
+Returns paginated list from `#recent-update` section with client-side tab filtering.
+
+---
+
+## GET /completed
+
+Get completed anime sorted by score.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| `page` | number | No | Page number (default: 1) |
+
+```bash
+curl "https://anikototvapi.vercel.app/api/completed"
+```
+
+Returns paginated list of finished anime from `section.top-table[data-name='completed']`.
+
+---
+
+## GET /stream/resolve
+
+Resolve an embed URL to actual video URL (m3u8/mp4).
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | `link_id` from `/servers` response |
+| `slug` | string | No | Anime slug (for session cookies) |
+
+```bash
+curl "https://anikototvapi.vercel.app/api/stream/resolve?id=MTF1dkFtaW9BRTZPbzJJRElFZUZr..."
+```
+
+Returns resolved URL, type (hls/mp4), server name, and subtitle URLs.
+
+---
+
+## GET /stream/qualities
+
+Parse M3U8 playlist for available quality options.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| `url` | string | Yes | M3U8 playlist URL |
+
+```bash
+curl "https://anikototvapi.vercel.app/api/stream/qualities?url=https://example.com/playlist.m3u8"
+```
+
+Returns array of quality objects with url, quality label, resolution, bandwidth, and codec.
+
+---
+
+## GET /stream/proxy
+
+M3U8 playlist proxy — rewrites relative URLs to proxy endpoints for CORS-free playback.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| `url` | string | Yes | M3U8 playlist URL |
+
+```bash
+curl "https://anikototvapi.vercel.app/api/stream/proxy?url=https://example.com/playlist.m3u8"
+```
+
+Returns rewritten M3U8 content with all `.m3u8` and `.ts` URLs pointing to proxy endpoints.
+
+---
+
+## GET /stream/ts-proxy
+
+TS video segment proxy — serves `.ts` segments with proper Content-Type and CORS headers.
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| `url` | string | Yes | `.ts` segment URL |
+
+```bash
+curl "https://anikototvapi.vercel.app/api/stream/ts-proxy?url=https://example.com/segment.ts"
+```
+
+Returns binary video segment with `Content-Type: video/mp2t` and `Access-Control-Allow-Origin: *`.

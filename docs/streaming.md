@@ -251,7 +251,65 @@ player.source = {
 | "No episodes found" | Check the anime ID is correct (use `/api/search` first to find slug, then use animeId) |
 | "No servers found" | The `server_ids` may be invalid, try another episode |
 | Stream URL 403 | Some servers require specific referrer headers |
-| CORS error | Use a proxy or access from server-side |
+| CORS error | Use `/api/stream/proxy` endpoint to proxy M3U8 playlists |
+
+---
+
+## Stream URL Resolution (v2.2.0)
+
+The `/api/stream` endpoint returns an **embed URL** (e.g., `vidtube.site/stream/...`). To get the **actual video URL** (m3u8/mp4), use the resolver:
+
+### Step 4: Resolve Embed URL to Video URL
+
+```bash
+# Resolve embed URL to actual stream URL
+curl "https://anikototvapi.vercel.app/api/stream/resolve?id=MTF1dkFtaW9BRTZPbzJJRElFZUZr..."
+```
+
+```json
+{
+  "success": true,
+  "results": {
+    "url": "https://vid-tube.site/hls/b32de9d4a3230c95f52948373e6e1549.m3u8",
+    "type": "hls",
+    "server": "HD-1",
+    "subtitles": []
+  }
+}
+```
+
+### Get Quality Options
+
+```bash
+curl "https://anikototvapi.vercel.app/api/stream/qualities?url=https://example.com/playlist.m3u8"
+```
+
+```json
+{
+  "success": true,
+  "results": {
+    "qualities": [
+      { "url": "https://example.com/360.m3u8", "quality": "360p", "width": 640, "height": 360 },
+      { "url": "https://example.com/720.m3u8", "quality": "720p", "width": 1280, "height": 720 }
+    ]
+  }
+}
+```
+
+### M3U8 Proxy (CORS-Free Playback)
+
+Browser video players often can't fetch M3U8 playlists directly due to CORS. Use the proxy:
+
+```bash
+# Proxy rewrites all relative URLs to go through our API
+curl "https://anikototvapi.vercel.app/api/stream/proxy?url=https://example.com/playlist.m3u8"
+```
+
+The proxy:
+1. Fetches the M3U8 playlist
+2. Rewrites relative `.m3u8` URLs → `https://anikototvapi.vercel.app/api/stream/proxy?url=...`
+3. Rewrites `.ts` segment URLs → `https://anikototvapi.vercel.app/api/stream/ts-proxy?url=...`
+4. Returns the rewritten M3U8 content with CORS headers
 
 ---
 

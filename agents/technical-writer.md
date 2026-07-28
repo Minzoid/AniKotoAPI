@@ -24,7 +24,7 @@ AniKotoAPI/
 ├── CONTRIBUTING.md         # Contribution guidelines
 ├── docs/
 │   ├── index.md           # Overview, quick start
-│   ├── endpoints.md       # Full API reference (36 endpoints)
+│   ├── endpoints.md       # Full API reference (38 endpoints)
 │   ├── streaming.md       # 3-step streaming flow guide
 │   ├── examples.md        # cURL, JS, Python examples
 │   └── architecture.md    # Project structure, tech stack
@@ -140,7 +140,7 @@ flowchart TD
 
 1. **Update CHANGELOG** — Add entries for every version bump
 2. **Maintain README** — Keep endpoint list, badges, examples current
-3. **Document endpoints** — Full docs for each of 36 endpoints
+3. **Document endpoints** — Full docs for each of 38 endpoints
 4. **Write examples** — cURL, JS, Python for common use cases
 5. **Update OpenAPI** — Keep spec in sync with actual routes
 6. **Review docs/ folder** — Keep all 5 markdown files current
