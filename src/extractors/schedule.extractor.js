@@ -48,6 +48,8 @@ const extractSchedule = async (date) => {
 
     const schedule = [];
 
+    // NOTE: Dual selector pattern — different mirrors use different HTML structures
+    // .schedule-item = new layout, .anime-schedule .item = old layout
     $(".schedule-item, .anime-schedule .item").each((i, el) => {
       const slug = $(el).find("a").attr("href")?.split("/watch/").pop() || "";
       const title = $(el).find(".film-name a, .name").text().trim() || "";

@@ -45,6 +45,7 @@ const EMBED_API_MAP = {
   "embed.bunkrerrer.com": "megaplay-1.buzz",
 };
 
+// ---- FEATURE: Server Name Normalization ----
 /**
  * Normalizes server display names to clean identifiers
  * @param {string} name - Raw server name (e.g., "VidPlay-1")
@@ -55,6 +56,7 @@ const normalizeServerName = (name) => {
   return SERVER_NAME_MAP[name] || name.toLowerCase().replace(/[-\s]+\d+$/, "").trim();
 };
 
+// ---- FEATURE: Stream URL Resolution ----
 /**
  * Resolves the actual video stream URL from an embed player page.
  * Extracts data-id from the embed HTML, then queries the megaplay API.
@@ -166,6 +168,7 @@ const resolveStreamUrl = async (embedUrl, options = {}) => {
   }
 };
 
+// ---- FEATURE: Batch Stream URL Resolution ----
 /**
  * Resolves stream URLs for multiple episodes in batch
  * @param {string} embedUrl - The embed player URL
@@ -185,6 +188,7 @@ const resolveStreamUrls = async (embedUrl, options = {}) => {
 // M3U8 PARSER
 // ══════════════════════════════════════════════════════════════
 
+// ---- FEATURE: M3U8 Quality Parser ----
 /**
  * Parses an M3U8 playlist to extract available quality options.
  * Supports both master playlists (multiple qualities) and media playlists.
@@ -265,6 +269,7 @@ const parseM3u8Qualities = async (m3u8Url, options = {}) => {
 // SUBTITLE EXTRACTOR
 // ══════════════════════════════════════════════════════════════
 
+// ---- FEATURE: Subtitle Track Extractor ----
 /**
  * Extracts subtitle information from API response data
  * @param {object} apiData - The megaplay API response

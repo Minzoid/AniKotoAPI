@@ -22,6 +22,7 @@
 // CREATOR METADATA
 // ══════════════════════════════════════════════════════════════
 
+// ---- FEATURE: Creator Attribution Object ----
 // NOTE: Injected into every response unless `data.creator` already exists
 const creatorInfo = {
   creator: "Shinei Nouzen",
@@ -34,6 +35,7 @@ const creatorInfo = {
 // MIDDLEWARE
 // ══════════════════════════════════════════════════════════════
 
+// ---- FEATURE: Response Creator Injection Middleware ----
 /**
  * Express middleware that enriches every JSON response with
  * creator attribution and an IN-formatted timestamp.

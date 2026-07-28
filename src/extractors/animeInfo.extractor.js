@@ -55,11 +55,14 @@ const extractAnimeInfo = async (slug) => {
     const reviewCount = $("#w-rating span[itemprop='reviewCount']").text().trim() || "";
     const animeId = parseInt($("#watch-main").attr("data-id")) || 0;
 
+    // NOTE: .bmeta .meta:first-child contains: type, premiered, aired, status, genres
+    // NOTE: Positional selectors (nth-child) are fragile — match source site's exact HTML structure
     const type = $(".bmeta .meta:first-child > div:nth-child(1) span").text().trim() || "";
     const premiered = $(".bmeta .meta:first-child > div:nth-child(2) span").text().trim() || "";
     const aired = $(".bmeta .meta:first-child > div:nth-child(3) span").text().trim() || "";
     const status = $(".bmeta .meta:first-child > div:nth-child(4) span a").text().trim() || "";
 
+    // NOTE: .bmeta .meta:nth-child(2) contains: MAL score, duration, episodes, studios, producers
     const malScore = $(".bmeta .meta:nth-child(2) > div:nth-child(1) span").text().trim() || "";
     const duration = $(".bmeta .meta:nth-child(2) > div:nth-child(2) span").text().trim() || "";
     const episodes = $(".bmeta .meta:nth-child(2) > div:nth-child(3) span").text().trim() || "";

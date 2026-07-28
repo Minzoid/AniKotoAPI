@@ -19,9 +19,17 @@
 import * as cheerio from "cheerio";
 import { fetchWithMirror } from "../helper/mirror.helper.js";
 
+// ══════════════════════════════════════════════════════════════
+// SEASONS EXTRACTOR
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Season Information Extraction ----
 /**
  * Fetches and parses season information for an anime.
  * Extracts season data from the watch page sidebar.
+ *
+ * NOTE: The source site's AJAX endpoints (/ajax/seasons/) don't exist,
+ * so we extract from the watch page HTML sidebar instead.
  *
  * @param {string|number} slugOrId - The anime slug or numeric ID
  * @returns {Promise<Object>} Object with animeId, totalSeasons, and seasons array
@@ -41,7 +49,7 @@ const extractSeasons = async (slugOrId) => {
     const animeId = parseInt($("#watch-main").attr("data-id")) || 0;
     const seasons = [];
 
-    // NOTE: Extract seasons from #ani-seasons section (if populated)
+    // NOTE: Try dedicated seasons section first (#ani-seasons)
     $("#ani-seasons .swiper-slide, .seasons .item, #w-seasons .item").each((_, el) => {
       const link = $(el).find("a").first();
       const href = link.attr("href") || "";
@@ -54,7 +62,7 @@ const extractSeasons = async (slugOrId) => {
       }
     });
 
-    // NOTE: If no dedicated seasons section, extract from episode list sidebar
+    // NOTE: Fallback — extract from episode list sidebar if no dedicated section
     if (seasons.length === 0) {
       $(".w-side-section .item").each((_, el) => {
         const link = $(el).find("a").first();
@@ -83,3 +91,4 @@ const extractSeasons = async (slugOrId) => {
 };
 
 export { extractSeasons };
+// ══════════════════════════════════════════════════════════════ END: seasons.extractor.js

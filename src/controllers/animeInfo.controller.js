@@ -42,6 +42,7 @@ import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 const getAnimeInfo = async (req, res, next) => {
   try {
     const { id, slug } = req.query;
+    // NOTE: Accept both ?id= and ?slug= for backwards compatibility
     const animeSlug = id || slug;
     if (!animeSlug) {
       return res.status(400).json({ success: false, message: "Anime slug is required (?id= or ?slug=)" });

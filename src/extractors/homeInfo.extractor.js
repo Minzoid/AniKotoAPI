@@ -39,6 +39,7 @@ const extractHomeInfo = async () => {
     const $ = cheerio.load(data);
 
     const spotlights = [];
+    // NOTE: #hotest .swiper-slide.item = spotlight carousel on homepage
     $("#hotest .swiper-slide.item").each((i, el) => {
       const slug = $(el).find("a.play").attr("href")?.split("/watch/").pop() || "";
       const poster = $(el).find(".image div").attr("style")?.match(/url\(['"]?(.+?)['"]?\)/)?.[1] || "";
@@ -68,6 +69,7 @@ const extractHomeInfo = async () => {
     });
 
     const trending = [];
+    // NOTE: Dual selector — .section-updated = new layout, #recent-update = old layout
     $(".section-updated .item, #recent-update .item").each((i, el) => {
       const slug = $(el).find("a.name.d-title").attr("href")?.split("/watch/").pop() || "";
       const poster = $(el).find(".poster img").attr("src") || "";

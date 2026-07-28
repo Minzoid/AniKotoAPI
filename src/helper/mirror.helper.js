@@ -24,6 +24,7 @@ import { getCache, setCache } from "./cache.helper.js";
 // MIRROR CONFIGURATION
 // ══════════════════════════════════════════════════════════════
 
+// ---- FEATURE: Mirror Domain Configuration ----
 // Default mirrors with names and priority
 const DEFAULT_MIRRORS = [
   { url: "https://anikototv.to", name: "Primary", priority: 1 },
@@ -63,6 +64,7 @@ let failedMirrors = new Set();
 // HELPER FUNCTIONS
 // ══════════════════════════════════════════════════════════════
 
+// ---- FEATURE: Mirror Health Check ----
 /**
  * Check if a mirror is accessible
  * @param {string} baseUrl - Mirror base URL
@@ -81,6 +83,7 @@ async function checkMirror(baseUrl) {
   }
 }
 
+// ---- FEATURE: Working Mirror Discovery ----
 /**
  * Get the best available mirror
  * @returns {Promise<string>} Working mirror base URL
@@ -116,6 +119,7 @@ async function getWorkingMirror() {
   return workingMirror;
 }
 
+// ---- FEATURE: Mirror Cache Reset ----
 /**
  * Reset mirror cache and failed state
  */
@@ -126,6 +130,7 @@ function resetMirrorCache() {
   console.log("[MIRROR] Cache reset");
 }
 
+// ---- FEATURE: URL Builder ----
 /**
  * Build URL with current mirror
  * @param {string} path - URL path
@@ -137,6 +142,7 @@ function buildUrl(path, baseUrl = workingMirror) {
   return `${base}${path}`;
 }
 
+// ---- FEATURE: Resilient Fetch with Mirror Fallback ----
 /**
  * Fetch with automatic mirror fallback
  * @param {string} path - URL path to fetch
@@ -227,6 +233,7 @@ async function fetchWithMirror(path, options = {}) {
   throw new Error(`All mirrors failed. Last error: ${lastError?.message}`);
 }
 
+// ---- FEATURE: Mirror Status Reporter ----
 /**
  * Get mirror status for all domains
  * @returns {Promise<Array>}
@@ -260,3 +267,4 @@ export {
   getMirrorStatus,
   ALL_MIRRORS
 };
+// ══════════════════════════════════════════════════════════════ END: mirror.helper.js

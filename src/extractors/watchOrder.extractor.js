@@ -19,9 +19,17 @@
 import * as cheerio from "cheerio";
 import { fetchWithMirror } from "../helper/mirror.helper.js";
 
+// ══════════════════════════════════════════════════════════════
+// WATCH ORDER EXTRACTOR
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Watch Order / Related Anime Extraction ----
 /**
  * Fetches and parses watch order / related anime for an anime.
  * Extracts related anime from the watch page sidebar.
+ *
+ * NOTE: The source site's AJAX endpoints (/ajax/related/) don't exist,
+ * so we extract from the watch page HTML sidebar instead.
  *
  * @param {string|number} slugOrId - The anime slug or numeric ID
  * @returns {Promise<Object>} Object with animeId, totalRelated, related array
@@ -41,7 +49,7 @@ const extractWatchOrder = async (slugOrId) => {
     const animeId = parseInt($("#watch-main").attr("data-id")) || 0;
     const related = [];
 
-    // NOTE: Extract from #w-related section
+    // NOTE: Try dedicated related section first (#w-related)
     $("#w-related .item, .w-side-section:has(.title:contains('Related')) .item").each((_, el) => {
       const link = $(el).find("a").first();
       const href = link.attr("href") || "";
@@ -55,7 +63,7 @@ const extractWatchOrder = async (slugOrId) => {
       }
     });
 
-    // NOTE: Also extract trending sidebar items as suggested watch order
+    // NOTE: Fallback — extract trending sidebar items as suggested watch order
     if (related.length === 0) {
       $(".w-side-section:has(.title:contains('Trending')) .item, .w-side-section:first .item").each((_, el) => {
         const link = $(el).find("a").first();
@@ -85,3 +93,4 @@ const extractWatchOrder = async (slugOrId) => {
 };
 
 export { extractWatchOrder };
+// ══════════════════════════════════════════════════════════════ END: watchOrder.extractor.js

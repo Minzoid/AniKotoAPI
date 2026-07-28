@@ -105,6 +105,7 @@ const extractNewlyAdded = async (page = 1) => {
 // LATEST UPDATED EXTRACTION
 // ══════════════════════════════════════════════════════════════
 
+// ---- FEATURE: Latest Updated Extraction ----
 /**
  * Fetches and parses recently updated anime with pagination.
  * Uses the /latest-updated page which shows anime sorted by last update time.

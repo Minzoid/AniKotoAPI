@@ -43,10 +43,13 @@ const extractRandom = async () => {
   try {
     const { data, request } = await axios.get(URLS.random, {
       headers,
+      // NOTE: maxRedirects=5 allows following the redirect chain from /random to the final anime page
       maxRedirects: 5,
+      // NOTE: validateStatus < 400 prevents axios from throwing on redirects (3xx)
       validateStatus: (status) => status < 400
     });
 
+    // NOTE: request.responseURL contains the final URL after all redirects
     const finalUrl = request?.responseURL || URLS.random;
     const slug = finalUrl.split("/watch/").pop() || "";
 

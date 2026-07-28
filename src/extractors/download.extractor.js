@@ -26,10 +26,17 @@ import axios from "axios";
 import { fetchWithMirror } from "../helper/mirror.helper.js";
 import { headers } from "../configs/header.config.js";
 
+// ══════════════════════════════════════════════════════════════
+// BASE64 DECODER
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Base64 Download Data Decoder ----
 /**
- * Decodes base64 download data from the website
+ * Decodes base64 download data from the website.
+ * The source site encodes download server URLs as base64 JSON.
+ *
  * @param {string} encoded - Base64 encoded string
- * @returns {Object} Decoded download data
+ * @returns {Object|null} Decoded download data, or null on failure
  */
 function decodeDownloadData(encoded) {
   try {
@@ -40,8 +47,15 @@ function decodeDownloadData(encoded) {
   }
 }
 
+// ══════════════════════════════════════════════════════════════
+// REDIRECT FOLLOWER
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Redirect Chain Resolver ----
 /**
- * Follows redirect chain to get the final URL
+ * Follows redirect chain to get the final URL.
+ * Uses axios maxRedirects to auto-follow up to 5 redirects.
+ *
  * @param {string} url - Starting URL
  * @returns {Promise<string>} Final URL after redirects
  */
@@ -52,9 +66,10 @@ async function followRedirects(url) {
       maxRedirects: 5,
       timeout: 10000
     });
+    // NOTE: response.request.res.responseUrl contains the final URL after all redirects
     return response.request?.res?.responseUrl || response.config?.url || url;
   } catch (error) {
-    // If we get a redirect error, try to extract the location
+    // NOTE: On redirect errors, axios throws — extract Location header manually
     if (error.response?.headers?.location) {
       return error.response.headers.location;
     }
@@ -62,6 +77,11 @@ async function followRedirects(url) {
   }
 }
 
+// ══════════════════════════════════════════════════════════════
+// DOWNLOAD LINKS EXTRACTOR
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Download Links Extraction ----
 /**
  * Fetches and parses download links for a specific episode.
  * Scrapes the watch page to extract download-data attributes
@@ -84,7 +104,7 @@ const extractDownloadLinks = async (slug, ep) => {
   try {
     const { data } = await fetchWithMirror(`/watch/${slug}/ep-${ep}`);
     
-    // Handle both string HTML and JSON responses
+    // NOTE: Response may be raw HTML string or JSON-wrapped HTML
     let html = "";
     if (typeof data === "string") {
       try {
@@ -105,8 +125,7 @@ const extractDownloadLinks = async (slug, ep) => {
 
     const downloads = [];
 
-    // Find all download buttons with download-data attribute
-    // Multiple selectors to handle different HTML structures
+    // NOTE: Multiple selectors to handle different HTML structures across mirrors
     const selectors = [
       "[download-data]",
       "li.download-icon",
@@ -124,13 +143,13 @@ const extractDownloadLinks = async (slug, ep) => {
         if (encoded && encoded.length > 10) {
           const decoded = decodeDownloadData(encoded);
           if (decoded) {
-            // Extract URLs from the decoded data
+            // NOTE: Decoded data is a nested object: { serverGroup: { serverName: url } }
             for (const [serverGroup, servers] of Object.entries(decoded)) {
               for (const [serverName, url] of Object.entries(servers)) {
-                // Avoid duplicates
+                // Avoid duplicates by URL
                 const exists = downloads.some(d => d.url === url);
                 if (!exists) {
-                  // Construct worker URL from nekostream.site URL
+                  // NOTE: nekostream.site URLs need Cloudflare Worker proxy
                   const workerUrl = url.includes("nekostream.site") 
                     ? url.replace("https://pahe.nekostream.site/", "https://proud-dew-d754.download992.workers.dev/")
                     : null;
@@ -155,7 +174,7 @@ const extractDownloadLinks = async (slug, ep) => {
       if (downloads.length > 0) break;
     }
 
-    // Try to follow redirects for each download URL
+    // NOTE: Follow redirects for each download URL to resolve kwik.cx links
     for (const download of downloads) {
       if (download.workerUrl) {
         try {
@@ -164,7 +183,7 @@ const extractDownloadLinks = async (slug, ep) => {
             download.kwikUrl = finalUrl;
           }
         } catch (error) {
-          // If redirect fails, construct a placeholder kwik URL
+          // NOTE: Redirect may fail due to Cloudflare — construct placeholder
           download.kwikUrl = "https://kwik.cx/f/[requires-browser]";
         }
       }
@@ -185,3 +204,4 @@ const extractDownloadLinks = async (slug, ep) => {
 };
 
 export { extractDownloadLinks };
+// ══════════════════════════════════════════════════════════════ END: download.extractor.js

@@ -97,6 +97,7 @@ const getNewlyAdded = async (req, res, next) => {
 // CONTROLLER: LATEST UPDATED
 // ══════════════════════════════════════════════════════════════
 
+// ---- FEATURE: Latest Updated Endpoint ----
 /**
  * Handles GET /api/latest-updated requests. Returns paginated list
  * of recently updated anime sorted by last update time.

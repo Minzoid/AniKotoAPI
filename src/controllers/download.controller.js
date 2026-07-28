@@ -18,6 +18,11 @@
 import { extractDownloadLinks } from "../extractors/download.extractor.js";
 import { getCache, setCache, TTL } from "../helper/cache.helper.js";
 
+// ══════════════════════════════════════════════════════════════
+// DOWNLOAD LINKS HANDLER
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Download Links ----
 /**
  * Handles GET /api/download requests. Returns download links
  * for the specified anime episode.
@@ -58,3 +63,4 @@ const getDownloadLinks = async (req, res, next) => {
 };
 
 export { getDownloadLinks };
+// ══════════════════════════════════════════════════════════════ END: download.controller.js

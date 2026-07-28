@@ -19,6 +19,11 @@
 import * as cheerio from "cheerio";
 import { fetchWithMirror } from "./mirror.helper.js";
 
+// ══════════════════════════════════════════════════════════════
+// PAGE EXTRACTOR
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Paginated Page Fetcher ----
 /**
  * Fetches HTML content from a URL with pagination and mirror fallback.
  * Automatically tries alternative domains if primary fails.
@@ -40,7 +45,7 @@ const extractPages = async (url, page = 1) => {
         const urlObj = new URL(url);
         path = urlObj.pathname + urlObj.search;
       } catch (e) {
-        // If URL parsing fails, try to extract path manually
+        // NOTE: If URL parsing fails, try regex fallback
         const match = url.match(/https?:\/\/[^/]+(\/.*)/);
         if (match) path = match[1];
       }
@@ -57,3 +62,4 @@ const extractPages = async (url, page = 1) => {
 };
 
 export { extractPages };
+// ══════════════════════════════════════════════════════════════ END: extractPages.helper.js
