@@ -235,10 +235,18 @@ app.use((req, res) => {
       success: false,
       message: "Endpoint not found",
       availableEndpoints: [
-        "/", "/search", "/info", "/episodes", "/servers", "/stream",
-        "/spotlight", "/trending", "/top-ten", "/random", "/most-popular",
-        "/new-release", "/schedule", "/genre/:genre", "/type/:type",
-        "/status/:status", "/health", "/stats", "/openapi"
+        "/", "/search", "/search/suggest", "/info", "/watch",
+        "/episodes/:id", "/episodes-ajax/:id", "/stream", "/servers",
+        "/mapper-servers", "/download", "/stream/resolve",
+        "/stream/qualities", "/stream/proxy", "/stream/ts-proxy",
+        "/spotlight", "/trending", "/top-ten", "/suggestions",
+        "/random", "/most-popular", "/upcoming", "/top-rankings",
+        "/recently-updated", "/completed", "/new-release",
+        "/newly-added", "/latest-updated", "/trending-sidebar",
+        "/seasons/:id", "/watch-order/:id", "/az-list/:letter",
+        "/filter", "/genre/:genre", "/type/:type", "/status/:status",
+        "/schedule", "/health", "/stats", "/cache/stats",
+        "/mirrors", "/openapi"
       ]
     });
   }

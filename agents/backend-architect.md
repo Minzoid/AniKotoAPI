@@ -25,7 +25,7 @@ Client → Vercel Edge/Express → Rate Limiter → CORS + Security Headers → 
 
 ### Key Files
 - `server.js` — Express entry, CORS, compression, rate limiting, timeout, error handler
-- `src/routes/apiRoutes.js` — All 36 route definitions + OpenAPI spec
+- `src/routes/apiRoutes.js` — All 38 route definitions + OpenAPI spec
 - `src/helper/cache.helper.js` — LRU cache with per-endpoint TTL (3min-60min)
 - `src/helper/mirror.helper.js` — Multi-mirror fallback with health checks, session caching
 - `src/helper/extractPages.helper.js` — Page fetching using `fetchWithMirror()`
@@ -34,9 +34,9 @@ Client → Vercel Edge/Express → Rate Limiter → CORS + Security Headers → 
 - `src/controllers/` — 26 route handlers
 - `src/configs/ids.config.js` — Genre/Type/Status/Rating/Sort/Source/Season ID mappings
 
-### Endpoints (36 total)
+### Endpoints (38 total)
 **Core**: `/` (home), `/search`, `/info`, `/watch`, `/episodes/:id`, `/episodes-ajax/:id`
-**Streaming**: `/servers`, `/stream`, `/download`, `/mapper-servers`
+**Streaming**: `/servers`, `/stream`, `/download`, `/mapper-servers`, `/stream/resolve`, `/stream/qualities`, `/stream/proxy`, `/stream/ts-proxy`
 **Discovery**: `/spotlight`, `/trending`, `/top-ten`, `/random`, `/suggestions`, `/most-popular`
 **New**: `/upcoming`, `/top-rankings`, `/recently-updated`, `/completed`
 **Lists**: `/new-release`, `/newly-added`, `/latest-updated`, `/trending-sidebar`, `/az-list/:letter`

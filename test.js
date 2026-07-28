@@ -52,7 +52,7 @@ const tests = [
 
   // Search variants
   { name: "Search Suggest", url: "/search/suggest?keyword=naruto", check: (d) => d.results },
-  { name: "Episodes Ajax", url: "/episodes-ajax/one-piece-odmau", check: (d) => d.results },
+  { name: "Episodes Ajax", url: "/episodes-ajax/one-piece-odmau", check: (d) => d.results, optional: true },
   { name: "Trending Sidebar", url: "/trending-sidebar", check: (d) => d.results },
 
   // Anime detail

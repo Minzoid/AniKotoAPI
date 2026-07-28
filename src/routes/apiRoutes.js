@@ -607,6 +607,7 @@ app.post("/api/mirrors/reset", (req, res) => {
 // ---- FEATURE: OpenAPI specification ----
 app.get("/api/openapi", (req, res) => {
   res.json({
+    success: true,
     openapi: "3.0.3",
     info: {
       title: "AniKotoAPI",
