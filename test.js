@@ -22,7 +22,9 @@ const tests = [
   { name: "Info", url: "/info?id=one-piece-odmau", check: (d) => d.results?.title },
   { name: "Episodes", url: "/episodes/one-piece-odmau", check: (d) => d.results?.episodes },
   { name: "Servers", url: "/servers?ids=1", check: (d) => d.results },
-  { name: "Watch", url: "/watch?slug=one-piece-odmau&ep=1", check: (d) => d.results?.servers || d.results?.episodeNumber },
+  // Streaming
+  { name: "Stream", url: "/watch?slug=one-piece-odmau&ep=1", check: (d) => d.results?.servers || d.results?.episodeNumber },
+  { name: "Stream Resolve", url: "/stream/resolve?id=MTF1dkFtaW9BRTZPbzJJRElFZUZrNHVJWFRVWWRWdU5JYnhuaU95bVRYSzk1Z0lVVjJha2FnSE95U3F4M1RsaXNCSnlnd05rTTlBUldTZGZxZjQzajVxcXVDRVY5bjBocnRCV2tkNnNzaXFnc3c5M1JJWjRnNmt5bDNPdm1TczlvVXdwWGplKzFmQmZJMlp0OTBNTXd3PT0&slug=one-piece-odmau", check: (d) => d.results?.url, optional: true },
 
   // Discovery endpoints
   { name: "Suggestions", url: "/suggestions?keyword=naruto", check: (d) => d.results },

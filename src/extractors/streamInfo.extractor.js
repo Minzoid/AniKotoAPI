@@ -20,6 +20,7 @@ import * as cheerio from "cheerio";
 import { headers } from "../configs/header.config.js";
 import { BASE_URL } from "../configs/dataUrl.js";
 import { fetchWithMirror } from "../helper/mirror.helper.js";
+import { normalizeServerName } from "./streamResolver.extractor.js";
 
 // ══════════════════════════════════════════════════════════════
 // STREAM INFO EXTRACTOR
@@ -28,33 +29,51 @@ import { fetchWithMirror } from "../helper/mirror.helper.js";
 // ---- FEATURE: Resolve a single stream URL from a linkId ----
 /**
  * Fetches the actual stream URL and skip data for a given server link ID.
- * This is the primary method for resolving playable video URLs.
+ * First establishes a session by fetching the watch page, then queries
+ * the AJAX stream endpoint with proper session context.
  *
  * @param {string} linkId - The server link ID to resolve
- * @returns {Promise<Object>} Object with linkId, url, and skipData (intro/outro timestamps)
+ * @param {string} [watchSlug] - Optional watch page slug to establish session
+ * @returns {Promise<Object>} Object with linkId, url, type, skipData (intro/outro timestamps)
  *
  * @example
- *   const stream = await extractStreamInfo("abc123");
+ *   const stream = await extractStreamInfo("abc123", "one-piece-odmau");
  *   console.log(stream.url);      // direct video URL
  *   console.log(stream.skipData); // intro/outro skip ranges
  */
-const extractStreamInfo = async (linkId) => {
+const extractStreamInfo = async (linkId, watchSlug = null) => {
   try {
+    // NOTE: Establish session by visiting watch page first (required for AJAX endpoints)
+    if (watchSlug) {
+      await fetchWithMirror(`/watch/${watchSlug}`);
+    }
+
     const path = `/ajax/server?get=${linkId}`;
-    const { data } = await fetchWithMirror(path, {
+    const { data: raw } = await fetchWithMirror(path, {
       headers: { "X-Requested-With": "XMLHttpRequest" }
     });
 
+    // NOTE: Handle both string JSON and parsed object responses
+    let data = raw;
+    if (typeof raw === "string") {
+      try { data = JSON.parse(raw); } catch { data = {}; }
+    }
+
     if (!data || !data.result) {
-      return { linkId, url: null, skipData: null };
+      return { linkId, url: null, type: null, skipData: null };
     }
 
     const result = typeof data.result === "string" ? (() => { try { return JSON.parse(data.result); } catch { return {}; } })() : data.result;
 
+    const streamUrl = result.url || null;
+    const streamType = streamUrl?.includes(".m3u8") ? "hls" : streamUrl ? "mp4" : null;
+
     return {
       linkId,
-      url: result.url || null,
-      skipData: result.skip_data || null
+      url: streamUrl,
+      type: streamType,
+      skipData: result.skip_data || null,
+      backup: result.backup || null,
     };
   } catch (error) {
     throw error;
@@ -68,17 +87,24 @@ const extractStreamInfo = async (linkId) => {
 // ---- FEATURE: Fetch available servers for a set of episode IDs ----
 /**
  * Retrieves the server list for the given episode IDs from the AJAX endpoint.
- * Returns raw server data as provided by the source site.
+ * First establishes a session by fetching the watch page, then queries
+ * the AJAX server list endpoint with proper session context.
  *
  * @param {string} episodeIds - Comma-separated or single episode ID string
+ * @param {string} [watchSlug] - Optional watch page slug to establish session
  * @returns {Promise<Array>} Array of server objects with type, link_id, ep_id, etc.
  *
  * @example
- *   const servers = await extractServerList("12345");
+ *   const servers = await extractServerList("12345", "one-piece-odmau");
  *   console.log(servers[0].link_id); // first server's link ID
  */
-const extractServerList = async (episodeIds) => {
+const extractServerList = async (episodeIds, watchSlug = null) => {
   try {
+    // NOTE: Establish session by visiting watch page first (required for AJAX endpoints)
+    if (watchSlug) {
+      await fetchWithMirror(`/watch/${watchSlug}`);
+    }
+
     const path = `/ajax/server/list?servers=${episodeIds}`;
     const { data: raw } = await fetchWithMirror(path, {
       headers: { "X-Requested-With": "XMLHttpRequest" }
@@ -88,19 +114,23 @@ const extractServerList = async (episodeIds) => {
     const $ = cheerio.load(html);
 
     const servers = [];
-    $(".servers .type").each((_, typeEl) => {
-      const type = $(typeEl).attr("data-type") || "sub";
-      $(typeEl).find("li[data-link-id]").each((__, li) => {
-        servers.push({
-          type,
-          ep_id: $(li).attr("data-ep-id") || "",
-          link_id: $(li).attr("data-link-id") || "",
-          cmid: $(li).attr("data-cmid") || "",
-          sv_id: $(li).attr("data-sv-id") || "",
-          name: $(li).text().trim() || ""
+      $(".servers .type").each((_, typeEl) => {
+        const type = $(typeEl).attr("data-type") || "sub";
+        const label = $(typeEl).find("label").text().trim() || type.toUpperCase();
+        $(typeEl).find("li[data-link-id]").each((__, li) => {
+          const rawName = $(li).text().trim() || "";
+          servers.push({
+            type,
+            typeLabel: label,
+            ep_id: $(li).attr("data-ep-id") || "",
+            link_id: $(li).attr("data-link-id") || "",
+            cmid: $(li).attr("data-cmid") || "",
+            sv_id: $(li).attr("data-sv-id") || "",
+            name: rawName,
+            normalizedName: normalizeServerName(rawName),
+          });
         });
       });
-    });
 
     return servers;
   } catch (error) {

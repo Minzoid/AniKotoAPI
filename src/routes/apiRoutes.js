@@ -26,6 +26,7 @@ import { getSearchResults, getSearchSuggestions } from "../controllers/search.co
 import { getEpisodeList } from "../controllers/episodeList.controller.js";
 import { getEpisodeListAjax } from "../controllers/episodeListAjax.controller.js";
 import { getStreamInfo, getServerList, getMapperServers } from "../controllers/streamInfo.controller.js";
+import { getResolvedStream, getStreamQualities } from "../controllers/streamResolver.controller.js";
 import { getSchedule } from "../controllers/schedule.controller.js";
 import { getSpotlight } from "../controllers/spotlight.controller.js";
 import { getTrending } from "../controllers/trending.controller.js";
@@ -204,6 +205,24 @@ app.use((req, res, next) => {
   app.get("/api/download", async (req, res, next) => {
     try {
       await getDownloadLinks(req, res, next);
+    } catch (error) {
+      jsonError(res, error.message);
+    }
+  });
+
+  // ---- FEATURE: Resolve actual stream URL (m3u8/mp4) from link ID ----
+  app.get("/api/stream/resolve", async (req, res, next) => {
+    try {
+      await getResolvedStream(req, res, next);
+    } catch (error) {
+      jsonError(res, error.message);
+    }
+  });
+
+  // ---- FEATURE: Available quality options for a stream URL ----
+  app.get("/api/stream/qualities", async (req, res, next) => {
+    try {
+      await getStreamQualities(req, res, next);
     } catch (error) {
       jsonError(res, error.message);
     }
@@ -475,7 +494,7 @@ app.get("/api/stats", (req, res) => {
         ttl: "5 minutes",
         description: "Map-based cache with TTL expiration",
       },
-      endpoints: 34,
+      endpoints: 36,
       timestamp: new Date().toISOString(),
     },
   });
@@ -544,6 +563,8 @@ app.get("/api/openapi", (req, res) => {
       "/mirrors/reset": { post: { summary: "Reset mirror cache", tags: ["System"] } },
       "/openapi": { get: { summary: "OpenAPI spec", tags: ["System"] } },
       "/watch": { get: { summary: "Watch page data", tags: ["Streaming"] } },
+      "/stream/resolve": { get: { summary: "Resolve actual stream URL (m3u8/mp4)", tags: ["Streaming"] } },
+      "/stream/qualities": { get: { summary: "Available quality options for M3U8 stream", tags: ["Streaming"] } },
       "/search/suggest": { get: { summary: "Search suggestions", tags: ["Search"] } },
       "/episodes-ajax/{id}": { get: { summary: "AJAX episode list", tags: ["Episodes"] } },
       "/mapper-servers": { get: { summary: "Mapper servers", tags: ["Streaming"] } },
