@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.0] - 2026-07-28
 
 ### Added
+- **Stream Resolve Endpoint**: `GET /api/stream/resolve?id=&slug=` — Resolves actual m3u8/mp4 URLs from embed player URLs (vidtube.site → megaplay API → m3u8 playlist)
+- **Stream Qualities Endpoint**: `GET /api/stream/qualities?url=` — Parses M3U8 playlists for available quality options with resolution, bandwidth, and URLs
+- **Stream Resolver Extractor**: Full pipeline for resolving actual video URLs from embed pages
+- **M3U8 Quality Parser**: Parses master playlists to extract quality options sorted by resolution
+- **Server Name Normalization**: Maps display names to clean identifiers (VidPlay-1 → vidplay, HD-1 → hd)
+- **Subtitle Extraction**: Extracts subtitle tracks from streaming API responses
+- **Embed API Domain Mapping**: Maps vidtube.site → megaplay-1.buzz for stream resolution
 - **Shared Helper**: New `parseListItem.helper.js` for unified anime list item parsing across all extractors
 - **Graceful Shutdown**: Server now handles SIGTERM/SIGINT signals for clean shutdown
 - **Request ID Tracking**: Every request gets a unique `X-Request-Id` header for debugging
