@@ -212,5 +212,90 @@ const SORT_IDS = {
   "number_of_episodes": "7"
 };
 
-export { GENRE_IDS, TYPE_IDS, STATUS_IDS, RATING_IDS, SORT_IDS };
+// ══════════════════════════════════════════════════════════════
+// SOURCE TYPE ID MAPPING
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Source type slug to numeric ID mapping ----
+/**
+ * Maps anime source type slugs to their corresponding numeric IDs.
+ * Used to filter anime by their original source material.
+ *
+ * @type {Object}
+ * @property {string} manga - ID for manga source
+ * @property {string} light-novel - ID for light novel source
+ * @property {string} original - ID for original work
+ * @property {string} visual-novel - ID for visual novel source
+ * @property {string} game - ID for game source
+ * @property {string} 4-koma-manga - ID for 4-koma manga source
+ *
+ * @example
+ *   // Get source ID for filtering
+ *   SOURCE_IDS["manga"] // "6"
+ *   SOURCE_IDS["original"] // "10"
+ */
+const SOURCE_IDS = {
+  "4-koma-manga": "1",
+  "book": "2",
+  "card-game": "3",
+  "game": "4",
+  "light-novel": "5",
+  "manga": "6",
+  "mixed-media": "7",
+  "music": "8",
+  "novel": "9",
+  "original": "10",
+  "other": "11",
+  "picture-book": "12",
+  "radio": "13",
+  "unknown": "14",
+  "video-game": "15",
+  "visual-novel": "16",
+  "web-manga": "17",
+  "web-novel": "18"
+};
+
+// ══════════════════════════════════════════════════════════════
+// SEASON ID MAPPING
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Season slug to ID mapping ----
+/**
+ * Maps anime season slugs to their corresponding IDs.
+ * Used to filter anime by their broadcast season.
+ *
+ * @type {Object}
+ * @property {string} spring - ID for spring season
+ * @property {string} summer - ID for summer season
+ * @property {string} fall - ID for fall season
+ * @property {string} winter - ID for winter season
+ *
+ * @example
+ *   // Get season ID for filtering
+ *   SEASON_IDS["spring"] // "1"
+ */
+const SEASON_IDS = {
+  "spring": "1",
+  "summer": "2",
+  "fall": "3",
+  "winter": "4"
+};
+
+// ══════════════════════════════════════════════════════════════
+// TV-SPECIFIC TYPE IDS
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Extended type slug to numeric ID mapping ----
+/**
+ * Extended type mappings including TV-specific formats.
+ *
+ * @type {Object}
+ */
+const EXTENDED_TYPE_IDS = {
+  ...TYPE_IDS,
+  "tv-short": "7",
+  "tv-special": "8"
+};
+
+export { GENRE_IDS, TYPE_IDS, STATUS_IDS, RATING_IDS, SORT_IDS, SOURCE_IDS, SEASON_IDS, EXTENDED_TYPE_IDS };
 // ══════════════════════════════════════════════════════════════ END: ids.config.js

@@ -6,7 +6,7 @@
  * @description
  *   Provides advanced anime filtering on anikototv.to — supports filtering
  *   by genre, type, status, language, rating, sort order, season, year,
- *   and keyword with full pagination support.
+ *   source, episode range, and keyword with full pagination support.
  *
  * @exports
  *   extractFilter
@@ -16,9 +16,8 @@
  * ======= • ======= • ======= • ======= • =======• =======
  */
 
-import { headers } from "../configs/header.config.js";
 import { URLS } from "../configs/dataUrl.js";
-import { GENRE_IDS, TYPE_IDS, STATUS_IDS, RATING_IDS, SORT_IDS } from "../configs/ids.config.js";
+import { GENRE_IDS, TYPE_IDS, STATUS_IDS, RATING_IDS, SORT_IDS, SOURCE_IDS, SEASON_IDS } from "../configs/ids.config.js";
 import { countPages } from "../helper/countPages.helper.js";
 import { extractPages } from "../helper/extractPages.helper.js";
 
@@ -30,7 +29,7 @@ import { extractPages } from "../helper/extractPages.helper.js";
 /**
  * Builds a filter URL from the given parameters and fetches matching anime
  * from anikototv.to. Supports keyword, genre, type, status, language,
- * rating, sort, season, and year filters — all combinable.
+ * rating, sort, season, year, source, episode range, and exclude watchlist.
  *
  * @param {Object} params - Filter parameters object
  * @param {string} [params.keyword] - Search keyword to filter by name
@@ -39,9 +38,13 @@ import { extractPages } from "../helper/extractPages.helper.js";
  * @param {string} [params.status] - Comma-separated statuses (e.g. "airing,completed")
  * @param {string} [params.language] - Comma-separated languages (e.g. "sub,dub")
  * @param {string} [params.rating] - Comma-separated ratings (e.g. "pg-13,r")
- * @param {string} [params.sort] - Sort order key (e.g. "score", "name")
+ * @param {string} [params.sort] - Sort order key (e.g. "score", "name-az")
  * @param {string} [params.season] - Comma-separated seasons (e.g. "winter,spring")
  * @param {string} [params.year] - Comma-separated years (e.g. "2024,2025")
+ * @param {string} [params.source] - Comma-separated sources (e.g. "manga,light-novel")
+ * @param {number} [params.epMin] - Minimum episode count filter
+ * @param {number} [params.epMax] - Maximum episode count filter
+ * @param {boolean} [params.excludeWatchlist=false] - Exclude watchlisted anime
  * @param {number} [params.page=1] - Page number for pagination
  * @returns {Promise<Object>} Object with totalPages count and data array of results
  *
@@ -49,6 +52,17 @@ import { extractPages } from "../helper/extractPages.helper.js";
  *   const filtered = await extractFilter({ genre: "action", type: "tv", page: 1 });
  *   console.log(filtered.totalPages);
  *   console.log(filtered.data[0].title);
+ *
+ * @example
+ *   // Advanced filter with episode range
+ *   const filtered = await extractFilter({
+ *     genre: "comedy,slice-of-life",
+ *     type: "tv",
+ *     year: "2024",
+ *     epMin: 12,
+ *     epMax: 24,
+ *     sort: "score"
+ *   });
  */
 const extractFilter = async (params) => {
   try {
@@ -102,14 +116,36 @@ const extractFilter = async (params) => {
 
     // ---- FEATURE: Append season filter ----
     if (params.season) {
-      const seasons = params.season.split(",");
-      seasons.forEach(s => queryParams.append("season[]", s.trim()));
+      const seasons = params.season.split(",").map(s => SEASON_IDS[s.trim().toLowerCase()] || s.trim());
+      seasons.forEach(s => queryParams.append("season[]", s));
     }
 
     // ---- FEATURE: Append year filter ----
     if (params.year) {
       const years = params.year.split(",");
       years.forEach(y => queryParams.append("year[]", y.trim()));
+    }
+
+    // ---- FEATURE: Append source filter ----
+    // NOTE: SOURCE_IDS maps source material types to numeric IDs
+    if (params.source) {
+      const sources = params.source.split(",").map(s => SOURCE_IDS[s.trim().toLowerCase()] || s.trim());
+      sources.forEach(s => queryParams.append("source[]", s));
+    }
+
+    // ---- FEATURE: Append episode range filter ----
+    // NOTE: epMin and epMax filter by total episode count range
+    if (params.epMin) {
+      queryParams.set("ep_min", params.epMin);
+    }
+    if (params.epMax) {
+      queryParams.set("ep_max", params.epMax);
+    }
+
+    // ---- FEATURE: Append exclude watchlist filter ----
+    // NOTE: Only works for logged-in users — ignores for guests
+    if (params.excludeWatchlist) {
+      queryParams.set("exclude_watchlist", "1");
     }
 
     // NOTE: The filter URL is built by appending query params to the search base URL

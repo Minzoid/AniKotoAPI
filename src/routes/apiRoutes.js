@@ -42,6 +42,10 @@ import { getTrendingSidebar } from "../controllers/trendingSidebar.controller.js
 import { getSeasons } from "../controllers/seasons.controller.js";
 import { getWatchOrder } from "../controllers/watchOrder.controller.js";
 import { getDownloadLinks } from "../controllers/download.controller.js";
+import { getUpcomingAnime } from "../controllers/upcomingAnime.controller.js";
+import { getTopAnimeRankings } from "../controllers/topAnimeRankings.controller.js";
+import { getRecentlyUpdatedTabs } from "../controllers/recentlyUpdatedTabs.controller.js";
+import { getCompletedAnime } from "../controllers/completedAnime.controller.js";
 import { categoryRoutes } from "./category.route.js";
 import { getMirrorStatus, resetMirrorCache } from "../helper/mirror.helper.js";
 
@@ -329,6 +333,58 @@ app.use((req, res, next) => {
   });
 
   // ══════════════════════════════════════════════════════════════
+  // UPCOMING ANIME
+  // ══════════════════════════════════════════════════════════════
+
+  // ---- FEATURE: Upcoming anime releases ----
+  app.get("/api/upcoming", async (req, res, next) => {
+    try {
+      await getUpcomingAnime(req, res, next);
+    } catch (error) {
+      jsonError(res, error.message);
+    }
+  });
+
+  // ══════════════════════════════════════════════════════════════
+  // TOP ANIME RANKINGS
+  // ══════════════════════════════════════════════════════════════
+
+  // ---- FEATURE: Top anime rankings with sort (top/newest) ----
+  app.get("/api/top-rankings", async (req, res, next) => {
+    try {
+      await getTopAnimeRankings(req, res, next);
+    } catch (error) {
+      jsonError(res, error.message);
+    }
+  });
+
+  // ══════════════════════════════════════════════════════════════
+  // RECENTLY UPDATED (TAB FILTERED)
+  // ══════════════════════════════════════════════════════════════
+
+  // ---- FEATURE: Recently updated anime with tab filter (all/dub/sub) ----
+  app.get("/api/recently-updated", async (req, res, next) => {
+    try {
+      await getRecentlyUpdatedTabs(req, res, next);
+    } catch (error) {
+      jsonError(res, error.message);
+    }
+  });
+
+  // ══════════════════════════════════════════════════════════════
+  // COMPLETED ANIME
+  // ══════════════════════════════════════════════════════════════
+
+  // ---- FEATURE: Completed anime series ----
+  app.get("/api/completed", async (req, res, next) => {
+    try {
+      await getCompletedAnime(req, res, next);
+    } catch (error) {
+      jsonError(res, error.message);
+    }
+  });
+
+  // ══════════════════════════════════════════════════════════════
   // SEASONS & WATCH ORDER
   // ══════════════════════════════════════════════════════════════
 
@@ -418,7 +474,7 @@ app.get("/api/stats", (req, res) => {
         ttl: "5 minutes",
         description: "Map-based cache with TTL expiration",
       },
-      endpoints: 30,
+      endpoints: 34,
       timestamp: new Date().toISOString(),
     },
   });
@@ -491,6 +547,10 @@ app.get("/api/openapi", (req, res) => {
       "/watch-order/{id}": { get: { summary: "Watch order", tags: ["Anime"] } },
       "/az-list/{letter}": { get: { summary: "A-Z listing", tags: ["Discovery"] } },
       "/suggestions": { get: { summary: "Anime suggestions", tags: ["Search"] } },
+      "/upcoming": { get: { summary: "Upcoming anime", tags: ["Discovery"] } },
+      "/top-rankings": { get: { summary: "Top anime rankings (top/newest)", tags: ["Rankings"] } },
+      "/recently-updated": { get: { summary: "Recently updated (all/dub/sub tabs)", tags: ["Releases"] } },
+      "/completed": { get: { summary: "Completed anime series", tags: ["Rankings"] } },
     },
     tags: [
       { name: "Home", description: "Homepage data" },

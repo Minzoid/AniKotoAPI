@@ -16,6 +16,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Body Size Limits**: Added `express.json({ limit: '10kb' })` to prevent large payload attacks
 - **Rate Limiter Cleanup**: Automatic cleanup of stale IP entries every 5 minutes
 - **Uncaught Exception Handler**: Added handler for uncaught exceptions with graceful shutdown
+- **Upcoming Anime Endpoint**: `GET /api/upcoming` — upcoming anime releases from homepage
+- **Top Anime Rankings Endpoint**: `GET /api/top-rankings?sort=top|newest` — ranked anime with sort modes
+- **Recently Updated Tabs Endpoint**: `GET /api/recently-updated?tab=all|dub|sub` — filtered updates
+- **Completed Anime Endpoint**: `GET /api/completed` — finished anime series from homepage
+- **Enhanced Filter**: Added `source`, `epMin`, `epMax`, `excludeWatchlist` parameters to `/api/filter`
+- **Source IDs Config**: New `SOURCE_IDS` mapping for 18 source material types
+- **Season IDs Config**: New `SEASON_IDS` mapping for 4 broadcast seasons
+- **Extended Type IDs**: Added `tv-short` and `tv-special` type mappings
 
 ### Changed
 - **Mirror Fallback**: All 22 extractors now use `fetchWithMirror()` for consistent mirror fallback
