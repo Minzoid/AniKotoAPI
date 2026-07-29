@@ -309,7 +309,8 @@ AniKotoAPI/
 │   │   ├── 📄 endpoints.md               #       Full API reference (38 endpoints)
 │   │   ├── 📄 streaming.md               #       Streaming flow guide + proxy
 │   │   ├── 📄 examples.md                #       Code examples (cURL, JS, Python)
-│   │   └── 📄 architecture.md            #       Project structure, tech stack
+│   │   ├── 📄 architecture.md            #       Project structure, tech stack
+│   │   └── 📄 testing.md                 #       Integration test suite & benchmarks
 │   │
 │
 ├── 📂 src/                               # ⚙️ Core logic

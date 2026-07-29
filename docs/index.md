@@ -72,6 +72,7 @@ curl "https://anikototvapi.vercel.app/api/info?id=naruto-eybxz"
 - [Streaming Flow Guide](streaming.md) — How to get stream URLs step by step
 - [Code Examples](examples.md) — cURL, JavaScript, Python (all tested and working)
 - [Architecture](architecture.md) — Project structure and design decisions
+- [Testing](testing.md) — Integration test suite, auto-detection, and benchmarks
 
 ## Response Format
 
