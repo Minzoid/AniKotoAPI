@@ -44,8 +44,7 @@
 
 ---
 
-> ## ⚠️ Disclaimer
->
+> [!WARNING]
 > 1. This `API` does not store any files — it only links to media hosted on 3rd party services.
 > 2. This `API` is explicitly made for **educational purposes only** and not for commercial usage. This repo will not be responsible for any misuse of it.
 > 3. All anime data, images, and content belong to their respective owners. This project is not affiliated with anikototv.to.
@@ -83,7 +82,8 @@
 
 **AniKotoAPI** is a serverless anime data API that scrapes and serves real-time information from **anikototv.to** — including anime details, episode lists, streaming servers, search, filtering, rankings, and more — all through a clean REST API with zero database setup.
 
-> 💡 No database, no auth, no complex setup. Just deploy to Vercel and you have a production API.
+> [!TIP]
+> No Database, No Auth, No Complex Setup. Just deploy to Vercel and you have a production API.
 
 ### Why AniKotoAPI?
 
@@ -244,10 +244,10 @@ flowchart TD
 ```json
 {
   "express": "^4.21.0",        // HTTP server
-  "axios": "^1.8.0",         // HTTP client for scraping
-  "cheerio": "^1.0.0-rc.12",  // HTML parsing
-  "compression": "^1.7.4",    // Response compression
-  "dotenv": "^16.4.0"         // Environment variables
+  "axios": "^1.8.0",           // HTTP client for scraping
+  "cheerio": "^1.0.0-rc.12",   // HTML parsing
+  "compression": "^1.7.4",     // Response compression
+  "dotenv": "^16.4.0"          // Environment variables
 }
 ```
 
@@ -286,7 +286,8 @@ flowchart TD
     style G fill:#1e1e2e,stroke:#22c55e,color:#f1f5f9
 ```
 
-> 💡 Serverless functions have read-only filesystems except `/tmp`. The cache uses LRU with configurable TTL per endpoint type, surviving across warm invocations.
+> [!TIP]
+>  Serverless functions have read-only filesystems except `/tmp`. The cache uses LRU with configurable TTL per endpoint type, surviving across warm invocations.
 
 ---
 
@@ -2337,14 +2338,14 @@ CMD ["node", "server.js"]
 
 | Problem | Cause | Solution |
 |:---|:---|:---|
-| ❌ `npm install` fails | Node.js version too old | Upgrade to Node.js 20+ (`node -v`) |
-| ❌ 500 error on filter | Missing `keyword` param | Add `?keyword=` (even empty) to filter requests |
-| ❌ Empty episodes array | Wrong parameter | Use `/api/episodes/:animeId` with numeric animeId (e.g., 958) |
-| ❌ CORS errors | Frontend domain blocked | CORS is `*` — check browser extension |
-| ❌ 404 on API routes | Wrong URL format | Use `/api/` prefix, not just `/` |
-| ❌ Deploy fails on Vercel | Build error | Check `node server.js` locally first |
-| ❌ Slow first request | Serverless cold start | Normal — first request after idle takes ~3s |
-| ❌ Rate limited | Too many requests | Cache reduces this — wait 5 min for TTL expiry |
+| ❎ `npm install` fails | Node.js version too old | Upgrade to Node.js 20+ (`node -v`) |
+| ❎ 500 error on filter | Missing `keyword` param | Add `?keyword=` (even empty) to filter requests |
+| ❎ Empty episodes array | Wrong parameter | Use `/api/episodes/:animeId` with numeric animeId (e.g., 958) |
+| ❎ CORS errors | Frontend domain blocked | CORS is `*` — check browser extension |
+| ❎ 404 on API routes | Wrong URL format | Use `/api/` prefix, not just `/` |
+| ❎ Deploy fails on Vercel | Build error | Check `node server.js` locally first |
+| ❎ Slow first request | Serverless cold start | Normal — first request after idle takes ~3s |
+| ❎ Rate limited | Too many requests | Cache reduces this — wait 5 min for TTL expiry |
 
 ### 🐛 Debug Mode
 
@@ -2517,8 +2518,8 @@ git push origin feature/amazing-feature
 - ✅ Update CHANGELOG.md with your changes
 - ✅ Keep PRs focused — one feature or fix per PR
 - ✅ Add JSDoc comments for new functions
-- ❌ Don't commit `node_modules` or cache files
-- ❌ Don't add unrelated changes to a single PR
+- ❎ Don't commit `node_modules` or cache files
+- ❎ Don't add unrelated changes to a single PR
 
 ---
 
