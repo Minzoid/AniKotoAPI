@@ -13,7 +13,24 @@
  * ======= • ======= • ======= • ======= • =======• =======
  */
 
-const BASE = process.env.API_URL || "https://anikototvapi.vercel.app/api";
+const LIVE_API = "https://anikototvapi.vercel.app/api";
+const LOCAL_API = "http://localhost:4444/api";
+
+let BASE = process.env.API_URL || LIVE_API;
+
+async function detectBase() {
+  if (process.env.API_URL) return;
+  try {
+    const res = await fetch(`${LOCAL_API}/health`, { signal: AbortSignal.timeout(2000) });
+    if (res.ok) {
+      BASE = LOCAL_API;
+      console.log("📡 Detected local server — using localhost:4444\n");
+      return;
+    }
+  } catch (_) {}
+  BASE = LIVE_API;
+  console.log("📡 No local server found — using live API\n");
+}
 
 const tests = [
   // Core endpoints
@@ -147,7 +164,8 @@ async function fetchJson(url) {
 }
 
 async function runAll() {
-  console.log(`\n🧪 Running ${tests.length} tests...\n`);
+  await detectBase();
+  console.log(`🧪 Running ${tests.length} tests...\n`);
   console.log(`📡 API: ${BASE}\n`);
 
   // ---- FEATURE: Resolve dynamic test dependencies ----
