@@ -25,7 +25,6 @@ import crypto from "crypto";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { createApiRoutes } from "./src/routes/apiRoutes.js";
-import { getCacheStats } from "./src/helper/cache.helper.js";
 import { addCreatorInfo } from "./src/middleware/creatorInfo.js";
 
 dotenv.config();
@@ -39,7 +38,6 @@ const PORT = process.env.PORT || 4444;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const publicDir = path.join(process.cwd(), "public");
-const has404File = fs.existsSync(path.join(publicDir, "404.html"));
 const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",");
 
 // ---- FEATURE: Response compression ----
@@ -186,11 +184,6 @@ app.use((req, res, next) => {
   res.setHeader("X-RateLimit-Limit", RATE_LIMIT);
   res.setHeader("X-RateLimit-Remaining", RATE_LIMIT - timestamps.length);
   next();
-});
-
-// ---- FEATURE: Cache stats endpoint ----
-app.get("/api/cache/stats", (req, res) => {
-  res.json({ success: true, results: getCacheStats() });
 });
 
 // ---- FEATURE: Creator info middleware (injects attribution into all responses) ----

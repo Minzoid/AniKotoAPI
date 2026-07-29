@@ -17,7 +17,6 @@
 
 import * as cheerio from "cheerio";
 import { fetchWithMirror } from "../helper/mirror.helper.js";
-import { parseListItems } from "../helper/parseListItem.helper.js";
 
 // ══════════════════════════════════════════════════════════════
 // UPCOMING ANIME EXTRACTION

@@ -17,7 +17,6 @@
  */
 
 import * as cheerio from "cheerio";
-import { URLS } from "../configs/dataUrl.js";
 import { fetchWithMirror } from "../helper/mirror.helper.js";
 
 // ══════════════════════════════════════════════════════════════

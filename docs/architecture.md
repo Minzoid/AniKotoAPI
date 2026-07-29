@@ -178,8 +178,8 @@ Client Response
 
 ## Caching Strategy
 
-- **Type:** In-memory Map
-- **TTL:** 5 minutes (300,000ms)
+- **Type:** LRU Cache (Map-based with TTL expiration)
+- **TTL:** Per-endpoint (3 min for search/stream, 5 min for home/trending, 10 min for info, 1 hour for schedule)
 - **Key:** Full request URL
 - **Behavior:** First request fetches from source, subsequent requests served from cache
 - **Reset:** TTL resets on each access
@@ -252,6 +252,5 @@ Error responses:
 | express | ^4.21.0 | Web framework |
 | cheerio | ^1.0.0-rc.12 | HTML parsing |
 | axios | ^1.8.0 | HTTP requests |
-| cookie-parser | ^1.4.7 | Cookie parsing |
 | dotenv | ^16.4.0 | Environment variables |
 | compression | ^1.7.4 | Response compression |

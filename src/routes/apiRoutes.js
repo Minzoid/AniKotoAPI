@@ -238,7 +238,7 @@ app.use((req, res, next) => {
       // NOTE: Validate URL is from known streaming domains
       const allowedDomains = ["vidtube.site", "vidplay.site", "megaplay.buzz", "megaplay-1.buzz", "cdn.anipixcdn.co"];
       const urlObj = new URL(url);
-      const isAllowed = allowedDomains.some(d => urlObj.hostname.includes(d)) || urlObj.hostname.endsWith(".m3u8");
+      const isAllowed = allowedDomains.some(d => urlObj.hostname === d || urlObj.hostname.endsWith(`.${d}`)) || urlObj.pathname.endsWith(".m3u8");
 
       if (!isAllowed) {
         return res.status(403).json({ success: false, message: "Domain not allowed for proxy" });

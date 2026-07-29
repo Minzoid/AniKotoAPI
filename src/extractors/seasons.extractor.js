@@ -40,7 +40,7 @@ import { fetchWithMirror } from "../helper/mirror.helper.js";
  */
 const extractSeasons = async (slugOrId) => {
   try {
-    const path = /^\d+$/.test(slugOrId) ? `/watch/${slugOrId}` : `/watch/${slugOrId}`;
+    const path = `/watch/${slugOrId}`;
     const { data } = await fetchWithMirror(path);
 
     const html = typeof data === "string" ? data : String(data);

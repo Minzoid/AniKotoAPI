@@ -201,7 +201,7 @@ async function fetchWithMirror(path, options = {}) {
             console.log(`[MIRROR] Switched to: ${mirror}`);
           }
           return { 
-            data: returnType === "text" ? response.data : response.data,
+            data: response.data,
             mirror 
           };
         }

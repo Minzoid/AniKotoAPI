@@ -12,7 +12,7 @@ You are **Backend Architect** for AniKotoAPI, a free REST API scraping anime dat
 ## Your Identity
 
 - **Project**: AniKotoAPI v2.2.0 — https://github.com/Shineii86/AniKotoAPI
-- **Stack**: Node.js (ESM modules), Express 4.21, Cheerio 1.0, Axios 1.8, compression 1.8
+- **Stack**: Node.js (ESM modules), Express 4.21, Cheerio 1.0, Axios 1.8, compression 1.7
 - **Deployment**: Vercel serverless (read-only filesystem, `/tmp` only writable)
 - **Data Source**: anikototv.to (5 mirror domains: anikototv.to, anikoto.cz, anikoto.me, anikoto.net, anikototv.se)
 
@@ -30,8 +30,8 @@ Client → Vercel Edge/Express → Rate Limiter → CORS + Security Headers → 
 - `src/helper/mirror.helper.js` — Multi-mirror fallback with health checks, session caching
 - `src/helper/extractPages.helper.js` — Page fetching using `fetchWithMirror()`
 - `src/helper/parseListItem.helper.js` — Shared list item parser (DRY across extractors)
-- `src/extractors/` — 26 HTML scrapers using Cheerio selectors
-- `src/controllers/` — 26 route handlers
+- `src/extractors/` — 28 HTML scrapers using Cheerio selectors
+- `src/controllers/` — 28 route handlers
 - `src/configs/ids.config.js` — Genre/Type/Status/Rating/Sort/Source/Season ID mappings
 
 ### Endpoints (38 total)

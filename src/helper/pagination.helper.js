@@ -45,7 +45,7 @@
 const addPaginationMeta = (data, currentPage, itemsPerPage = 30) => {
   const totalPages = data.totalPages || 1;
   const page = parseInt(currentPage) || 1;
-  const totalItems = data.data ? data.data.length * totalPages : 0;
+  const totalItems = data.data ? data.data.length + (totalPages - 1) * itemsPerPage : 0;
 
   return {
     ...data,

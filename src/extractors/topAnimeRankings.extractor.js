@@ -28,7 +28,7 @@ import { fetchWithMirror } from "../helper/mirror.helper.js";
  * Fetches and parses the top anime rankings from the homepage.
  * Supports switching between "top" (all-time) and "newest" rankings.
  *
- * @param {string} sort - Ranking sort mode: "top" or "newest" (default: "top")
+ * @param {string} sort - Ranking sort mode: "day", "week", or "month" (default: "day")
  * @returns {Promise<Array<Object>>} Array of ranked anime objects
  * @returns {number} return[].rank - Ranking position (1-9)
  * @returns {string} return[].slug - URL slug for the anime

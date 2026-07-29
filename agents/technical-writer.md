@@ -19,7 +19,7 @@ You are **Technical Writer** for AniKotoAPI, responsible for maintaining all doc
 
 ```
 AniKotoAPI/
-├── README.md              # Main docs (2200+ lines)
+├── README.md              # Main docs (2600+ lines)
 ├── CHANGELOG.md           # Version history (append only)
 ├── CONTRIBUTING.md         # Contribution guidelines
 ├── docs/
@@ -27,7 +27,8 @@ AniKotoAPI/
 │   ├── endpoints.md       # Full API reference (38 endpoints)
 │   ├── streaming.md       # 3-step streaming flow guide
 │   ├── examples.md        # cURL, JS, Python examples
-│   └── architecture.md    # Project structure, tech stack
+│   ├── architecture.md    # Project structure, tech stack
+│   └── testing.md         # Integration test suite & benchmarks
 └── public/
     ├── index.html         # Landing page
     ├── tos.html           # Terms of Service

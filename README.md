@@ -138,7 +138,7 @@ flowchart TD
 ### ⚡ Core
 - **Real-time scraping** from anikototv.to
 - **Smart caching** with LRU and configurable TTL per endpoint
-- **33 RESTful endpoints** covering all data
+- **38 RESTful endpoints** covering all data
 - **AJAX episode loading** for accurate data
 - **Mapper API integration** for extra servers
 - **Graceful error handling** per endpoint
@@ -320,7 +320,7 @@ AniKotoAPI/
 │   │   ├── 📄 header.config.js           #       📋 Request headers
 │   │   └── 📄 ids.config.js              #       🏷️ Genre/Type/Status/Source/Season ID mappings
 │   │
-│   ├── 📂 controllers/                   #    🎮 Route handlers (24 files)
+│   ├── 📂 controllers/                   #    🎮 Route handlers (28 files)
 │   │   ├── 📄 homeInfo.controller.js
 │   │   ├── 📄 animeInfo.controller.js
 │   │   ├── 📄 search.controller.js
@@ -332,7 +332,7 @@ AniKotoAPI/
 │   │   ├── 📄 watchPage.controller.js
 │   │   └── 📄 ... (15 more)
 │   │
-│   ├── 📂 extractors/                    #    🔍 HTML scrapers (26 files)
+│   ├── 📂 extractors/                    #    🔍 HTML scrapers (28 files)
 │   │   ├── 📄 homeInfo.extractor.js      #       🏠 Home page data
 │   │   ├── 📄 search.extractor.js        #       🔍 Search results
 │   │   ├── 📄 animeInfo.extractor.js     #       📺 Anime details
@@ -2298,8 +2298,8 @@ CMD ["node", "server.js"]
 |:---|:---|
 | ⚡ Cached response | ~200ms |
 | 🔄 Fresh fetch | ~1-3s |
-| 💾 Cache TTL | 5 minutes |
-| ⏱️ Timeout per request | 15 seconds |
+| 💾 Cache TTL | 3 min–1 hour (per-endpoint) |
+| ⏱️ Timeout per request | 30 seconds |
 | 🎬 Total anime indexed | 10,000+ |
 | 📦 Total codebase | ~120KB |
 
@@ -2390,7 +2390,7 @@ Yes! CORS is enabled for all origins (<code>*</code>). Just make fetch requests 
 <details>
 <summary><b>🔄 How often does the data refresh?</b></summary>
 <br/>
-The cache TTL is 5 minutes. After that, the next request triggers a fresh scrape from anikototv.to. This keeps data relatively fresh while reducing load on the source site.
+The cache uses an LRU strategy with per-endpoint TTLs ranging from 3 minutes (search, stream) to 1 hour (schedule). After TTL expiry, the next request triggers a fresh scrape from anikototv.to.
 </details>
 
 <details>

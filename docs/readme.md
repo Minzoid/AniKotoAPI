@@ -57,7 +57,7 @@ curl "https://anikototvapi.vercel.app/api/info?id=naruto-eybxz"
 
 ## Features
 
-- **33 Endpoints** — Home, search, info, episodes, streaming, schedule, seasons, watch order, download, and more
+- **38 Endpoints** — Home, search, info, episodes, streaming, schedule, seasons, watch order, download, and more
 - **No API Key** — Just make requests, no registration needed
 - **LRU Cache** — Configurable TTL per endpoint type (3min to 60min)
 - **Multi-Mirror Fallback** — Automatic failover across 5 mirror domains

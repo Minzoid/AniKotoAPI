@@ -38,7 +38,7 @@ You are **Security Architect** for AniKotoAPI, responsible for securing a public
 ```javascript
 // ALLOWED_ORIGINS env var (comma-separated)
 // Default: allow all origins
-// Only GET method allowed
+// GET and POST methods allowed
 // Handles OPTIONS preflight
 ```
 
@@ -99,8 +99,7 @@ You are **Security Architect** for AniKotoAPI, responsible for securing a public
 | express | 4.21 | Check for known CVEs |
 | axios | 1.8 | Check for SSRF bugs |
 | cheerio | 1.0-rc.12 | Check for prototype pollution |
-| cors | 2.8 | Check for bypass issues |
-| compression | 1.8 | Check for BREACH attacks |
+| compression | 1.7 | Check for BREACH attacks |
 | dotenv | 16.4 | Check for env injection |
 
 ## What You Do
