@@ -55,7 +55,8 @@ const extractEpisodeListAjax = async (animeId, style = "", vrf = "") => {
     });
 
     // NOTE: Response is JSON {status, result} where result is HTML
-    const html = typeof raw === "string" ? raw : (raw?.result || "");
+    const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
+    const html = parsed?.result || "";
     const $ = cheerio.load(html);
 
     // NOTE: Extract filter options (Sub/Dub, episode ranges)

@@ -6,35 +6,42 @@ Base URL: `https://anikototvapi.vercel.app/api`
 
 ## Pagination
 
-All list endpoints include pagination metadata in the response:
+Most list endpoints return a `totalPages` field for pagination:
 
 ```json
 {
   "success": true,
   "results": {
-    "data": [...],
+    "totalPages": 296,
+    "data": [...]
+  }
+}
+```
+
+Use the `page` query parameter to navigate: `?page=2`
+
+**Only `/api/filter` returns the full pagination object:**
+
+```json
+{
+  "results": {
+    "totalPages": 1,
+    "data": [],
     "pagination": {
       "currentPage": 1,
-      "totalPages": 294,
-      "totalItems": 8820,
+      "totalPages": 1,
+      "totalItems": 0,
       "itemsPerPage": 30,
-      "hasNext": true,
+      "hasNext": false,
       "hasPrev": false
     }
   }
 }
 ```
 
-| Field | Type | Description |
-|:---|:---|:---|
-| `currentPage` | `number` | Current page number (1-indexed) |
-| `totalPages` | `number` | Total number of pages available |
-| `totalItems` | `number` | Estimated total items across all pages |
-| `itemsPerPage` | `number` | Number of items per page (default: 30) |
-| `hasNext` | `boolean` | Whether there is a next page |
-| `hasPrev` | `boolean` | Whether there is a previous page |
+**Endpoints with `totalPages` pagination:** `/api/search`, `/api/most-popular`, `/api/new-release`, `/api/newly-added`, `/api/latest-updated`, `/api/az-list/:letter`, `/api/filter`, `/api/genre/:name`, `/api/type/:name`, `/api/status/:name`
 
-**Endpoints with pagination:** `/api/search`, `/api/most-popular`, `/api/new-release`, `/api/newly-added`, `/api/latest-updated`, `/api/az-list/:letter`, `/api/filter`, `/api/genre/:name`, `/api/type/:name`, `/api/status/:name`
+**Endpoints with flat arrays (no pagination):** `/api/spotlight`, `/api/trending`, `/api/top-ten`, `/api/suggestions`, `/api/recently-updated`, `/api/completed`, `/api/upcoming`, `/api/top-rankings`, `/api/mirrors`, `/api/schedule`
 
 ---
 
@@ -136,12 +143,14 @@ Get detailed info about an anime.
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
-| `id` | string | Yes | Anime slug (e.g., `road-of-naruto-ggjw8`) |
+| `id` | string | Yes | Anime slug with random hash (e.g., `naruto-shippuuden-movie-6-road-to-ninja-w2wqq`) |
+
+> **Important:** Slugs now include random hashes (e.g., `one-piece-odmau`). Get valid slugs from `/search` or `/most-popular` results.
 
 **Request:**
 
 ```bash
-curl "https://anikototvapi.vercel.app/api/info?id=road-of-naruto-ggjw8"
+curl "https://anikototvapi.vercel.app/api/info?id=naruto-shippuuden-movie-6-road-to-ninja-w2wqq"
 ```
 
 **Response:**
@@ -150,13 +159,26 @@ curl "https://anikototvapi.vercel.app/api/info?id=road-of-naruto-ggjw8"
 {
   "success": true,
   "results": {
-    "title": "Road of Naruto",
-    "type": "ONA",
+    "slug": "naruto-shippuuden-movie-6-road-to-ninja-w2wqq",
+    "animeId": 786,
+    "title": "Naruto: Shippuuden Movie 6: Road to Ninja",
+    "japaneseTitle": "Naruto: Shippuuden Movie 6 - Road to Ninja",
+    "altNames": "Naruto: Shippuuden Movie 6 - Road to Ninja;Naruto Movie 9",
+    "poster": "https://cdn.anipixcdn.co/thumbnail/43dd49b4fdb9bede653e94468ff8df1e.jpg",
+    "backgroundImage": "'",
+    "synopsis": "Returning home to Konohagakure, the young ninja celebrate defeating a group of supposed Akatsuki...",
+    "type": "Movie",
+    "premiered": "Summer 2012",
+    "aired": "Jul 28, 2012",
     "status": "Finished Airing",
-    "totalEpisodes": null,
-    "synopsis": "In celebration of 20 years of Naruto, Studio Pierrot posted an anniversary PV on their YouTube channel...",
-    "malId": "53236",
-    "genres": ["Action", "Fantasy", "Shounen"]
+    "malScore": "7.84",
+    "duration": "1 hr 39 min",
+    "episodes": "1",
+    "studios": ["Pierrot"],
+    "producers": ["TV Tokyo", "Shueisha"],
+    "genres": ["Action", "Comedy", "Supernatural"],
+    "rating": "PG-13",
+    "reviewCount": "0"
   }
 }
 ```
@@ -687,17 +709,36 @@ Returns paginated list of upcoming anime with sub/dub counts, type, and rating.
 
 ## GET /top-rankings
 
-Get top-ranked anime (source site's top section).
+Get top-ranked anime with sort options.
 
 | Param | Type | Required | Description |
 |-------|------|----------|-------------|
+| `sort` | string | No | Sort mode: `day` (default), `week`, or `month` |
 | `page` | number | No | Page number (default: 1) |
 
 ```bash
-curl "https://anikototvapi.vercel.app/api/top-rankings"
+curl "https://anikototvapi.vercel.app/api/top-rankings?sort=week"
 ```
 
-Returns paginated list with rank numbers extracted from CSS classes.
+**Response:**
+
+```json
+{
+  "success": true,
+  "results": [
+    {
+      "rank": 1,
+      "slug": "demon-slayer-kimetsu-no-yaiba-infinity-castle-4tmun",
+      "poster": "https://cdn.anipixcdn.co/thumbnail/...",
+      "title": "Demon Slayer: Kimetsu no Yaiba Infinity Castle",
+      "japaneseTitle": "Kimetsu no Yaiba Movie: Mugen Jou-hen",
+      "sub": 1,
+      "dub": 1,
+      "type": "Movie"
+    }
+  ]
+}
+```
 
 ---
 
@@ -730,7 +771,9 @@ Get completed anime sorted by score.
 curl "https://anikototvapi.vercel.app/api/completed"
 ```
 
-Returns paginated list of finished anime from `section.top-table[data-name='completed']`.
+Returns flat array of finished anime.
+
+> **Note:** The `type` field in completed results contains the **air date** (e.g., `"2016-05-14"`), not the anime type (TV/Movie/etc).
 
 ---
 
@@ -796,3 +839,214 @@ curl "https://anikototvapi.vercel.app/api/stream/ts-proxy?url=https://example.co
 ```
 
 Returns binary video segment with `Content-Type: video/mp2t` and `Access-Control-Allow-Origin: *`.
+
+---
+
+## System Endpoints
+
+### GET /health
+
+Health check endpoint. No parameters required.
+
+```bash
+curl "https://anikototvapi.vercel.app/api/health"
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "results": {
+    "status": "healthy",
+    "version": "2.2.0",
+    "uptime": "0h 1m 21s",
+    "uptimeSeconds": 81,
+    "timestamp": "2026-07-30T02:20:46.153Z",
+    "node": "v26.4.0",
+    "memory": {
+      "used": "99MB",
+      "total": "150MB"
+    }
+  }
+}
+```
+
+---
+
+### GET /stats
+
+API statistics endpoint. No parameters required.
+
+```bash
+curl "https://anikototvapi.vercel.app/api/stats"
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "results": {
+    "uptime": "81s",
+    "requests": {
+      "total": 37,
+      "errors": 9,
+      "successRate": "75.7%"
+    },
+    "cache": {
+      "type": "in-memory",
+      "ttl": "5 minutes",
+      "description": "Map-based cache with TTL expiration"
+    },
+    "endpoints": 38,
+    "timestamp": "2026-07-30T02:20:46.205Z"
+  }
+}
+```
+
+---
+
+### GET /cache/stats
+
+Cache statistics endpoint. No parameters required.
+
+```bash
+curl "https://anikototvapi.vercel.app/api/cache/stats"
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "results": {
+    "hits": 0,
+    "misses": 28,
+    "sets": 26,
+    "deletes": 0,
+    "size": 26,
+    "hitRate": "0.00%"
+  }
+}
+```
+
+---
+
+### GET /mirrors
+
+Mirror status endpoint. No parameters required.
+
+```bash
+curl "https://anikototvapi.vercel.app/api/mirrors"
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "results": [
+    {
+      "name": "Primary",
+      "url": "https://anikototv.to",
+      "priority": 1,
+      "status": "online",
+      "latency": "6115ms",
+      "isCurrent": true
+    },
+    {
+      "name": "Regional CZ",
+      "url": "https://anikoto.cz",
+      "priority": 2,
+      "status": "online",
+      "latency": "672ms",
+      "isCurrent": false
+    }
+  ]
+}
+```
+
+---
+
+### POST /mirrors/reset
+
+Reset mirror cache. No parameters required.
+
+```bash
+curl -X POST "https://anikototvapi.vercel.app/api/mirrors/reset"
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": "Mirror cache reset"
+}
+```
+
+---
+
+### GET /openapi
+
+OpenAPI 3.0.3 specification. No parameters required.
+
+```bash
+curl "https://anikototvapi.vercel.app/api/openapi"
+```
+
+Returns the full OpenAPI spec document with all endpoint definitions, tags, and server information.
+
+---
+
+## Response Patterns
+
+| Pattern | Format | Endpoints |
+|:---|:---|:---|
+| **Flat array** | `results: [...]` | `/spotlight`, `/trending`, `/top-ten`, `/suggestions`, `/recently-updated`, `/completed`, `/upcoming`, `/top-rankings`, `/mirrors`, `/schedule` |
+| **Paginated data** | `results: { totalPages, data: [...] }` | `/search`, `/most-popular`, `/new-release`, `/newly-added`, `/latest-updated`, `/genre/:name`, `/type/:name`, `/status/:name`, `/az-list/:letter` |
+| **Full pagination** | `results: { totalPages, data: [...], pagination: {...} }` | `/filter` only |
+| **Three-period** | `results: { today/week/month: [...] }` or `{ day/week/month: [...] }` | `/top-ten`, `/trending-sidebar` |
+| **Single object** | `results: {...}` | `/home`, `/info`, `/episodes`, `/episodes-ajax`, `/random`, `/health`, `/stats`, `/cache/stats`, `/stream-qualities` |
+
+---
+
+## Common Workflows
+
+### Streaming Workflow
+
+```
+1. GET /episodes/{animeId}     → Get episode list with server_ids
+2. GET /servers?ids={ids}      → Get available servers with link_ids
+3. GET /stream?id={link_id}    → Get embed URL + skip data
+4. GET /stream/resolve?id={link_id}  → Get actual m3u8/mp4 URL
+5. GET /stream/qualities?url={m3u8}  → Get available qualities
+6. GET /stream/proxy?url={m3u8}      → Get CORS-free proxied playlist
+```
+
+### Discovery Workflow
+
+```
+1. GET /              → Homepage: spotlights, trending, genres
+2. GET /search?q=     → Search by keyword
+3. GET /info?id=      → Get anime details
+4. GET /episodes/     → Get episode list
+5. GET /seasons/      → Get all seasons
+6. GET /watch-order/  → Get watch order for franchises
+```
+
+### Filter & Browse Workflow
+
+```
+1. GET /genre/{name}      → Browse by genre
+2. GET /type/{name}       → Browse by type (TV, Movie, OVA)
+3. GET /status/{name}     → Browse by status (airing, completed)
+4. GET /filter?...        → Advanced multi-parameter filter
+5. GET /az-list/{letter}  → Browse alphabetically
+6. GET /top-rankings?sort=day  → Top ranked anime
+```
+
+---
+
+// ══════ END: endpoints.md ══════

@@ -661,7 +661,7 @@ app.get("/api/openapi", (req, res) => {
       "/az-list/{letter}": { get: { summary: "A-Z listing", tags: ["Discovery"] } },
       "/suggestions": { get: { summary: "Anime suggestions", tags: ["Search"] } },
       "/upcoming": { get: { summary: "Upcoming anime", tags: ["Discovery"] } },
-      "/top-rankings": { get: { summary: "Top anime rankings (top/newest)", tags: ["Rankings"] } },
+      "/top-rankings": { get: { summary: "Top anime rankings (day/week/month)", tags: ["Rankings"] } },
       "/recently-updated": { get: { summary: "Recently updated (all/dub/sub tabs)", tags: ["Releases"] } },
       "/completed": { get: { summary: "Completed anime series", tags: ["Rankings"] } },
     },

@@ -61,7 +61,8 @@ const extractEpisodeList = async (slugOrId) => {
         headers: { "X-Requested-With": "XMLHttpRequest" }
       });
 
-      const ajaxHtml = typeof ajaxRaw === "string" ? ajaxRaw : (ajaxRaw?.result || "");
+      const ajaxParsed = typeof ajaxRaw === "string" ? JSON.parse(ajaxRaw) : ajaxRaw;
+      const ajaxHtml = ajaxParsed?.result || "";
       const $ep = cheerio.load(ajaxHtml);
 
       const episodes = [];

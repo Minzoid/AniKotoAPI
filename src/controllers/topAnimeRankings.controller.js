@@ -5,7 +5,7 @@
  *
  * @description
  *   Controller for top anime rankings. Returns ranked anime list
- *   with support for top (all-time) and newest sort modes.
+ *   with support for day, week, and month sort modes.
  *
  * @exports
  *   getTopAnimeRankings - Express route handler for GET /api/top-rankings
@@ -28,18 +28,18 @@ import { getCache, setCache, TTL } from "../helper/cache.helper.js";
  * with support for top (all-time) and newest sort modes.
  *
  * @param {object} req - Express request object
- * @param {string} [req.query.sort="top"] - Sort mode: "top" or "newest"
+ * @param {string} [req.query.sort="day"] - Sort mode: "day", "week", or "month"
  * @param {object} res - Express response object
  * @param {Function} next - Express next middleware function
  * @returns {void} Sends JSON response with ranked anime list
  *
  * @example
- *   GET /api/top-rankings?sort=top
+ *   GET /api/top-rankings?sort=day
  *   Response: { success: true, results: [{ rank: 1, title: "...", ... }] }
  */
 const getTopAnimeRankings = async (req, res, next) => {
   try {
-    const { sort = "top" } = req.query;
+    const { sort = "day" } = req.query;
     const cacheKey = `top_rankings_${sort}`;
     const cached = getCache(cacheKey);
     if (cached) {
