@@ -55,7 +55,10 @@ const extractEpisodeListAjax = async (animeId, style = "", vrf = "") => {
     });
 
     // NOTE: Response is JSON {status, result} where result is HTML
-    const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
+    let parsed = raw;
+    if (typeof raw === "string") {
+      try { parsed = JSON.parse(raw); } catch { parsed = {}; }
+    }
     const html = parsed?.result || "";
     const $ = cheerio.load(html);
 

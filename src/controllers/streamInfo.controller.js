@@ -54,7 +54,10 @@ const getStreamInfo = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractStreamInfo(id);
-    setCache(cacheKey, data, TTL.default);
+    if (!data.url) {
+      return res.status(404).json({ success: false, message: "Stream URL not found for this link ID", results: data });
+    }
+    setCache(cacheKey, data, TTL.stream);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);
@@ -94,7 +97,10 @@ const getServerList = async (req, res, next) => {
       return res.json({ success: true, results: cached });
     }
     const data = await extractServerList(ids);
-    setCache(cacheKey, data, TTL.default);
+    if (!data || data.length === 0) {
+      return res.status(404).json({ success: false, message: "No servers found for the given episode IDs", results: [] });
+    }
+    setCache(cacheKey, data, TTL.servers);
     res.json({ success: true, results: data });
   } catch (error) {
     next(error);

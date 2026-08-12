@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.1] - 2026-08-12
+
+### Fixed
+- **CRITICAL**: Fixed `streamInfo.extractor.js` `extractServerList` not parsing JSON response — `fetchWithMirror` returns raw text by default, causing Cheerio to parse a JSON string as HTML, resulting in empty server arrays (null values)
+- **CRITICAL**: Fixed `streamInfo.extractor.js` `extractMapperServers` not parsing JSON response — same raw text issue caused the data processing loop to be skipped entirely, returning empty arrays
+- Fixed `streamInfo.controller.js` `getStreamInfo` to return 404 with error message when stream URL is null instead of silently returning null values
+- Fixed `streamInfo.controller.js` `getServerList` to return 404 with error message when server list is empty instead of returning empty array with no indication
+- Fixed `streamInfo.controller.js` to use `TTL.stream` instead of `TTL.default` for stream info caching (stream URLs rotate frequently)
+- Fixed `streamInfo.controller.js` to use `TTL.servers` instead of `TTL.default` for server list caching
+- Fixed `episodeList.extractor.js` JSON.parse error handling — added try/catch around JSON parsing to prevent uncaught exceptions
+- Fixed `episodeListAjax.extractor.js` JSON.parse error handling — added try/catch around JSON parsing to prevent uncaught exceptions
+
 ## [2.2.0] - 2026-07-28
 
 ### Added

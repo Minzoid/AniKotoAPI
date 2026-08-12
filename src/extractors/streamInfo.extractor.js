@@ -110,7 +110,12 @@ const extractServerList = async (episodeIds, watchSlug = null) => {
       headers: { "X-Requested-With": "XMLHttpRequest" }
     });
 
-    const html = typeof raw === "string" ? raw : (raw?.result || "");
+    // NOTE: Parse JSON response first — fetchWithMirror returns raw text by default
+    let parsed = raw;
+    if (typeof raw === "string") {
+      try { parsed = JSON.parse(raw); } catch { parsed = {}; }
+    }
+    const html = parsed?.result || "";
     const $ = cheerio.load(html);
 
     const servers = [];
@@ -165,7 +170,13 @@ const extractMapperServers = async (malId, slug, timestamp) => {
     if (!Number.isFinite(Number(timestamp))) throw new Error("Invalid timestamp");
 
     const path = `/ajax/mapper/${encodeURIComponent(malId)}/${encodeURIComponent(slug)}/${encodeURIComponent(timestamp)}`;
-    const { data } = await fetchWithMirror(path);
+    const { data: rawData } = await fetchWithMirror(path);
+
+    // NOTE: Parse JSON response first — fetchWithMirror returns raw text by default
+    let data = rawData;
+    if (typeof rawData === "string") {
+      try { data = JSON.parse(rawData); } catch { data = {}; }
+    }
 
     const servers = [];
 

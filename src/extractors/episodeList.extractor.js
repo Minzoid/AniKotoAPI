@@ -61,7 +61,11 @@ const extractEpisodeList = async (slugOrId) => {
         headers: { "X-Requested-With": "XMLHttpRequest" }
       });
 
-      const ajaxParsed = typeof ajaxRaw === "string" ? JSON.parse(ajaxRaw) : ajaxRaw;
+      // NOTE: Parse JSON response first — fetchWithMirror returns raw text by default
+      let ajaxParsed = ajaxRaw;
+      if (typeof ajaxRaw === "string") {
+        try { ajaxParsed = JSON.parse(ajaxRaw); } catch { ajaxParsed = {}; }
+      }
       const ajaxHtml = ajaxParsed?.result || "";
       const $ep = cheerio.load(ajaxHtml);
 
