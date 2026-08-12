@@ -55,7 +55,7 @@ const extractWatchOrder = async (slugOrId) => {
       const href = link.attr("href") || "";
       const title = $(el).find(".name").text().trim() || "";
       const poster = $(el).find("img").attr("src") || "";
-      const slug = href.split("/watch/").pop() || "";
+      const slug = href.split("/watch/").pop() || $(el).find(".poster").attr("data-tip") || "";
       const relation = $(el).find(".relation, .serieslabelitem").text().trim() || "related";
 
       if (slug) {
@@ -63,17 +63,24 @@ const extractWatchOrder = async (slugOrId) => {
       }
     });
 
-    // NOTE: Fallback — extract trending sidebar items as suggested watch order
+    // NOTE: Fallback — extract from #watch-order section (trending sidebar items as suggested watch order)
     if (related.length === 0) {
-      $(".w-side-section:has(.title:contains('Trending')) .item, .w-side-section:first .item").each((_, el) => {
+      $("#watch-order .item, .w-side-section:has(.title:contains('Trending')) .item, .w-side-section:first .item").each((_, el) => {
         const link = $(el).find("a").first();
         const href = link.attr("href") || "";
         const title = $(el).find(".name").text().trim() || "";
         const poster = $(el).find("img").attr("src") || "";
-        const slug = href.split("/watch/").pop() || "";
+        // NOTE: Items may not have <a> tags — fall back to data-tip attribute for slug
+        let slug = href.split("/watch/").pop() || "";
+        if (!slug) {
+          const dataTip = $(el).find(".poster").attr("data-tip") || "";
+          if (dataTip) slug = dataTip;
+        }
         const score = $(el).find(".score").text().trim() || "";
-        const type = $(el).find(".meta .dot:last-child").text().trim() || "";
-        const episodes = $(el).find(".meta .dot:first-child").text().trim() || "";
+        // NOTE: .meta .dot elements: [0]=score, [1]=type, [2]=episodes
+        const metaDots = $(el).find(".meta .dot");
+        const type = metaDots.eq(1).text().trim() || "";
+        const episodes = metaDots.eq(2).text().trim() || "";
 
         if (slug && slug !== slugOrId) {
           related.push({ title, slug, poster, url: href, relation: "trending", score, type, episodes });

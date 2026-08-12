@@ -55,7 +55,10 @@ const extractSeasons = async (slugOrId) => {
       const href = link.attr("href") || "";
       const poster = $(el).find("img").attr("src") || "";
       const title = $(el).find(".name, .title").text().trim() || link.text().trim() || "";
-      const slug = href.split("/watch/").pop() || "";
+      let slug = href.split("/watch/").pop() || "";
+      if (!slug) {
+        slug = $(el).find(".poster").attr("data-tip") || "";
+      }
 
       if (slug || title) {
         seasons.push({ title, slug, poster, url: href });
@@ -69,7 +72,11 @@ const extractSeasons = async (slugOrId) => {
         const href = link.attr("href") || "";
         const poster = $(el).find("img").attr("src") || "";
         const title = $(el).find(".name").text().trim() || "";
-        const slug = href.split("/watch/").pop() || "";
+        let slug = href.split("/watch/").pop() || "";
+        // NOTE: Items may not have <a> tags — fall back to data-tip attribute
+        if (!slug) {
+          slug = $(el).find(".poster").attr("data-tip") || "";
+        }
         const score = $(el).find(".score").text().trim() || "";
         const episodes = $(el).find(".meta .dot:last-child").text().trim() || "";
 

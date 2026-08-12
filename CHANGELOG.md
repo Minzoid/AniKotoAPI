@@ -10,12 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - **CRITICAL**: Fixed `streamInfo.extractor.js` `extractServerList` not parsing JSON response — `fetchWithMirror` returns raw text by default, causing Cheerio to parse a JSON string as HTML, resulting in empty server arrays (null values)
 - **CRITICAL**: Fixed `streamInfo.extractor.js` `extractMapperServers` not parsing JSON response — same raw text issue caused the data processing loop to be skipped entirely, returning empty arrays
+- **CRITICAL**: Fixed `creatorInfo.js` middleware overwriting error messages — the `message` field from creatorInfo was replacing actual error messages, making debugging impossible (all 500 errors showed "Built with ❤️ by Shinei Nouzen" instead of the real error)
 - Fixed `streamInfo.controller.js` `getStreamInfo` to return 404 with error message when stream URL is null instead of silently returning null values
 - Fixed `streamInfo.controller.js` `getServerList` to return 404 with error message when server list is empty instead of returning empty array with no indication
 - Fixed `streamInfo.controller.js` to use `TTL.stream` instead of `TTL.default` for stream info caching (stream URLs rotate frequently)
 - Fixed `streamInfo.controller.js` to use `TTL.servers` instead of `TTL.default` for server list caching
 - Fixed `episodeList.extractor.js` JSON.parse error handling — added try/catch around JSON parsing to prevent uncaught exceptions
 - Fixed `episodeListAjax.extractor.js` JSON.parse error handling — added try/catch around JSON parsing to prevent uncaught exceptions
+- Fixed `schedule.extractor.js` — changed from incorrect `/?date=` URL to proper `/ajax/schedule?date=` AJAX endpoint with JSON parsing
+- Fixed `seasons.extractor.js` — updated CSS selectors to handle new HTML structure where items use `data-tip` attribute instead of `<a>` tags
+- Fixed `watchOrder.extractor.js` — updated CSS selectors to handle new HTML structure, added fallback to `data-tip` attribute for slugs, fixed type/episodes field extraction from `.meta .dot` elements
 
 ## [2.2.0] - 2026-07-28
 

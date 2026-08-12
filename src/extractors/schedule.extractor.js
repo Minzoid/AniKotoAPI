@@ -42,24 +42,37 @@ import { fetchWithMirror } from "../helper/mirror.helper.js";
  */
 const extractSchedule = async (date) => {
   try {
-    const path = `/?date=${date}`;
-    const { data } = await fetchWithMirror(path);
-    const $ = cheerio.load(data);
+    // NOTE: The schedule data is loaded via AJAX endpoint, not a static page
+    const path = `/ajax/schedule?date=${date}`;
+    const { data: raw } = await fetchWithMirror(path, {
+      headers: { "X-Requested-With": "XMLHttpRequest" }
+    });
+
+    // NOTE: Parse JSON response first — fetchWithMirror returns raw text by default
+    let parsed = raw;
+    if (typeof raw === "string") {
+      try { parsed = JSON.parse(raw); } catch { parsed = {}; }
+    }
+    const html = parsed?.result || "";
+    const $ = cheerio.load(html);
 
     const schedule = [];
 
-    // NOTE: Dual selector pattern — different mirrors use different HTML structures
-    // .schedule-item = new layout, .anime-schedule .item = old layout
-    $(".schedule-item, .anime-schedule .item").each((i, el) => {
-      const slug = $(el).find("a").attr("href")?.split("/watch/").pop() || "";
-      const title = $(el).find(".film-name a, .name").text().trim() || "";
-      const time = $(el).find(".time, .schedule-time").text().trim() || "";
-      const episodeNo = parseInt($(el).find(".episode-no, .ep-num").text().trim()) || 0;
+    // NOTE: Schedule items live inside .item with .time, .ep, .title structure
+    $(".item").each((i, el) => {
+      const title = $(el).find(".title").text().trim() || "";
+      const jpTitle = $(el).find(".title").attr("data-jp") || "";
+      const time = $(el).find(".time").text().trim() || "";
+      const episodeText = $(el).find(".ep span").text().trim() || "";
+      const episodeNo = parseInt(episodeText.replace(/\D/g, "")) || 0;
+      // NOTE: Items may not have direct links — use title as identifier
+      const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "";
 
-      if (slug) {
+      if (title) {
         schedule.push({
           slug,
           title,
+          japaneseTitle: jpTitle,
           time,
           episode_no: episodeNo
         });

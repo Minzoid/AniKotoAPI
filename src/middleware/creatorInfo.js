@@ -58,14 +58,21 @@ const addCreatorInfo = (req, res, next) => {
   res.json = (data) => {
     // NOTE: Only inject if data is a plain object and missing creator field
     if (typeof data === "object" && data !== null && !data.creator) {
+      // NOTE: Preserve existing 'message' field (e.g., error messages) — only add creator metadata
+      const preservedMessage = data.message;
       data = {
         ...data,
         creator: creatorInfo.creator,
         github: creatorInfo.github,
         telegram: creatorInfo.telegram,
-        message: creatorInfo.message,
-        timestamp: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", hour12: true }),
       };
+      // NOTE: Restore original message if it existed (error handler sets this)
+      if (preservedMessage) {
+        data.message = preservedMessage;
+      } else {
+        data.message = creatorInfo.message;
+      }
+      data.timestamp = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", hour12: true });
     }
     return originalJson(data);
   };
