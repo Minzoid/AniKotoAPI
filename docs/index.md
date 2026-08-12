@@ -1,11 +1,11 @@
 # // === HEADER ===
-# AniKotoAPI v2.2.0
+# AniKotoAPI v2.2.1
 # Free REST API for Anime Data
 # Scraping anikototv.to with Cheerio
 
 ---
 
-![AniKotoAPI](https://img.shields.io/badge/AniKotoAPI-v2.2.0-blue)
+![AniKotoAPI](https://img.shields.io/badge/AniKotoAPI-v2.2.1-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Endpoints](https://img.shields.io/badge/Endpoints-38+-orange)
 ![Node.js](https://img.shields.io/badge/Node.js-18+-brightgreen)

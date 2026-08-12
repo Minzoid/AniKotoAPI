@@ -859,7 +859,7 @@ curl "https://anikototvapi.vercel.app/api/health"
   "success": true,
   "results": {
     "status": "healthy",
-    "version": "2.2.0",
+    "version": "2.2.1",
     "uptime": "0h 1m 21s",
     "uptimeSeconds": 81,
     "timestamp": "2026-07-30T02:20:46.153Z",

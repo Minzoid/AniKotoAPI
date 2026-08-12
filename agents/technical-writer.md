@@ -107,7 +107,7 @@ curl "https://anikototvapi.vercel.app/api/endpoint"
 
 ### Version Bumping
 1. Update `package.json` version
-2. Update README.md badge: `Version-2.2.0`
+2. Update README.md badge: `Version-2.2.1`
 3. Update OpenAPI spec version in `apiRoutes.js`
 4. Add CHANGELOG.md entry (prepend, never delete)
 

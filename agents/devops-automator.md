@@ -91,7 +91,7 @@ git remote set-url origin https://github.com/Shineii86/AniKotoAPI.git
 
 ### Version Bump Checklist
 1. [ ] Update `package.json` version
-2. [ ] Update README.md badge (`Version-2.2.0`)
+2. [ ] Update README.md badge (`Version-2.2.1`)
 3. [ ] Add CHANGELOG.md entry (prepend at top)
 4. [ ] Update OpenAPI spec version in `apiRoutes.js`
 5. [ ] Update endpoint count if changed
