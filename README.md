@@ -127,6 +127,23 @@ flowchart TD
     style H fill:#1e1e2e,stroke:#22c55e,color:#f1f5f9
 ```
 
+### ⚠️ Streaming Status
+
+> **Streaming endpoints (`/api/servers`, `/api/stream`, `/api/stream/resolve`) return errors when anikototv.to blocks AJAX requests from server-side IPs.**
+>
+> This is expected behavior when scraping from datacenter IPs (including Vercel's). AniKoto's bot protection blocks non-browser requests to their AJAX endpoints. Metadata endpoints (home, search, info, trending, etc.) work perfectly — only streaming is affected.
+
+| What Works | What's Blocked |
+|:---|:---|
+| Home, spotlight, trending | `/api/servers` — server list |
+| Search, suggestions, filter | `/api/stream` — embed URLs |
+| Info, episodes, schedule | `/api/stream/resolve` — m3u8/mp4 |
+| Top 10, most popular, new release | `/api/mapper-servers` — gogoanime servers |
+| AZ list, random, genre list | All AJAX-dependent endpoints |
+| All HTML-scraped endpoints | |
+
+> To fix streaming, self-host with a residential IP or use a proxy service that bypasses bot protection.
+
 ---
 
 ## ✨ Features
