@@ -16,10 +16,11 @@
  * ======= • ======= • ======= • ======= • =======• =======
  */
 
+import axios from "axios";
 import * as cheerio from "cheerio";
 import { headers } from "../configs/header.config.js";
 import { BASE_URL } from "../configs/dataUrl.js";
-import { fetchWithMirror } from "../helper/mirror.helper.js";
+import { fetchWithMirror, getWorkingMirror } from "../helper/mirror.helper.js";
 import { normalizeServerName } from "./streamResolver.extractor.js";
 
 // ══════════════════════════════════════════════════════════════
@@ -43,14 +44,48 @@ import { normalizeServerName } from "./streamResolver.extractor.js";
  */
 const extractStreamInfo = async (linkId, watchSlug = null) => {
   try {
-    // NOTE: Establish session by visiting watch page first (required for AJAX endpoints)
+    // NOTE: Establish session with cookies — AJAX endpoints require session cookies
+    const mirror = await getWorkingMirror();
+    let cookieHeader = "";
+
     if (watchSlug) {
-      await fetchWithMirror(`/watch/${watchSlug}`);
+      try {
+        const sessionRes = await axios.get(`${mirror}/watch/${watchSlug}`, {
+          headers,
+          timeout: 10000,
+          maxRedirects: 5,
+        });
+        const setCookies = sessionRes.headers["set-cookie"];
+        if (Array.isArray(setCookies)) {
+          cookieHeader = setCookies.map(c => c.split(";")[0]).join("; ");
+        }
+      } catch { /* session establishment is best-effort */ }
+    }
+
+    // NOTE: Fallback — if no slug provided, try fetching any page to get session cookies
+    if (!cookieHeader) {
+      try {
+        const fallbackRes = await axios.get(`${mirror}/home`, {
+          headers,
+          timeout: 10000,
+          maxRedirects: 5,
+        });
+        const setCookies = fallbackRes.headers["set-cookie"];
+        if (Array.isArray(setCookies)) {
+          cookieHeader = setCookies.map(c => c.split(";")[0]).join("; ");
+        }
+      } catch { /* fallback is best-effort */ }
     }
 
     const path = `/ajax/server?get=${linkId}`;
+    const requestHeaders = {
+      ...headers,
+      "X-Requested-With": "XMLHttpRequest",
+      ...(cookieHeader ? { "Cookie": cookieHeader } : {}),
+    };
+
     const { data: raw } = await fetchWithMirror(path, {
-      headers: { "X-Requested-With": "XMLHttpRequest" }
+      headers: requestHeaders
     });
 
     // NOTE: Handle both string JSON and parsed object responses
@@ -116,14 +151,47 @@ const extractStreamInfo = async (linkId, watchSlug = null) => {
  */
 const extractServerList = async (episodeIds, watchSlug = null) => {
   try {
-    // NOTE: Establish session by visiting watch page first (required for AJAX endpoints)
+    // NOTE: Establish session with cookies — AJAX endpoints require session cookies
+    const mirror = await getWorkingMirror();
+    let cookieHeader = "";
+
     if (watchSlug) {
-      await fetchWithMirror(`/watch/${watchSlug}`);
+      try {
+        const sessionRes = await axios.get(`${mirror}/watch/${watchSlug}`, {
+          headers,
+          timeout: 10000,
+          maxRedirects: 5,
+        });
+        const setCookies = sessionRes.headers["set-cookie"];
+        if (Array.isArray(setCookies)) {
+          cookieHeader = setCookies.map(c => c.split(";")[0]).join("; ");
+        }
+      } catch { /* session establishment is best-effort */ }
+    }
+
+    if (!cookieHeader) {
+      try {
+        const fallbackRes = await axios.get(`${mirror}/home`, {
+          headers,
+          timeout: 10000,
+          maxRedirects: 5,
+        });
+        const setCookies = fallbackRes.headers["set-cookie"];
+        if (Array.isArray(setCookies)) {
+          cookieHeader = setCookies.map(c => c.split(";")[0]).join("; ");
+        }
+      } catch { /* fallback is best-effort */ }
     }
 
     const path = `/ajax/server/list?servers=${episodeIds}`;
+    const requestHeaders = {
+      ...headers,
+      "X-Requested-With": "XMLHttpRequest",
+      ...(cookieHeader ? { "Cookie": cookieHeader } : {}),
+    };
+
     const { data: raw } = await fetchWithMirror(path, {
-      headers: { "X-Requested-With": "XMLHttpRequest" }
+      headers: requestHeaders
     });
 
     // NOTE: Parse JSON response first — fetchWithMirror returns raw text by default

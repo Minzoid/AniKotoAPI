@@ -44,7 +44,7 @@ import { getCache, setCache, TTL } from "../helper/cache.helper.js";
  */
 const getStreamInfo = async (req, res, next) => {
   try {
-    const { id } = req.query;
+    const { id, slug } = req.query;
     if (!id) {
       return res.status(400).json({ success: false, message: "Link ID is required" });
     }
@@ -55,7 +55,7 @@ const getStreamInfo = async (req, res, next) => {
     }
     let data;
     try {
-      data = await extractStreamInfo(id);
+      data = await extractStreamInfo(id, slug);
     } catch (upstreamError) {
       return res.status(502).json({ success: false, message: `Upstream API error: ${upstreamError.message}` });
     }

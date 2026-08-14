@@ -8,12 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.2] - 2026-08-14
 
 ### Fixed
-- **CRITICAL**: Fixed `/api/stream` returning `null` URL when upstream API returns error responses (e.g. `{status: 500, result: "Bad request"}`) — extractor now detects upstream error status codes and throws meaningful errors instead of silently returning null
-- Fixed `streamInfo.extractor.js` `extractStreamInfo` to detect upstream API error responses (`data.status >= 400`) and throw descriptive errors
-- Fixed `streamInfo.extractor.js` `extractStreamInfo` to detect non-JSON error strings from upstream API (e.g. "Bad request") and throw errors instead of silently swallowing them
-- Fixed `streamInfo.extractor.js` `extractServerList` to detect upstream API error responses and throw descriptive errors
+- **CRITICAL**: Fixed `/api/stream` returning `null` URL — root cause was AJAX endpoints (`/ajax/server?get=`, `/ajax/server/list?servers=`) require session cookies from the watch page; `fetchWithMirror` didn't persist cookies between requests, causing upstream to return `{status:500, result:"Bad request"}`
+- Fixed `streamInfo.extractor.js` `extractStreamInfo` to establish session with cookies before AJAX requests — fetches watch page or home page to capture `set-cookie` headers and passes them with the AJAX request
+- Fixed `streamInfo.extractor.js` `extractServerList` to establish session with cookies before AJAX requests (same cookie-aware pattern)
+- Fixed `streamInfo.controller.js` `getStreamInfo` to accept optional `slug` query parameter and pass it to extractor for session establishment
 - Fixed `streamInfo.controller.js` `getStreamInfo` to return HTTP 502 (Bad Gateway) with error message for upstream API failures instead of silently returning null URL
-- Fixed `streamInfo.controller.js` `getServerList` to properly propagate upstream errors via error handler
+- Fixed upstream error detection in both extractors — detects `status >= 400` and non-JSON error strings from upstream API
 
 ## [2.2.1] - 2026-08-12
 
