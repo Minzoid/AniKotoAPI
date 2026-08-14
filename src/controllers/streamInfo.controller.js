@@ -53,7 +53,12 @@ const getStreamInfo = async (req, res, next) => {
     if (cached) {
       return res.json({ success: true, results: cached });
     }
-    const data = await extractStreamInfo(id);
+    let data;
+    try {
+      data = await extractStreamInfo(id);
+    } catch (upstreamError) {
+      return res.status(502).json({ success: false, message: `Upstream API error: ${upstreamError.message}` });
+    }
     if (!data.url) {
       return res.status(404).json({ success: false, message: "Stream URL not found for this link ID", results: data });
     }

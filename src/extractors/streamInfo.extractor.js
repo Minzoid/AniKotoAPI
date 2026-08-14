@@ -59,11 +59,27 @@ const extractStreamInfo = async (linkId, watchSlug = null) => {
       try { data = JSON.parse(raw); } catch { data = {}; }
     }
 
+    // NOTE: Detect upstream API error responses (e.g. {status: 500, result: "Bad request"})
+    if (data && typeof data === "object" && data.status && Number(data.status) >= 400) {
+      throw new Error(`Upstream API error (${data.status}): ${data.result || "Unknown error"}`);
+    }
+
     if (!data || !data.result) {
       return { linkId, url: null, type: null, skipData: null };
     }
 
-    const result = typeof data.result === "string" ? (() => { try { return JSON.parse(data.result); } catch { return {}; } })() : data.result;
+    // NOTE: If result is a non-JSON string (error message), treat as upstream failure
+    const result = typeof data.result === "string"
+      ? (() => {
+          try { return JSON.parse(data.result); }
+          catch {
+            if (!data.result.startsWith("{") && !data.result.startsWith("[")) {
+              throw new Error(`Upstream returned invalid data: ${data.result}`);
+            }
+            return {};
+          }
+        })()
+      : data.result;
 
     const streamUrl = result.url || null;
     const streamType = streamUrl?.includes(".m3u8") ? "hls" : streamUrl ? "mp4" : null;
@@ -115,6 +131,12 @@ const extractServerList = async (episodeIds, watchSlug = null) => {
     if (typeof raw === "string") {
       try { parsed = JSON.parse(raw); } catch { parsed = {}; }
     }
+
+    // NOTE: Detect upstream API error responses
+    if (parsed && typeof parsed === "object" && parsed.status && Number(parsed.status) >= 400) {
+      throw new Error(`Upstream API error (${parsed.status}): ${parsed.result || "Unknown error"}`);
+    }
+
     const html = parsed?.result || "";
     const $ = cheerio.load(html);
 
