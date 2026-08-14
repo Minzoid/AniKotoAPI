@@ -142,7 +142,15 @@ flowchart TD
 | AZ list, random, genre list | All AJAX-dependent endpoints |
 | All HTML-scraped endpoints | |
 
-> To fix streaming, self-host with a residential IP or use a proxy service that bypasses bot protection.
+**To fix streaming**, set one of these environment variables:
+
+```bash
+# Option 1: ScraperAPI (requires premium plan — $49/month)
+SCRAPER_API_KEY=your_scraperapi_key
+
+# Option 2: FlareSolverr (self-hosted, unlimited)
+FLARESOLVERR_URL=http://your-flaresolverr-host:8191
+```
 
 ---
 
